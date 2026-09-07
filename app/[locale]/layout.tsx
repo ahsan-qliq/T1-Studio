@@ -4,6 +4,8 @@ import { getMessages } from 'next-intl/server';
 import { routing } from '@/app/i18n/routing';
 import { notFound } from 'next/navigation';
 import { Navbar } from '@/components/layout/Navbar';
+import { Footer } from '@/components/layout/Footer';
+import Image from 'next/image';
 import '../globals.css';
 
 export const metadata: Metadata = {
@@ -32,10 +34,20 @@ export default async function LocaleLayout({
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
           <div className="relative">
-            <div className="absolute top-0 left-0 right-0 z-50">
+            {/* Global project background — sits behind every page */}
+            <Image
+              src="/assets/images/Home.webp"
+              alt=""
+              fill
+              sizes="100vw"
+              className="fixed inset-0 -z-10 object-cover"
+              aria-hidden="true"
+            />
+            <div className="page-wrap absolute top-0 left-0 right-0 z-50">
               <Navbar />
             </div>
             {children}
+            <Footer />
           </div>
         </NextIntlClientProvider>
       </body>
