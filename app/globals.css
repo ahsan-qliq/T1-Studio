@@ -61,7 +61,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: #111111;
   --primary-foreground: #ffffff;
-  --secondary: #CA9C44;
+  --secondary: #ffffff;
   --secondary-foreground: #111111;
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
@@ -96,7 +96,7 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: #111111;
   --primary-foreground: #ffffff;
-  --secondary: #CA9C44;
+  --secondary: #ffffff;
   --secondary-foreground: #111111;
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
@@ -127,6 +127,7 @@
   }
   body {
     font-family: var(--font-sans);
+    overflow-x: hidden;
     @apply bg-background text-foreground;
   }
   html[lang="ar"] {
@@ -135,5 +136,58 @@
 
   html[lang="en"] {
     font-family: var(--font-sans);
+  }
+}
+
+/* Hero stagger — CSS-only so it runs before JS hydration (no LCP delay) */
+@keyframes hero-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @keyframes hero-fade-up {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+@layer components {
+  /* Consistent page-level horizontal padding + centred max-width. */
+  .page-wrap {
+    @apply mx-auto max-w-360 px-4 sm:px-6 lg:px-12 xl:px-16;
+  }
+
+  /*
+   * Underline that grows from the center on hover.
+   * Wraps in prefers-reduced-motion so the animation is opt-in only.
+   */
+  .underline-grow {
+    position: relative;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .underline-grow::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 50%;
+      right: 50%;
+      height: 1px;
+      background: currentColor;
+      transition: left 0.25s ease, right 0.25s ease;
+    }
+
+    .underline-grow:hover::after,
+    .underline-grow:focus-visible::after {
+      left: 0;
+      right: 0;
+    }
   }
 }
