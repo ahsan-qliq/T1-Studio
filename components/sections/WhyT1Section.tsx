@@ -55,7 +55,7 @@ function FeatureCard({ icon: Icon, title, description, variant }: FeatureCard) {
 
 export function WhyT1Section({ label, heading, image, cards }: WhyT1SectionProps) {
   return (
-    <section aria-labelledby="why-t1-heading" className="bg-white py-14 px-8 lg:px-16">
+    <section aria-labelledby="why-t1-heading" className="bg-white py-14 px-4 sm:px-8 lg:px-16">
       <div className="mx-auto grid items-center gap-12 lg:grid-cols-[2fr_3fr]">
 
         {/* Left — image */}
@@ -85,7 +85,7 @@ export function WhyT1Section({ label, heading, image, cards }: WhyT1SectionProps
           {/* 2×2 card grid */}
           <div
             role="list"
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
             aria-label={heading}
           >
             {cards.map((card) => (
