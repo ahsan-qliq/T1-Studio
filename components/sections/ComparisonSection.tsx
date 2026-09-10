@@ -61,18 +61,18 @@ function ComparisonCard({ title, features, variant }: ComparisonColumn) {
 
 export function ComparisonSection({ heading, columns }: ComparisonSectionProps) {
   return (
-    <section aria-labelledby="comparison-heading" className="bg-white py-14 px-8 lg:px-16">
+    <section aria-labelledby="comparison-heading" className="page-wrap py-12">
 
       <h2
         id="comparison-heading"
-        className="mb-10 text-center text-3xl font-bold text-foreground lg:text-4xl"
+        className="mb-10 text-center text-3xl font-bold text-secondary lg:text-4xl"
       >
         {heading}
       </h2>
 
       <ul
         role="list"
-        className="mx-auto grid max-w-6xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        className="mx-auto grid  grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
       >
         {columns.map((col) => (
           <li key={col.title}>
