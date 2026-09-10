@@ -65,8 +65,7 @@ export default async function SpacesPage() {
         description={tPhilosophy("description")}
         ctaLabel={tPhilosophy("ctaLabel")}
         ctaHref="/"
-        image="/assets/images/why-t1.webp"
-        imageAlt={tPhilosophy("imageAlt")}
+
       />
       <SpacesAccordionSection
         heading={tSpaces("heading")}
