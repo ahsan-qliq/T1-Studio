@@ -161,7 +161,7 @@
 @layer components {
   /* Consistent page-level horizontal padding + centred max-width. */
   .page-wrap {
-    @apply mx-auto max-w-360 px-4 sm:px-6 lg:px-12 xl:px-16;
+    @apply mx-auto max-w-360 px-4 sm:px-6 lg:px-15 xl:px-15;
   }
 
   /*
