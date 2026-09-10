@@ -13,8 +13,8 @@ export interface SpaceCard {
 
 interface FeaturedSpacesProps {
   heading: string;
-  viewAllLabel: string;
-  viewAllHref: string;
+  viewAllLabel?: string;
+  viewAllHref?: string;
   cardArrowLabel: string;
   cards: SpaceCard[];
 }
@@ -29,7 +29,7 @@ function SpaceCard({
   return (
     <article className="group overflow-hidden rounded-2xl border border-border shadow-sm">
       {/* Image */}
-      <div className="relative h-72 overflow-hidden">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <Image
           src={image.src}
           alt={image.alt}
@@ -49,9 +49,12 @@ function SpaceCard({
             <Link
               href={href}
               aria-label={`${cardArrowLabel} ${title}`}
-              className=" flex size-10 items-center justify-center rounded-md border border-border bg-white text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="group/arrow flex size-10 items-center justify-center rounded-md border border-border bg-white text-foreground shadow-sm transition-all duration-200 hover:bg-gold hover:border-gold hover:text-white hover:shadow-md motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
-              <ArrowRight className="size-4" aria-hidden="true" />
+              <ArrowRight
+                className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover/arrow:translate-x-0.5"
+                aria-hidden="true"
+              />
             </Link>
           </div>
         </div>
@@ -72,10 +75,11 @@ export function FeaturedSpaces({
   return (
     <section
       aria-labelledby="featured-spaces-heading"
-      className="bg-white py-14 px-8 lg:px-16"
+      // sticky top-0 z-20
+      className="bg-white py-14 px-4 sm:px-8 lg:px-16"
     >
       {/* Header row */}
-      <div className="mb-8 flex items-center justify-between">
+      {/* <div className="mb-8 flex items-center justify-between">
         <h2
           id="featured-spaces-heading"
           className="text-3xl font-bold text-foreground lg:text-4xl"
@@ -87,12 +91,46 @@ export function FeaturedSpaces({
           href={viewAllHref}
           className={cn(
             buttonVariants({ variant: "gold", size: "lg" }),
-            "text-white rounded-lg gap-2",
+            "group text-white rounded-lg gap-2",
           )}
         >
           {viewAllLabel}
-          <ArrowRight className="size-4 " aria-hidden="true" />
+          <ArrowRight className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5" aria-hidden="true" />
         </Link>
+      </div> */}
+
+      {/* Header row */}
+      <div
+        className={cn(
+          "mb-8 flex items-center",
+          viewAllLabel && viewAllHref
+            ? "justify-between"
+            : "justify-center text-center",
+        )}
+      >
+        <h2
+          id="featured-spaces-heading"
+          className="text-3xl font-bold text-foreground lg:text-4xl"
+        >
+          {heading}
+        </h2>
+
+        {viewAllLabel && viewAllHref && (
+          <Link
+            href={viewAllHref}
+            className={cn(
+              buttonVariants({ variant: "gold", size: "lg" }),
+              "group gap-2 rounded-lg text-white",
+            )}
+          >
+            {viewAllLabel}
+
+            <ArrowRight
+              className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </Link>
+        )}
       </div>
 
       {/* Cards grid */}
