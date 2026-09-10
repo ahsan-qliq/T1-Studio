@@ -1,6 +1,6 @@
 import { ArrowRight } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { JourneyStepperClient } from './JourneyStepperClient';
+import { JourneyCarouselClient } from './JourneyCarouselClient';
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
@@ -45,7 +45,7 @@ export function SmartSpaceDiagram({ badge, items }: SmartSpaceDiagramProps) {
             <div key={i} className="flex items-start gap-1" role="listitem">
               <div className="flex flex-col items-center gap-1.5 text-center">
                 <div className="flex size-10 items-center justify-center rounded-lg border border-border">
-                  <Icon className="size-5 text-gold" aria-hidden="true" strokeWidth={1.5} />
+                  <Icon className="size-5 text-secondary" aria-hidden="true" strokeWidth={1.5} />
                 </div>
                 <span className="text-[11px] leading-tight text-muted-foreground">{item.label}</span>
               </div>
@@ -70,12 +70,12 @@ export function KellerBadge({ line1, line2 }: KellerBadgeProps) {
     <div className="flex items-center gap-3 rounded-xl border border-border px-4 py-3">
       <div className="grid shrink-0 grid-cols-2 gap-1" aria-hidden="true">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="size-1.5 rounded-full bg-gold" />
+          <div key={i} className="size-1.5 rounded-full bg-secondary  " />
         ))}
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-gold">{line1}</p>
-        <p className="text-xs font-semibold uppercase tracking-wider text-gold">{line2}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-secondary">{line1}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-secondary">{line2}</p>
       </div>
     </div>
   );
@@ -99,16 +99,16 @@ function StepCard({
     <article
       id={id}
       aria-label={step.title}
-      className="flex h-full flex-col gap-4 rounded-2xl border border-border bg-white p-6"
+      className="flex h-full flex-col gap-4 rounded-2xl border border-border bg-primary p-6"
     >
-      <Icon className="size-9 text-gold" aria-hidden="true" strokeWidth={1.5} />
+      <Icon className="size-9 text-secondary" aria-hidden="true" strokeWidth={1.5} />
 
       <div className="flex flex-col gap-1">
-        <h3 className="text-2xl font-bold text-foreground">{step.title}</h3>
-        <p className="text-sm font-medium text-gold">{step.subtitle}</p>
+        <h3 className="text-2xl font-bold text-secondary">{step.title}</h3>
+        <p className="text-sm font-medium text-secondary">{step.subtitle}</p>
       </div>
 
-      <p className="text-sm leading-relaxed text-muted-foreground">{step.description}</p>
+      <p className="text-sm leading-relaxed text-secondary">{step.description}</p>
 
       <hr className="border-border" />
 
@@ -120,27 +120,25 @@ function StepCard({
       )}
 
       <div className="flex flex-col gap-1.5">
-        <p className="text-xs font-semibold uppercase tracking-widest text-gold">
+        <p className="text-xs font-semibold uppercase tracking-widest text-secondary">
           {advantageLabel}
         </p>
-        <p className="text-sm leading-relaxed text-muted-foreground">{step.advantageText}</p>
+        <p className="text-sm leading-relaxed text-secondary">{step.advantageText}</p>
       </div>
 
       <div className="mt-auto flex items-start gap-3 rounded-xl border border-border p-4">
         <HighlightIcon
-          className="mt-0.5 size-5 shrink-0 text-gold"
+          className="mt-0.5 size-5 shrink-0 text-secondary"
           aria-hidden="true"
           strokeWidth={1.5}
         />
-        <p className="text-sm leading-relaxed text-muted-foreground">{step.highlightText}</p>
+        <p className="text-sm leading-relaxed text-secondary">{step.highlightText}</p>
       </div>
     </article>
   );
 }
 
 // ─── Main section (server) ────────────────────────────────────────────────────
-
-const TRACK_ID = 'journey-track';
 
 export function ProjectJourneySection({
   label,
@@ -151,39 +149,40 @@ export function ProjectJourneySection({
   nextLabel,
 }: ProjectJourneySectionProps) {
   return (
-    <section aria-labelledby="journey-heading" className="bg-white py-14 px-8 lg:px-16">
+    <section aria-labelledby="journey-heading" className="page-wrap py-12">
 
       {/* Label + heading */}
       <div className="mb-10 text-center">
-        <p className="mb-3 text-sm font-medium text-muted-foreground">{label}</p>
-        <h2 id="journey-heading" className="text-3xl font-bold text-foreground lg:text-4xl">
+        <p className="mb-3 text-sm font-medium text-primary-foreground">{label}</p>
+        <h2 id="journey-heading" className="text-3xl font-bold text-primary-foreground lg:text-4xl">
           {heading}
         </h2>
       </div>
 
-      {/* Interactive stepper — client island, receives only plain strings */}
-      <JourneyStepperClient
+      {/*
+       * JourneyCarouselClient receives step cards as children (RSC composition pattern).
+       * Server renders the card content (icons etc.), client controls the carousel transform.
+       */}
+      <JourneyCarouselClient
         steps={steps.map((s) => ({ number: s.number, title: s.title }))}
-        trackId={TRACK_ID}
         prevLabel={prevLabel}
         nextLabel={nextLabel}
-      />
-
-      {/* Step cards — server-rendered, icons resolved here */}
-      <ol
-        id={TRACK_ID}
-        aria-label={heading}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-2 lg:overflow-visible"
+        cardsLabel={heading}
       >
         {steps.map((step, i) => (
           <li
             key={step.number}
-            className="shrink-0 snap-start w-[min(calc(100vw-4rem),400px)] lg:w-auto lg:flex-1"
+            /*
+             * px-3 on each card creates 24 px visual gap between cards (12 px right + 12 px left
+             * of the adjacent card) while keeping offsetWidth = wrapper / visibleCount,
+             * which the client uses to calculate the exact translateX per step.
+             */
+            className="shrink-0 w-full sm:w-1/2 lg:w-1/3 px-3 flex"
           >
             <StepCard step={step} advantageLabel={advantageLabel} id={`journey-step-${i}`} />
           </li>
         ))}
-      </ol>
+      </JourneyCarouselClient>
 
     </section>
   );
