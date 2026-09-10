@@ -56,7 +56,7 @@ export function CarouselSection({
   };
 
   return (
-    <section aria-labelledby="carousel-heading" className="bg-white py-14 px-8 lg:px-16">
+    <section aria-labelledby="carousel-heading" className="bg-white py-14 px-4 sm:px-8 lg:px-16">
 
       {/* Header row */}
       <div className="mb-8 flex items-center justify-between">
@@ -76,9 +76,9 @@ export function CarouselSection({
             aria-label={prevLabel}
             aria-controls="carousel-track"
             className={cn(
-              'flex size-11 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
+              'flex size-11 items-center justify-center rounded-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
               canPrev
-                ? 'bg-secondary text-secondary-foreground hover:bg-gold-hover'
+                ? 'bg-secondary text-secondary-foreground hover:bg-gold-hover motion-safe:hover:scale-105 motion-safe:active:scale-95'
                 : 'bg-secondary/40 text-secondary-foreground/50 cursor-not-allowed',
             )}
           >
@@ -92,9 +92,9 @@ export function CarouselSection({
             aria-label={nextLabel}
             aria-controls="carousel-track"
             className={cn(
-              'flex size-11 items-center justify-center rounded-md transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
+              'flex size-11 items-center justify-center rounded-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
               canNext
-                ? 'bg-secondary text-secondary-foreground hover:bg-gold-hover'
+                ? 'bg-secondary text-secondary-foreground hover:bg-gold-hover motion-safe:hover:scale-105 motion-safe:active:scale-95'
                 : 'bg-secondary/40 text-secondary-foreground/50 cursor-not-allowed',
             )}
           >
@@ -114,9 +114,9 @@ export function CarouselSection({
         {cards.map((card) => (
           <li
             key={card.label}
-            className="shrink-0 snap-start w-[calc(33.333%-11px)] min-w-64"
+            className="shrink-0 snap-start w-[min(calc(100vw-2rem),300px)] sm:w-[calc(50%-8px)] lg:w-[calc(33.333%-11px)]"
           >
-            <article className="group relative overflow-hidden rounded-2xl h-72">
+            <article className="group relative overflow-hidden rounded-2xl aspect-[4/3]">
               {/* Background image */}
               <Image
                 src={card.image.src}
@@ -132,9 +132,9 @@ export function CarouselSection({
                 <Link
                   href={card.href}
                   aria-label={`${cardArrowLabel} ${card.label}`}
-                  className="flex size-9 shrink-0 items-center justify-center rounded-md border border-white/25 text-black transition-colors bg-white hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+                  className="group/arrow flex size-9 shrink-0 items-center justify-center rounded-md border border-white/25 text-black transition-all duration-200 bg-white hover:bg-gold hover:border-gold hover:text-white motion-safe:hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                 >
-                  <ArrowRight className="size-4" aria-hidden="true" />
+                  <ArrowRight className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover/arrow:translate-x-0.5" aria-hidden="true" />
                 </Link>
               </div>
             </article>
