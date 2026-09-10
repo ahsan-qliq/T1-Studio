@@ -12,11 +12,13 @@ export interface AwardLogo {
 interface AwardsSectionProps {
   label: string;
   logos: AwardLogo[];
+  className?: string;
 }
 
 // ─── Main section ─────────────────────────────────────────────────────────────
 
-export function AwardsSection({ label, logos }: AwardsSectionProps) {
+export function AwardsSection({ label, logos, className
+ }: AwardsSectionProps) {
   return (
     <section
       aria-label={label}
@@ -25,7 +27,7 @@ export function AwardsSection({ label, logos }: AwardsSectionProps) {
       <div className="mx-auto flex flex-col items-center justify-between gap-8 sm:flex-row sm:gap-12">
 
         {/* Label */}
-        <p className="shrink-0 text-3xl font-bold text-secondary">
+        <p className={`shrink-0 text-3xl font-bold text-secondary ${className}`}>
           {label}
         </p>
 
