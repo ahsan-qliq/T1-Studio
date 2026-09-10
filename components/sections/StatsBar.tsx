@@ -1,37 +1,38 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations } from "next-intl/server";
 
 interface StatItem {
   value: string;
-  labelKey: 'unitsDelivered' | 'projectScale' | 'leadTime' | 'teamMembers';
+  label: string;
 }
-
-const DEFAULT_STATS: StatItem[] = [
-  { value: '50+',  labelKey: 'unitsDelivered' },
-  { value: '200+', labelKey: 'projectScale' },
-  { value: '200+', labelKey: 'leadTime' },
-  { value: '200+', labelKey: 'teamMembers' },
-];
 
 interface StatsBarProps {
-  stats?: StatItem[];
+  namespace: string;
 }
 
-export async function StatsBar({ stats = DEFAULT_STATS }: StatsBarProps) {
-  const t = await getTranslations('Stats');
+export async function StatsBar({ namespace }: StatsBarProps) {
+  const t = await getTranslations(namespace);
+  console.log("StatsBar namespace:", t);
+  const stats = t.raw("items") as StatItem[];
 
   return (
-    <section aria-label={t('sectionLabel')} className="bg-primary py-14 px-8 lg:px-16">
-      <ul role="list" className="flex flex-wrap justify-between gap-y-10 max-w-6xl mx-auto">
-        {stats.map(({ value, labelKey }) => (
-          <li key={labelKey} className="flex flex-col text-center gap-2">
+    <section aria-label={t("sectionLabel")} className="page-wrap py-12">
+      <ul role="list" className="flex flex-wrap justify-between gap-8 sm:gap-12 lg:gap-16">
+        {stats.map(({ value, label }) => (
+          <li
+            key={label}
+            className="flex flex-col items-center gap-2 text-center"
+          >
             <span
-              className="text-4xl font-bold text-white lg:text-[56px]"
-              aria-label={`${value} ${t(labelKey)}`}
+              className="text-4xl font-bold text-white sm:text-5xl lg:text-[56px]"
+              aria-label={`${value} ${label}`}
             >
               {value}
             </span>
-            <p className="text-base  text-white/80" aria-hidden="true">
-              {t(labelKey)}
+            <p
+              className="text-sm text-white/80 sm:text-base"
+              aria-hidden="true"
+            >
+              {label}
             </p>
           </li>
         ))}
