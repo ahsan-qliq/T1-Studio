@@ -11,14 +11,20 @@ interface HeroBannerProps {
   description?: string;
   cta?: string;
   imageSrc?: string;
+  videoSrc?: string;
 }
+
+// CSS stagger timings — delay increases per element so they cascade in.
+// animation-fill-mode: both keeps opacity:0 before the delay fires.
+const ANIM = "hero-fade-up 0.75s cubic-bezier(0.22,1,0.36,1) both";
 
 export async function HeroBanner({
   badge,
   heading,
   description,
   cta,
-  imageSrc = "/assets/images/Banner.png",
+  imageSrc,
+  videoSrc,
 }: HeroBannerProps) {
   const t = await getTranslations("Hero");
 
@@ -27,59 +33,79 @@ export async function HeroBanner({
       className="relative min-h-screen bg-zinc-950"
       aria-labelledby="hero-heading"
     >
-      {/* Background image */}
-      <Image
-        src={imageSrc}
-        alt={t("bgImageAlt")}
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover"
-      />
+      {/* Background — video takes priority over image when provided */}
+      {videoSrc ? (
+        <video
+          src={videoSrc}
+          poster="/assets/images/Home.webp"
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <Image
+          src={imageSrc ?? "/assets/images/Banner.webp"}
+          alt={t("bgImageAlt")}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+      )}
 
-      {/* Gradient overlay — darker on the content side */}
+      {/* Gradient overlay */}
       <div
-        className="absolute inset-0 bg-linear-to-r from-black/85 via-black/60 to-black/20"
+        className="absolute inset-0 bg-linear-to-t from-black/85 via-black/60 to-black/20"
         aria-hidden="true"
       />
 
       {/* Page content stacks inside the section: nav space + hero copy */}
-      <div className="relative z-10 flex min-h-screen flex-col">
-        {/* Reserved height for the absolutely-positioned Navbar */}
-        <div className="h-20 shrink-0" aria-hidden="true" />
+      <div className="relative z-10 flex min-h-screen flex-col max-w-225 mx-auto">
+        <div className="h-16 shrink-0 sm:h-20" aria-hidden="true" />
 
-        {/* Hero copy */}
-        <div className="flex flex-1 flex-col justify-center px-8 py-16 lg:px-16">
-          <div className="max-w-2xl">
-            {/* Category badge */}
-            <p className="mb-6 text-xs font-medium uppercase tracking-widest text-white/75 underline underline-offset-4 decoration-white/40">
+        {/* Hero copy — each element animates in via CSS (runs before JS hydration) */}
+        <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-8 sm:py-16 lg:px-16">
+          <div className="text-center">
+            <p
+              className="mb-6 text-xs font-medium uppercase tracking-widest text-white/75 underline underline-offset-4 decoration-white/40"
+              style={{ animation: ANIM, animationDelay: "0.15s" }}
+            >
               {badge}
             </p>
 
-            {/* Main heading */}
             <h1
               id="hero-heading"
-              className="mb-6 text-4xl font-bold leading-tight text-white lg:text-[3.25rem] lg:leading-[1.15]"
+              className="mb-6 text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl lg:text-[3.25rem] lg:leading-[1.15]"
+              style={{ animation: ANIM, animationDelay: "0.3s" }}
             >
               {heading}
             </h1>
 
-            {/* Supporting copy */}
-            <p className="mb-10 max-w-xl text-base leading-relaxed text-white/75 lg:text-lg">
-              {description}
-            </p>
-
-            {/* CTA */}
-            <Link
-              href="/contact"
-              className={cn(
-                buttonVariants({ variant: "gold", size: "lg" }),
-                "rounded-full gap-2 px-6 py-3 text-base h-auto",
-              )}
+            {/* <p
+              className="mb-10 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base lg:text-lg"
+              style={{ animation: ANIM, animationDelay: "0.45s" }}
             >
-              {cta}
-              <ArrowRight className="size-4" aria-hidden="true" />
-            </Link>
+              {description}
+            </p> */}
+
+            <div style={{ animation: ANIM, animationDelay: "0.6s" }}>
+              <Link
+                href="/contact"
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "group py-3",
+                )}
+              >
+                {cta}
+                <ArrowRight
+                  className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
           </div>
         </div>
       </div>
