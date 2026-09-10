@@ -33,6 +33,8 @@ import {
 import { createElement } from "react";
 
 import type { FeatureCard } from "@/components/sections/WhyT1Section";
+import type { WhyT1GridFeature } from "@/components/sections/WhyT1GridSection";
+
 import type { CarouselCard } from "@/components/sections/CarouselSection";
 import type { SpaceCard } from "@/components/sections/FeaturedSpaces";
 import type { AccordionSpace } from "@/components/sections/SpacesAccordionSection";
@@ -41,6 +43,13 @@ import type { SignatureProject } from "@/components/sections/SignatureProjectsSe
 import type { ComparisonColumn } from "@/components/sections/ComparisonSection";
 
 type Translator = (key: string) => string;
+
+export const getWhyT1GridFeatures = (t: Translator): WhyT1GridFeature[] => [
+  { iconName: 'Sun',        title: t("oneStudio"),        description: t("oneStudioDesc")        },
+  { iconName: 'Shield',     title: t("europeanQuality"),  description: t("europeanQualityDesc")  },
+  { iconName: 'RefreshCcw', title: t("premiumMaterials"), description: t("premiumMaterialsDesc") },
+  { iconName: 'Users',      title: t("expertDesigners"),  description: t("expertDesignersDesc")  },
+];
 
 export const getFeatureCards = (t: Translator): FeatureCard[] => [
   {
