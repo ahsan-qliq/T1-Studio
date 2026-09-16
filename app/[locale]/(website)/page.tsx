@@ -23,7 +23,7 @@ import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSec
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { SpacesAccordionSection } from "@/components/sections/SpacesAccordionSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
@@ -83,10 +83,8 @@ export default async function HomePage() {
         cta={tHero("cta")}
       />
 
-      {/* Stats — scroll reveal */}
-      <FadeUp>
-        <StatsBar namespace="Stats" />
-      </FadeUp>
+      {/* Stats — staggered scroll reveal per item */}
+      <StatsBarServer namespace="Stats" />
 
       {/* Services — stagger animation handled internally */}
       <ServicesSection
@@ -123,13 +121,11 @@ export default async function HomePage() {
         />
       </FadeUp>
 
-      {/* Comparison — scroll reveal */}
-      <FadeUp>
-        <ComparisonSection
-          heading={tComparison("heading")}
-          columns={comparisonColumns}
-        />
-      </FadeUp>
+      {/* Comparison — columns slide in from different directions */}
+      <ComparisonSection
+        heading={tComparison("heading")}
+        columns={comparisonColumns}
+      />
 
       {/* Testimonials — scroll reveal handled internally */}
       <TestimonialsSection
@@ -163,15 +159,11 @@ export default async function HomePage() {
         submitLabel={tDreamSpace("submitLabel")}
       />
 
-      {/* Referral — scroll reveal */}
-      <FadeUp>
-        <ReferralPartnerSection {...referralPartnerConfig} />
-      </FadeUp>
+      {/* Referral — animated internally */}
+      <ReferralPartnerSection {...referralPartnerConfig} />
 
-      {/* Awards — scroll reveal */}
-      <FadeUp>
-        <AwardsSection {...awardsConfig} />
-      </FadeUp>
+      {/* Awards — staggered logos */}
+      <AwardsSection {...awardsConfig} />
 
       {/* Blog — stagger animation handled internally */}
       <BlogSection {...blogConfig} />
