@@ -11,7 +11,7 @@ import { ComparisonSection } from "@/components/sections/ComparisonSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
 import { AwardsSection } from "@/components/sections/AwardsSection";
@@ -74,7 +74,7 @@ export default async function WhyT1Page() {
       </FadeUp>
       {/* Stats — scroll reveal */}
       <FadeUp>
-        <StatsBar namespace="Stats" />
+        <StatsBarServer namespace="Stats" />
       </FadeUp>
 
       {/* Services — stagger animation handled internally */}
