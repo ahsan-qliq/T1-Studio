@@ -12,7 +12,7 @@ import { LpHeroBanner } from "@/components/sections/LpHeroBanner";
 import { MilestoneTimelineSection } from "@/components/sections/MilestoneTimelineSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
 
@@ -82,7 +82,7 @@ export default async function LandingPage({ params }: Props) {
         submitLabel="Submit"
       />
       <FadeUp>
-        <StatsBar namespace="Stats" />
+        <StatsBarServer namespace="Stats" />
       </FadeUp>
       <AboutStorySection
         label={tStory("label")}
