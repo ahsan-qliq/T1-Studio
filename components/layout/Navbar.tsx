@@ -9,7 +9,6 @@ import { cn } from '@/lib/utils';
 const NAV_LINK_KEYS = [
   { key: 'spaces', href: '/spaces' },
   { key: 'projects', href: '/projects' },
-  { key: 'designStudio', href: '/design-studio' },
   { key: 'inspirations', href: '/inspiration' },
   { key: 'trade', href: '/trade' },
   { key: 'whyT1', href: '/why-t1' },
