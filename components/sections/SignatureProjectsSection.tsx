@@ -5,14 +5,13 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
-import { stagger } from "@/components/ui/animate";
 
 export interface SignatureProject {
   id: string;
   title: string;
   location: string;
   href: string;
-  image: { src: string; alt: string };
+  image: { src: string; alt: string; width: number; height: number };
 }
 
 interface SignatureProjectsSectionProps {
@@ -30,39 +29,81 @@ const GRID_PLACEMENT = [
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function ProjectCard({ project }: { project: SignatureProject }) {
+const cardVariants = {
+  hidden: { opacity: 0, y: 56, scale: 0.97 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.85, ease: EASE, delay: i * 0.14 },
+  }),
+};
+
+function ProjectCard({ project, index }: { project: SignatureProject; index: number }) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref as React.RefObject<Element>, { once: true, margin: '-80px' });
+
   return (
-    <article>
+    <motion.article
+      ref={ref}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate={inView ? 'show' : 'hidden'}
+    >
       <Link
         href={project.href}
         aria-label={`${project.title} — ${project.location}`}
-        className="group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        className="group relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       >
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div
+          className="relative w-full overflow-hidden"
+          style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
+        >
+          {/* Image — scales on hover */}
           <Image
             src={project.image.src}
             alt={project.image.alt}
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+            className="object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-in-out motion-safe:group-hover:scale-[1.07]"
           />
+
+          {/* Base gradient */}
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 transition-opacity duration-500 group-hover:opacity-80"
             style={{
               background:
-                "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 45%, transparent 75%)",
+                "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 50%, transparent 80%)",
             }}
             aria-hidden="true"
           />
-          <div className="absolute bottom-0 inset-x-0 p-6">
+
+          {/* Hover tint overlay */}
+          <div
+            className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/20"
+            aria-hidden="true"
+          />
+
+          {/* Text block — lifts slightly on hover */}
+          <div className="absolute inset-x-0 bottom-0 p-6 motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:-translate-y-1">
             <h3 className="mb-1 text-2xl font-bold leading-tight text-white sm:text-3xl">
               {project.title}
             </h3>
-            <p className="text-sm text-white/75">{project.location}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-white/75">{project.location}</p>
+              {/* Arrow — slides in from left + fades on hover */}
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-full border border-white/30 bg-white/10 opacity-0 backdrop-blur-sm motion-safe:translate-x-3 motion-safe:transition motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:translate-x-0 motion-safe:group-hover:opacity-100"
+                aria-hidden="true"
+              >
+                <ArrowRight className="size-4 text-white" />
+              </span>
+            </div>
           </div>
         </div>
       </Link>
-    </article>
+    </motion.article>
   );
 }
 
@@ -74,12 +115,6 @@ export function SignatureProjectsSection({
 }: SignatureProjectsSectionProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef as React.RefObject<Element>, {
-    once: true,
-    margin: '-60px',
-  });
-
-  const gridRef = useRef<HTMLUListElement>(null);
-  const gridInView = useInView(gridRef as React.RefObject<Element>, {
     once: true,
     margin: '-60px',
   });
@@ -99,38 +134,33 @@ export function SignatureProjectsSection({
         ref={headingRef}
         id="signature-projects-heading"
         className="mb-12 text-center text-4xl font-bold text-white sm:text-5xl lg:mb-16"
-        initial={{ opacity: 0, y: 24 }}
+        initial={{ opacity: 0, y: 32 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7, ease: EASE }}
+        transition={{ duration: 0.8, ease: EASE }}
       >
         {heading}
       </motion.h2>
 
-      <motion.ul
-        ref={gridRef}
+      <ul
         role="list"
-        className="grid grid-cols-1 gap-6 lg:grid-cols-4 lg:gap-8"
-        variants={stagger.container}
-        initial="hidden"
-        animate={gridInView ? 'show' : 'hidden'}
+        className="grid grid-cols-1 gap-y-6 lg:grid-cols-4 lg:gap-y-8"
       >
         {projects.map((project, i) => (
-          <motion.li
+          <li
             key={project.id}
             className={GRID_PLACEMENT[i] ?? ""}
-            variants={stagger.item}
           >
-            <ProjectCard project={project} />
-          </motion.li>
+            <ProjectCard project={project} index={i} />
+          </li>
         ))}
-      </motion.ul>
+      </ul>
 
       <motion.div
         ref={ctaRef}
         className="mt-14 flex justify-center"
         initial={{ opacity: 0, y: 20 }}
         animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: EASE }}
+        transition={{ duration: 0.65, ease: EASE, delay: 0.2 }}
       >
         <Link
           href={viewAllHref}
