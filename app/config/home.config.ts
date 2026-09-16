@@ -13,16 +13,6 @@ import {
   CheckCircle2,
   TrendingUp,
   RefreshCw,
-  Star,
-  Award,
-  Video,
-  Check,
-  UserPlus,
-  Handshake,
-  Eye,
-  Zap,
-  UserCheck,
-  Gift,
 } from "lucide-react";
 
 import {
@@ -266,21 +256,21 @@ export const getSignatureProjects = (t: Translator): SignatureProject[] => [
     title: t("jumeirahGateTitle"),
     location: t("jumeirahGateLocation"),
     href: "/projects/jumeirah-gate-dubai",
-    image: { src: "/assets/images/why-t1.webp", alt: t("jumeirahGateAlt") },
+    image: { src: "/assets/images/why-t1.webp", alt: t("jumeirahGateAlt"), width: 700, height: 500 },
   },
   {
     id: "blue-waters",
     title: t("blueWatersTitle"),
     location: t("blueWatersLocation"),
     href: "/projects/blue-waters-dubai",
-    image: { src: "/assets/images/why-t1.webp", alt: t("blueWatersAlt") },
+    image: { src: "/assets/images/why-t1.webp", alt: t("blueWatersAlt"), width: 280, height: 180 },
   },
   {
     id: "al-yasmeen",
     title: t("alYasmeenTitle"),
     location: t("alYasmeenLocation"),
     href: "/projects/al-yasmeen-sharjah",
-    image: { src: "/assets/images/why-t1.webp", alt: t("alYasmeenAlt") },
+    image: { src: "/assets/images/why-t1.webp", alt: t("alYasmeenAlt"), width: 560, height: 480 },
   },
 ];
 
@@ -502,57 +492,21 @@ export const getReferralPartnerConfig = (t: Translator) => ({
   ctaHref: "/referral-partner",
 
   benefits: [
-    {
-      label: t("benefit1"),
-      icon: Gift,
-    },
-    {
-      label: t("benefit2"),
-      icon: UserCheck,
-    },
-    {
-      label: t("benefit3"),
-      icon: Zap,
-    },
-    {
-      label: t("benefit4"),
-      icon: Eye,
-    },
-    {
-      label: t("benefit5"),
-      icon: Handshake,
-    },
-    {
-      label: t("benefit6"),
-      icon: UserPlus,
-    },
+    { label: t("benefit1"), iconName: "Gift" },
+    { label: t("benefit2"), iconName: "UserCheck" },
+    { label: t("benefit3"), iconName: "Zap" },
+    { label: t("benefit4"), iconName: "Eye" },
+    { label: t("benefit5"), iconName: "Handshake" },
+    { label: t("benefit6"), iconName: "UserPlus" },
   ],
 
   steps: [
-    {
-      label: t("step1"),
-      icon: Check,
-    },
-    {
-      label: t("step2"),
-      icon: Video,
-    },
-    {
-      label: t("step3"),
-      icon: Award,
-    },
-    {
-      label: t("step4"),
-      icon: Star,
-    },
-    {
-      label: t("step5"),
-      icon: CheckCircle2,
-    },
-    {
-      label: t("step6"),
-      icon: TrendingUp,
-    },
+    { label: t("step1"), iconName: "Check" },
+    { label: t("step2"), iconName: "Video" },
+    { label: t("step3"), iconName: "Award" },
+    { label: t("step4"), iconName: "Star" },
+    { label: t("step5"), iconName: "CheckCircle2" },
+    { label: t("step6"), iconName: "TrendingUp" },
   ],
 });
 
