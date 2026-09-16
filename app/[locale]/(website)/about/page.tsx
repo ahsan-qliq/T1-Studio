@@ -15,7 +15,7 @@ import {
   type Milestone,
 } from "@/components/sections/MilestoneTimelineSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { TeamSection } from "@/components/sections/TeamSection";
 import { type TeamMember } from "@/components/sections/TeamSection";
 import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
@@ -113,7 +113,7 @@ export default async function AboutPage() {
         ]}
       />
       <FadeUp>
-        <StatsBar namespace="Stats" />
+        <StatsBarServer namespace="Stats" />
       </FadeUp>
       <TeamSection
         heading={tTeam("heading")}
