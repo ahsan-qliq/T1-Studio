@@ -18,7 +18,7 @@ import { SignatureProjectsSection } from "@/components/sections/SignatureProject
 import { WhyT1GridSection } from "@/components/sections/WhyT1GridSection";
 import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
 import { SpaceIntroSection } from "@/components/sections/SpaceIntroSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/dist/client/components/not-found";
@@ -66,7 +66,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         cta={tHero("cta")}
       />
       <FadeUp>
-        <StatsBar namespace="ProjectStats" />
+        <StatsBarServer namespace="ProjectStats" />
       </FadeUp>
       <SpaceIntroSection
         label={spaceDetail.overviewLabel}
