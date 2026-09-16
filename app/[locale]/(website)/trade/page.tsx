@@ -12,7 +12,7 @@ import { MaterialInspirationSection } from "@/components/sections/MaterialInspir
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import { StatsBar } from "@/components/sections/StatsBar";
+import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
 import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
@@ -96,7 +96,7 @@ export default async function TradePage() {
         />
       </FadeUp>
       <FadeUp>
-        <StatsBar namespace="Stats" />
+        <StatsBarServer namespace="Stats" />
       </FadeUp>
       <SignatureProjectsSection
         heading={tprojects("heading")}
@@ -110,7 +110,7 @@ export default async function TradePage() {
         services={serviceItems}
       />
       <FadeUp>
-        <StatsBar namespace="Stats" />
+        <StatsBarServer namespace="Stats" />
       </FadeUp>
       <ServicesSection
         label={tServices("label")}
