@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Link } from '@/app/i18n/navigation';
 import { LocaleSwitcher } from '@/components/layout/LocaleSwitcher';
 import { NavMobileMenu } from '@/components/layout/NavMobileMenu';
+import { NavbarShell } from '@/components/layout/NavbarShell';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -24,10 +25,10 @@ export async function Navbar() {
   }));
 
   return (
-    <header role="banner" className="relative z-50 w-full">
+    <NavbarShell>
       <nav
         aria-label={t('mainNav')}
-        className="flex items-center justify-between py-4 sm:py-6"
+        className="page-wrap flex items-center justify-between py-4 sm:py-6"
       >
         {/* Logo */}
         <Link
@@ -82,6 +83,6 @@ export async function Navbar() {
           />
         </div>
       </nav>
-    </header>
+    </NavbarShell>
   );
 }
