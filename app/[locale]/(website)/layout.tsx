@@ -18,9 +18,7 @@ export default function WebsiteLayout({
         className="fixed inset-0 -z-10 object-cover"
         aria-hidden="true"
       />
-      <div className="page-wrap absolute top-0 left-0 right-0 z-50">
-        <Navbar />
-      </div>
+      <Navbar />
       {children}
       <Footer />
     </div>
