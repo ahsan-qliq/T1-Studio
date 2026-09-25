@@ -31,8 +31,10 @@ export function generateStaticParams() {
   return SPACE_SLUGS.map((slug) => ({ slug }));
 }
 
+export const revalidate = 3600;
+
 export default async function ProjectDetailsPage({ params }: Props) {
-  const { slug } = await params;
+  const { slug, locale } = await params;
   const [
     tHero,
     tDetail,
@@ -43,14 +45,14 @@ export default async function ProjectDetailsPage({ params }: Props) {
     tDreamSpace,
     tTestimonials,
   ] = await Promise.all([
-    getTranslations("Hero"),
-    getTranslations("SpaceDetail"),
-    getTranslations("BeforeAfter"),
-    getTranslations("SpacesCarousel"),
-    getTranslations("SignatureProject"),
-    getTranslations("WhyT1"),
-    getTranslations("DreamSpace"),
-    getTranslations("Testimonials"),
+    getTranslations({ locale, namespace: "Hero" }),
+    getTranslations({ locale, namespace: "SpaceDetail" }),
+    getTranslations({ locale, namespace: "BeforeAfter" }),
+    getTranslations({ locale, namespace: "SpacesCarousel" }),
+    getTranslations({ locale, namespace: "SignatureProject" }),
+    getTranslations({ locale, namespace: "WhyT1" }),
+    getTranslations({ locale, namespace: "DreamSpace" }),
+    getTranslations({ locale, namespace: "Testimonials" }),
   ]);
   const spaceDetail = getSpaceDetailConfig(slug, tDetail);
   if (!spaceDetail) notFound();
