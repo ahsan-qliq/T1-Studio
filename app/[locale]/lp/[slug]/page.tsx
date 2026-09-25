@@ -20,8 +20,10 @@ interface Props {
   params: Promise<{ slug: string; locale: string }>;
 }
 
+export const revalidate = 3600;
+
 export default async function LandingPage({ params }: Props) {
-  await params;
+  const { locale } = await params;
   const [
     tHero,
     tStory,
@@ -32,14 +34,14 @@ export default async function LandingPage({ params }: Props) {
     tFaq,
     tDreamSpace,
   ] = await Promise.all([
-    getTranslations("Hero"),
-    getTranslations("AboutStory"),
-    getTranslations("SignatureProject"),
-    getTranslations("MilestoneTimeline"),
-    getTranslations("Services"),
-    getTranslations("Testimonials"),
-    getTranslations("Faq"),
-    getTranslations("DreamSpace"),
+    getTranslations({ locale, namespace: "Hero" }),
+    getTranslations({ locale, namespace: "AboutStory" }),
+    getTranslations({ locale, namespace: "SignatureProject" }),
+    getTranslations({ locale, namespace: "MilestoneTimeline" }),
+    getTranslations({ locale, namespace: "Services" }),
+    getTranslations({ locale, namespace: "Testimonials" }),
+    getTranslations({ locale, namespace: "Faq" }),
+    getTranslations({ locale, namespace: "DreamSpace" }),
   ]);
 
   const signatureProjects = getSignatureProjects(tprojects);
