@@ -47,7 +47,7 @@ export async function HeroBanner({
         />
       ) : (
         <Image
-          src={imageSrc ?? "/assets/images/banner-project.png"}
+          src={imageSrc ?? "/assets/images/Banner-project.png"}
           alt={t("bgImageAlt")}
           fill
           priority
