@@ -1,63 +1,114 @@
-import { getTranslations } from "next-intl/server";
+import { getContactPageCms } from "@/lib/cms/contact";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { getDreamSpaceConfig, getServiceItems } from "@/app/config/home.config";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
-import { getFaqConfig } from "@/app/config/space.config";
-import { FaqSection } from "@/components/sections/FaqSection";
 import { MapSection } from "@/components/sections/MapSection";
+import { FaqSection } from "@/components/sections/FaqSection";
 
+export const revalidate = 3600;
 
-export default async function ContactPage() {
-  const [tHero, tServices, tDreamSpace, tFaq] = await Promise.all([
-    getTranslations("Hero"),
-    getTranslations("Services"),
-    getTranslations("DreamSpace"),
-    getTranslations("Faq"),
-  ]);
-  const serviceItems = getServiceItems(tServices);
-  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
-  const faqConfig = getFaqConfig(tFaq);
+export default async function ContactPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const cms = await getContactPageCms(locale);
+  const s = cms?.sections;
+
+  const cta = (
+    s as typeof s & {
+      consultationCTA?: {
+        fields: Array<{
+          name: string;
+          label?: unknown;
+          options?: Array<{ value: string; label: unknown }>;
+        }>;
+        contactForm?: { isVisible?: boolean };
+        heading?: unknown;
+        image?: { url?: string; alt?: unknown };
+        tabs: Array<{ value: string; label: unknown }>;
+        submitButtonLabel?: unknown;
+      };
+    }
+  )?.consultationCTA;
+  const getField = (name: string) =>
+    cta?.fields.find((f: { name: string }) => f.name === name);
+  const mapFieldOptions = (name: string) =>
+    getField(name)?.options?.map((o: { value: string; label: unknown }) => ({
+      value: o.value,
+      label: o.label as string,
+    })) ?? [];
   return (
     <main>
-      <HeroBanner
-        badge={tHero("badge")}
-        heading={tHero("heading")}
-        description={tHero("description")}
-        cta={tHero("cta")}
-      />
-      <ServicesSection
-        label={tServices("label")}
-        heading={tServices("heading")}
-        services={serviceItems}
-      />
+      {s?.hero?.isVisible && (
+        <HeroBanner
+          badge={s.hero.eyebrow as string}
+          heading={s.hero.heading as string}
+          description={s.hero.description as string}
+          cta={s.hero.primaryButton.label as string}
+          imageSrc={s.hero.backgroundImage.url || undefined}
+        />
+      )}
 
-      <DreamSpaceSection
-        heading={tDreamSpace("heading")}
-        imageSrc={dreamSpaceConfig.imageSrc}
-        imageAlt={tDreamSpace("imageAlt")}
-        audienceTabs={dreamSpaceConfig.audienceTabs}
-        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
-        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
-        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
-        timelineLabel={tDreamSpace("timelineLabel")}
-        timelineOptions={dreamSpaceConfig.timelineOptions}
-        firstNameLabel={tDreamSpace("firstNameLabel")}
-        lastNameLabel={tDreamSpace("lastNameLabel")}
-        emailLabel={tDreamSpace("emailLabel")}
-        phoneLabel={tDreamSpace("phoneLabel")}
-        submitLabel={tDreamSpace("submitLabel")}
-      />
-                  <MapSection
-        embedUrl="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3605.8!2d55.5136!3d25.4052!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e5f5b0e4b4b4b4b%3A0x0!2sAjman+Corniche!5e0!3m2!1sen!2sae!4v1000000000000"
-        title="T1 Studio location — Ajman Corniche, UAE"
-        height={480}
-      />
-      <FaqSection {...faqConfig} />
+      {s?.contactInfo?.isVisible && (
+        <ServicesSection
+          label={s.contactInfo.eyebrow as string}
+          heading={s.contactInfo.heading as string}
+          services={s.contactInfo.services
+            .filter((svc) => svc.isVisible)
+            .map((svc) => ({
+              title: svc.title as string,
+              subtitle: svc.description as string,
+            }))}
+        />
+      )}
 
+      {cta?.contactForm?.isVisible && (
+        <DreamSpaceSection
+          heading={cta.heading as string}
+          imageSrc={cta.image?.url || ""}
+          imageAlt={cta.image?.alt as string}
+          audienceTabs={cta.tabs.map((tab: { value: string; label: unknown }) => ({
+            id: tab.value,
+            label: tab.label as string,
+          }))}
+          propertyTypeLabel={getField("propertyType")?.label as string ?? ""}
+          propertyTypeOptions={mapFieldOptions("propertyType")}
+          spaceRequiredLabel={getField("spaceRequired")?.label as string ?? ""}
+          spaceRequiredOptions={mapFieldOptions("spaceRequired")}
+          typeOfServiceLabel={getField("typeOfService")?.label as string ?? ""}
+          typeOfServiceOptions={mapFieldOptions("typeOfService")}
+          timelineLabel={getField("timeline")?.label as string ?? ""}
+          timelineOptions={mapFieldOptions("timeline")}
+          firstNameLabel={getField("firstName")?.label as string ?? ""}
+          lastNameLabel={getField("lastName")?.label as string ?? ""}
+          emailLabel={getField("email")?.label as string ?? ""}
+          phoneLabel={getField("phone")?.label as string ?? ""}
+          submitLabel={cta.submitButtonLabel as string}
+        />
+      )}
+
+      {s?.location?.isVisible && s.location.embedUrl && (
+        <MapSection
+          embedUrl={s.location.embedUrl}
+          title={s.location.title}
+          height={s.location.height || 480}
+        />
+      )}
+
+      {s?.faq?.isVisible && (
+        <FaqSection
+          label={s.faq.eyebrow as string}
+          heading={s.faq.heading as string}
+          items={s.faq.faqs
+            .filter((f) => f.isVisible)
+            .map((f) => ({
+              question: f.question as string,
+              answer: f.answer as string,
+            }))}
+        />
+      )}
     </main>
   );
 }
