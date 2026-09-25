@@ -1,116 +1,113 @@
+import { getBlogDetailCms } from "@/lib/cms/blog-detail";
 import { HeroBanner } from "@/components/sections/HeroBanner";
-import { getTranslations } from "next-intl/server";
-
-import { getFaqConfig } from "@/app/config/space.config";
-import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
-import {
-  getProjectFilterOptions,
-  getProjects,
-} from "@/app/config/project.config";
-import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
-import { FaqSection } from "@/components/sections/FaqSection";
-import {
-  getAccordionSpaces,
-  getDreamSpaceConfig,
-  getReferralPartnerConfig,
-  getSignatureProjects,
-} from "@/app/config/home.config";
-import { SpacesAccordionSection } from "@/components/sections/SpacesAccordionSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import {
-  BlogDetailContentSection,
-  type BlogContentBlock,
-} from "@/components/sections/BlogDetailContentSection";
+import { BlogDetailContentSection } from "@/components/sections/BlogDetailContentSection";
 import { BlogAuthorQuoteSection } from "@/components/sections/BlogAuthorQuoteSection";
 
-export default async function BlogsDetailsPage() {
-  const [tHero, tDreamSpace, tprojects, tBlogDetail] = await Promise.all([
-    getTranslations("Hero"),
-    getTranslations("DreamSpace"),
-    getTranslations("SignatureProject"),
-    getTranslations("BlogDetail"),
-  ]);
+const PROJECT_SIZES = [
+  { width: 700, height: 500 },
+  { width: 280, height: 180 },
+  { width: 560, height: 480 },
+];
 
-  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
-  const signatureProjects = getSignatureProjects(tprojects);
+export const revalidate = 3600;
 
-  const blogContentBlocks: BlogContentBlock[] = [
-    {
-      label: tBlogDetail("block1Label"),
-      body: tBlogDetail("block1Body"),
-      image: {
-        src: "/assets/images/Banner.webp",
-        alt: tBlogDetail("block1ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block1BodyAfter"),
-    },
-    {
-      label: tBlogDetail("block2Label"),
-      body: tBlogDetail("block2Body"),
-      image: {
-        src: "/assets/images/Home.webp",
-        alt: tBlogDetail("block2ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block2BodyAfter"),
-    },
-    {
-      label: tBlogDetail("block3Label"),
-      body: tBlogDetail("block3Body"),
-      image: {
-        src: "/assets/images/why-t1.webp",
-        alt: tBlogDetail("block3ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block3BodyAfter"),
-    },
-  ];
+export default async function BlogsDetailsPage({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
+  const { locale, slug } = await params;
+  const cms = await getBlogDetailCms(slug, locale);
+  const s = cms?.sections;
+
+  const cta = s?.consultationCTA;
+  const getField = (name: string) => cta?.fields.find((f) => f.name === name);
+  const mapFieldOptions = (name: string) =>
+    getField(name)?.options?.map((o) => ({ value: o.value, label: o.label as string })) ?? [];
 
   return (
     <main>
-      <HeroBanner
-        badge={tHero("badge")}
-        heading={tHero("heading")}
-        description={tHero("description")}
-        cta={tHero("cta")}
-      />
-      <BlogDetailContentSection blocks={blogContentBlocks} />
+      {s?.hero?.isVisible && (
+        <HeroBanner
+          badge={s.hero.eyebrow as string}
+          heading={s.hero.heading as string}
+          description={s.hero.description as string}
+          cta={s.hero.primaryButton.label as string}
+          imageSrc={s.hero.backgroundImage.url || undefined}
+        />
+      )}
 
-      <DreamSpaceSection
-        heading={tDreamSpace("heading")}
-        imageSrc={dreamSpaceConfig.imageSrc}
-        imageAlt={tDreamSpace("imageAlt")}
-        audienceTabs={dreamSpaceConfig.audienceTabs}
-        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
-        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
-        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
-        timelineLabel={tDreamSpace("timelineLabel")}
-        timelineOptions={dreamSpaceConfig.timelineOptions}
-        firstNameLabel={tDreamSpace("firstNameLabel")}
-        lastNameLabel={tDreamSpace("lastNameLabel")}
-        emailLabel={tDreamSpace("emailLabel")}
-        phoneLabel={tDreamSpace("phoneLabel")}
-        submitLabel={tDreamSpace("submitLabel")}
-      />
-      <SignatureProjectsSection
-        heading={tprojects("heading")}
-        viewAllLabel={tprojects("viewAllLabel")}
-        viewAllHref="/projects"
-        projects={signatureProjects}
-      />
-      <BlogAuthorQuoteSection
-        quote={tBlogDetail("authorQuote")}
-        authorName={tBlogDetail("authorName")}
-        authorRole={tBlogDetail("authorRole")}
-        authorExperience={tBlogDetail("authorExperience")}
-        authorImage={{
-          src: "/assets/images/Banner.webp",
-          alt: tBlogDetail("authorImageAlt"),
-        }}
-      />
+      {s?.contentBlocks?.isVisible && (
+        <BlogDetailContentSection
+          blocks={s.contentBlocks.blocks.map((block) => ({
+            label: block.label,
+            body: block.body,
+            image: { src: block.image.url, alt: block.image.alt as string },
+            bodyAfter: block.bodyAfter,
+          }))}
+        />
+      )}
+
+      {cta?.isVisible && (
+        <DreamSpaceSection
+          heading={cta.heading as string}
+          imageSrc={cta.image?.url || ""}
+          imageAlt={cta.image?.alt as string}
+          audienceTabs={cta.tabs.map((tab) => ({
+            id: tab.value,
+            label: tab.label as string,
+          }))}
+          propertyTypeLabel={getField("propertyType")?.label as string ?? ""}
+          propertyTypeOptions={mapFieldOptions("propertyType")}
+          spaceRequiredLabel={getField("spaceRequired")?.label as string ?? ""}
+          spaceRequiredOptions={mapFieldOptions("spaceRequired")}
+          typeOfServiceLabel={getField("typeOfService")?.label as string ?? ""}
+          typeOfServiceOptions={mapFieldOptions("typeOfService")}
+          timelineLabel={getField("timeline")?.label as string ?? ""}
+          timelineOptions={mapFieldOptions("timeline")}
+          firstNameLabel={getField("firstName")?.label as string ?? ""}
+          lastNameLabel={getField("lastName")?.label as string ?? ""}
+          emailLabel={getField("email")?.label as string ?? ""}
+          phoneLabel={getField("phone")?.label as string ?? ""}
+          submitLabel={cta.submitButtonLabel as string}
+        />
+      )}
+
+      {s?.signatureProjects?.isVisible && (
+        <SignatureProjectsSection
+          heading={s.signatureProjects.heading as string}
+          viewAllLabel={s.signatureProjects.button.label as string}
+          viewAllHref="/projects"
+          projects={s.signatureProjects.projects
+            .filter((pr) => pr.isVisible)
+            .map((pr, i) => ({
+              id: pr._id,
+              title: pr.title as string,
+              location: pr.location as string,
+              href: pr.href,
+              image: {
+                src: pr.image.url,
+                alt: pr.image.alt as string,
+                ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
+              },
+            }))}
+        />
+      )}
+
+      {s?.author?.isVisible && (
+        <BlogAuthorQuoteSection
+          quote={s.author.quote}
+          authorName={s.author.name}
+          authorRole={s.author.role}
+          authorExperience={s.author.experience}
+          authorImage={{
+            src: s.author.image.url,
+            alt: s.author.image.alt as string,
+          }}
+        />
+      )}
     </main>
   );
 }
