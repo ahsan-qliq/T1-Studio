@@ -5,8 +5,15 @@ import {
   type PrivacySection,
 } from "@/components/sections/PrivacyPolicySection";
 
-export default async function TermsConditionsPage() {
-  const t = await getTranslations("TermsConditions");
+export const revalidate = 3600;
+
+export default async function TermsConditionsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "TermsConditions" });
 
   const sections: PrivacySection[] = [
     {
