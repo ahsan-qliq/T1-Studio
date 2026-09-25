@@ -633,17 +633,27 @@ export interface CmsBlogsPage {
 
 // ─── Before / After ───────────────────────────────────────────────────────────
 
+export interface CmsBeforeAfterItem {
+  title: string | CmsBilingualText;
+  description: string | CmsBilingualText;
+  beforeImage: CmsImage;
+  afterImage: CmsImage;
+  projectHref: string;
+  isVisible: boolean;
+}
+
 export interface CmsBeforeAfterSection {
   isVisible: boolean;
   order: number;
-  heading: string;
-  beforeLabel: string;
-  afterLabel: string;
-  handleLabel: string;
-  beforeImage: CmsImage;
-  afterImage: CmsImage;
-}
 
+  heading: string | CmsBilingualText;
+  description?: string | CmsBilingualText;
+
+  items: CmsBeforeAfterItem[];
+
+  autoplay?: boolean;
+  showNavigation?: boolean;
+}
 // ─── Full projects page ───────────────────────────────────────────────────────
 
 export interface CmsProjectsPageSections {

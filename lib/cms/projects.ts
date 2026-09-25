@@ -3,7 +3,7 @@ import type { CmsProjectsPage } from "./types";
 
 export async function getProjectsPageCms(locale: string): Promise<CmsProjectsPage | null> {
   return cmsGet<CmsProjectsPage>(
-    "/projects-page",
+    "/project-page",
     { slug: "projects", lang: locale },
     { tags: [`projects-page-${locale}`] },
   );
