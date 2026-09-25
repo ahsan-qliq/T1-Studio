@@ -3,22 +3,22 @@ type Translator = (key: string) => string;
 // ─── Space detail ─────────────────────────────────────────────────────────────
 
 type SpaceKey =
-  | 'kitchen'
+  | 'kitchens'
   | 'wardrobes'
   | 'livingRooms'
   | 'bedrooms'
   | 'bathrooms'
-  | 'homeOffice'
+  | 'homeOffices'
   | 'outdoorLiving'
   | 'bespokeJoinery';
 
 const SLUG_TO_KEY: Record<string, SpaceKey> = {
-  'kitchen': 'kitchen',
+  'kitchens': 'kitchens',
   'wardrobes': 'wardrobes',
   'living-rooms': 'livingRooms',
   'bedrooms': 'bedrooms',
   'bathrooms': 'bathrooms',
-  'home-office': 'homeOffice',
+  'home-offices': 'homeOffices',
   'outdoor-living': 'outdoorLiving',
   'bespoke-joinery': 'bespokeJoinery',
 };
