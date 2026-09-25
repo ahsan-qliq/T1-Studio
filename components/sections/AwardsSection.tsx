@@ -56,7 +56,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
         >
           {logos.map((logo, i) => (
             <motion.li
-              key={logo.alt}
+              key={logo.alt || i}
               className="flex items-center justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
