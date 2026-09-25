@@ -44,13 +44,15 @@ function InspirationTile({
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.9, ease: EASE, delay: index * 0.1 }}
     >
-      <Image
-        src={item.src}
-        alt={item.alt}
-        fill
-        sizes={sizes}
-        className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
-      />
+      {item.src && (
+        <Image
+          src={item.src}
+          alt={item.alt}
+          fill
+          sizes={sizes}
+          className="object-cover transition-transform duration-700 ease-in-out hover:scale-105"
+        />
+      )}
 
       <div
         aria-hidden="true"
