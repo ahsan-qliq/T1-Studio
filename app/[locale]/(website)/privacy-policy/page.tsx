@@ -5,8 +5,15 @@ import {
   type PrivacySection,
 } from "@/components/sections/PrivacyPolicySection";
 
-export default async function PrivacyPolicyPage() {
-  const t = await getTranslations("PrivacyPolicy");
+export const revalidate = 3600;
+
+export default async function PrivacyPolicyPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "PrivacyPolicy" });
 
   const sections: PrivacySection[] = [
     {
