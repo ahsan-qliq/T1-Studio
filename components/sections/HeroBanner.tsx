@@ -27,7 +27,6 @@ export async function HeroBanner({
   videoSrc,
 }: HeroBannerProps) {
   const t = await getTranslations("Hero");
-
   return (
     <section
       className="relative min-h-screen bg-zinc-950"
@@ -47,7 +46,7 @@ export async function HeroBanner({
         />
       ) : (
         <Image
-          src={imageSrc ?? "/assets/images/Banner.webp"}
+          src={imageSrc ?? ''}
           alt={t("bgImageAlt")}
           fill
           priority
