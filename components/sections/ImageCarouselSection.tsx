@@ -145,7 +145,7 @@ export function ImageCarouselSection({
     (index: number) => api?.scrollTo(index),
     [api],
   );
-
+console.log(slides, 150)
   if (!slides.length) return null;
 
   return (
