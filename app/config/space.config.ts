@@ -10,7 +10,8 @@ type SpaceKey =
   | 'bathrooms'
   | 'homeOffice'
   | 'outdoorLiving'
-  | 'bespokeJoinery';
+  | 'bespokeJoinery'
+  | 'nadiya'
 
 const SLUG_TO_KEY: Record<string, SpaceKey> = {
   'kitchen': 'kitchen',
@@ -21,6 +22,7 @@ const SLUG_TO_KEY: Record<string, SpaceKey> = {
   'home-office': 'homeOffice',
   'outdoor-living': 'outdoorLiving',
   'bespoke-joinery': 'bespokeJoinery',
+  'nadiya': 'nadiya'
 };
 
 export const SPACE_SLUGS = Object.keys(SLUG_TO_KEY);
@@ -75,7 +77,7 @@ export const getFaqConfig = (t: Translator) => ({
 });
 
 export const getCarouselSlides = (t: Translator) => [
-  { src: "/assets/images/spaces.png", alt: t("slide1Alt") },
-  { src: "/assets/images/Home.webp", alt: t("slide2Alt") },
-  { src: "/assets/images/why-t1.webp", alt: t("slide3Alt") },
+  { src: "/assets/images/gallery-01.png", alt: t("slide1Alt") },
+  { src: "/assets/images/gallery-02.png", alt: t("slide2Alt") },
+  { src: "/assets/images/gallery-03.png", alt: t("slide3Alt") },
 ];

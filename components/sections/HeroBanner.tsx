@@ -37,7 +37,7 @@ export async function HeroBanner({
       {videoSrc ? (
         <video
           src={videoSrc}
-          poster="/assets/images/Home.webp"
+          poster="/assets/images/project-details.jpg"
           autoPlay
           loop
           muted
@@ -47,7 +47,7 @@ export async function HeroBanner({
         />
       ) : (
         <Image
-          src={imageSrc ?? "/assets/images/Banner.webp"}
+          src={imageSrc ?? "/assets/images/project-details.jpg"}
           alt={t("bgImageAlt")}
           fill
           priority

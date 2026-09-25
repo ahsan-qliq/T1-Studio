@@ -93,6 +93,10 @@ export default async function SpaceDetailPage({ params }: Props) {
         description={spaceDetail.overviewDescription}
         image="/assets/images/Banner.webp"
         imageAlt={spaceDetail.heroImageAlt}
+        videos={[
+          { src: '/assets/videos/Video 1.mp4' },
+          { src: '/assets/videos/Video 2.mp4' },
+        ]}
       />
 
       <SpaceApproachSection

@@ -18,7 +18,7 @@ export default function WebsiteLayout({
         className="fixed inset-0 -z-10 object-cover"
         aria-hidden="true"
       />
-      <Navbar />
+      {/* <Navbar /> */}
       {children}
       <Footer />
     </div>

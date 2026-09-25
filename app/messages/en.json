@@ -17,7 +17,7 @@
   },
   "Hero": {
     "badge": "LUXURY INTERIOR DESIGN • DESIGN & BUILD • PREMIUM FIT-OUT",
-    "heading": "Luxury Interior Design, Design & Build for Exceptional Residential & Commercial Spaces",
+    "heading": "Nadia Saeed — Bespoke Villa Kitchen Renovation in Palm Jumeirah",
     "description": "From bespoke luxury kitchens and custom joinery to complete residential, hospitality and commercial interiors, T1 Studio delivers beautifully crafted spaces through integrated design, precision manufacturing and turnkey project delivery. Trusted by leading UAE developers for over two decades.",
     "cta": "Book Free Consultation",
     "bgImageAlt": "Luxury kitchen interior with circular pendant lights and a dark marble island"
@@ -448,10 +448,10 @@
     "sectionLabel": "About T1 Studio at a glance",
     "items": [
       { "value": "Villa",    "label": "Property Type" },
-      { "value": "400+",     "label": "Kitchens Delivered" },
-      { "value": "4 Weeks",  "label": "Timeline" },
-      { "value": "₿ 100K",  "label": "Total Budget" },
-      { "value": "4.5/5",   "label": "Client Rating" }
+      { "value": "400+",     "label": "Scope" },
+      { "value": "6 Weeks",  "label": "Timeline" },
+      { "value": "AED 185,000",  "label": "Total Budget" },
+      { "value": "5/5",   "label": "Client Rating" }
     ]
   },
   "ReferralPartner": {
@@ -700,7 +700,20 @@
     "bespokeJoinery_item2": "Wide range of wood species, veneers, lacquers and hardware finishes.",
     "bespokeJoinery_item3": "Integrated lighting, cable management and pull-out storage systems.",
     "bespokeJoinery_item4": "Designed in our studio and manufactured in our own workshop.",
-    "bespokeJoinery_item5": "Installed by skilled joiners to exact tolerances, on schedule."
+    "bespokeJoinery_item5": "Installed by skilled joiners to exact tolerances, on schedule.",
+
+    "nadiya_heroHeading": "Nadia Saeed — Bespoke Villa Kitchen Renovation",
+    "nadiya_heroDescription": "A complete kitchen transformation in Palm Jumeirah — designed around the client's love of entertaining, with a statement marble island, custom cabinetry and integrated appliances.",
+    "nadiya_overviewLabel": "Project Overview",
+    "nadiya_overviewHeading": "A Kitchen Built Around Life in Palm Jumeirah",
+    "nadiya_overviewDescription": "This full renovation replaced a dated kitchen with a bespoke, open-plan cooking and entertaining space. The design centres on a dramatic Calacatta marble island, hand-crafted cabinetry in a warm oak finish and a suite of integrated appliances — all delivered within a 10-week programme.",
+    "nadiya_heroImageAlt": "Luxury bespoke kitchen renovation in Palm Jumeirah villa",
+    "nadiya_approachHeading": "How We Approached the Nadia Project.",
+    "nadiya_item1": "Full site survey and brief alignment before any design work began.",
+    "nadiya_item2": "Calacatta marble island as the centrepiece, balancing aesthetics and function.",
+    "nadiya_item3": "Custom oak cabinetry with soft-close hardware and integrated appliances.",
+    "nadiya_item4": "10-week delivery programme with minimal disruption to the household.",
+    "nadiya_item5": "Post-completion walkthrough and full warranty on all joinery and finishes."
   },
   "BlogDetail": {
     "block1Label": "Overview",

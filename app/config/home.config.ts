@@ -396,7 +396,7 @@ export const getJourneySteps = (t: Translator): JourneyStep[] => [
 ];
 
 export const getDreamSpaceConfig = (t: Translator) => ({
-  imageSrc: "/assets/images/Banner.webp",
+  imageSrc: "/assets/images/contact.png",
 
   audienceTabs: [
     { id: "homeOwners", label: t("homeOwnersTab") },

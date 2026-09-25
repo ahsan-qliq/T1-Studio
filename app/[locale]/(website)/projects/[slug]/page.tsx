@@ -75,6 +75,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
         image="/assets/images/Banner.webp"
         imageAlt={spaceDetail.heroImageAlt}
         className="order-2 lg:order-1"
+        videos={[
+          { src: '/assets/videos/Video 1.mp4' },
+          { src: '/assets/videos/Video 2.mp4' },
+        ]}
       />
       <BeforeAfterSection
         heading={tBeforeAfter("heading")}
@@ -82,11 +86,11 @@ export default async function ProjectDetailsPage({ params }: Props) {
         afterLabel={tBeforeAfter("afterLabel")}
         handleLabel={tBeforeAfter("handleLabel")}
         beforeImage={{
-          src: "/assets/images/Banner.webp",
+          src: "/assets/images/before.png",
           alt: tBeforeAfter("beforeLabel"),
         }}
         afterImage={{
-          src: "/assets/images/growth.webp",
+          src: "/assets/images/after.png",
           alt: tBeforeAfter("afterLabel"),
         }}
       />
@@ -100,12 +104,12 @@ export default async function ProjectDetailsPage({ params }: Props) {
         heading={tDetail("materialInspirationHeading")}
         items={[
           {
-            src: "/assets/images/Banner.webp",
+            src: "/assets/images/mat-01.png",
             alt: spaceDetail.heroImageAlt,
             label: "Marble",
           },
           {
-            src: "/assets/images/why-t1.webp",
+            src: "/assets/images/mat-02.png",
             alt: spaceDetail.heroImageAlt,
             label: "Oak",
           },
