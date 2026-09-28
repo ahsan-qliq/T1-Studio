@@ -1,11 +1,13 @@
 import { getTranslations } from 'next-intl/server';
 import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
 import { Link } from '@/app/i18n/navigation';
 import { LocaleSwitcher } from '@/components/layout/LocaleSwitcher';
 import { NavMobileMenu } from '@/components/layout/NavMobileMenu';
 import { NavbarShell } from '@/components/layout/NavbarShell';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import logo from '@/public/assets/images/Logo.png';
 
 const NAV_LINK_KEYS = [
   { key: 'spaces', href: '/spaces' },
@@ -34,13 +36,9 @@ export async function Navbar() {
         <Link
           href="/"
           aria-label={t('logoLabel')}
-          className="flex items-center gap-2 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-sm"
+          className="shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 rounded-sm"
         >
-          <span className="text-xl font-semibold text-white tracking-tight select-none">
-            T<span className="text-gold">.</span>one
-          </span>
-          <span className="text-white/40 text-xl font-light select-none" aria-hidden="true">|</span>
-          <span className="text-white text-xl font-light tracking-widest select-none">keller</span>
+          <Image src={logo} alt={t('logoLabel')} height={36} priority />
         </Link>
 
         {/* Primary nav links — desktop only */}
