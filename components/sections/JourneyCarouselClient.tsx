@@ -178,7 +178,8 @@ export function JourneyCarouselClient({
       </div>
 
       {/* Cards viewport — clips to show only N cards */}
-      <div className="overflow-hidden">
+      {/* sm:mx-14 (56px) matches the button (44px) + gap (12px) offset so circles align above card centers */}
+      <div className="overflow-hidden sm:mx-14">
         <ol
           ref={trackRef}
           aria-label={cardsLabel}
