@@ -31,8 +31,20 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
 
-const JOURNEY_ICONS: LucideIcon[] = [Globe, Lightbulb, Building2, Rocket, TrendingUp];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [User, Maximize2, Shield, CheckCircle2, RefreshCw];
+const JOURNEY_ICONS: LucideIcon[] = [
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+];
+const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+];
 
 const PROJECT_SIZES = [
   { width: 700, height: 500 },
@@ -57,35 +69,35 @@ export default async function WhyT1Page({
 
   const s = cms?.sections;
 
-  const journeySteps = s?.journey?.steps
-    .filter((step) => step.isVisible)
-    .map((step, i) => ({
-      number: String(i + 1).padStart(2, "0"),
-      icon: JOURNEY_ICONS[i] ?? Globe,
-      title: step.title as string,
-      subtitle: step.subtitle as string,
-      description: step.description as string,
-      advantageText: step.advantageTitle as string,
-      highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
-      highlightText: step.highlight as string,
-      extraContent:
-        i === 1
-          ? createElement(SmartSpaceDiagram, {
-              badge: tJourney("smartSpaceBadge"),
-              items: [
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
-              ],
-            })
-          : i === 2
-            ? createElement(KellerBadge, {
-                line1: tJourney("kellerLine1"),
-                line2: tJourney("kellerLine2"),
+  const journeySteps =
+    s?.journey?.steps
+      .filter((step) => step.isVisible)
+      .map((step, i) => ({
+        number: String(i + 1).padStart(2, "0"),
+        icon: JOURNEY_ICONS[i] ?? Globe,
+        title: step.title as string,
+        subtitle: step.subtitle as string,
+        description: step.description as string,
+        advantageText: step.advantageTitle as string,
+        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
+        highlightText: step.highlight as string,
+        extraContent:
+          i === 1
+            ? createElement(SmartSpaceDiagram, {
+                badge: tJourney("smartSpaceBadge"),
+                items: [
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
+                ],
               })
-            : undefined,
-    })) ?? [];
-    console.log(s);
+            : i === 2
+              ? createElement(KellerBadge, {
+                  line1: tJourney("kellerLine1"),
+                  line2: tJourney("kellerLine2"),
+                })
+              : undefined,
+      })) ?? [];
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -129,7 +141,10 @@ export default async function WhyT1Page({
           <StatsBar
             items={s.stats.stats
               .filter((stat) => stat.isVisible)
-              .map((stat) => ({ value: stat.value, label: stat.label as string }))}
+              .map((stat) => ({
+                value: stat.value,
+                label: stat.label as string,
+              }))}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
