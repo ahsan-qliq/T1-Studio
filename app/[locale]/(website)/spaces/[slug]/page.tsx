@@ -155,7 +155,7 @@ export default async function SpaceDetailPage({ params }: Props) {
       {s?.materials?.isVisible && (
         <MaterialInspirationSection
           heading={s.materials.heading}
-          items={s.materials.materials.map((item) => ({
+          items={s.materials.values.map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
             label: item.label,
