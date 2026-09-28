@@ -85,7 +85,7 @@ export default async function WhyT1Page({
               })
             : undefined,
     })) ?? [];
-    
+    console.log(s);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -127,7 +127,7 @@ export default async function WhyT1Page({
       {s?.stats?.isVisible && (
         <FadeUp>
           <StatsBar
-            items={s.stats.statistics
+            items={s.stats.stats
               .filter((stat) => stat.isVisible)
               .map((stat) => ({ value: stat.value, label: stat.label as string }))}
             sectionLabel={tStats("sectionLabel")}
@@ -139,7 +139,7 @@ export default async function WhyT1Page({
         <ServicesSection
           label={s.benefits.eyebrow as string}
           heading={s.benefits.heading as string}
-          services={s.benefits.services
+          services={s.benefits.items
             .filter((svc) => svc.isVisible)
             .map((svc) => ({
               title: svc.title as string,
