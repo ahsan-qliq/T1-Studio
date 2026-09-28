@@ -893,3 +893,287 @@ export interface CmsHomePage {
   updatedAt: string;
   publishedAt: string | null;
 }
+
+// ─── Project Detail Page ─────────────────────────────────────────────────────
+
+export interface CmsProjectDetailHeroStat {
+  value: string;
+  label: CmsBilingualText;
+  icon: string;
+  _id: string;
+}
+
+export interface CmsProjectDetailHeroSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  location: CmsBilingualText;
+
+  backgroundImage: CmsImage;
+  mobileImage: CmsImage;
+
+  stats: CmsProjectDetailHeroStat[];
+
+  overlayOpacity: number;
+}
+
+// ─── Project Detail Overview ─────────────────────────────────────────────────
+
+export interface CmsProjectDetailOverviewSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  image: CmsImage;
+
+  imagePosition: "left" | "right" | string;
+}
+
+// ─── Project Detail Before / After ───────────────────────────────────────────
+
+export interface CmsProjectDetailBeforeAfterItem {
+  title: CmsBilingualText;
+  description: CmsBilingualText;
+
+  beforeImage: CmsImage;
+  afterImage: CmsImage;
+
+  isVisible: boolean;
+  _id: string;
+}
+
+export interface CmsProjectDetailBeforeAfterSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  items: CmsProjectDetailBeforeAfterItem[];
+
+  showNavigation: boolean;
+  autoplay: boolean;
+}
+
+// ─── Project Detail Gallery ──────────────────────────────────────────────────
+
+export interface CmsProjectDetailGalleryItem {
+  image: CmsImage;
+
+  title: CmsBilingualText;
+  caption: CmsBilingualText;
+
+  isVisible: boolean;
+  _id: string;
+}
+
+export interface CmsProjectDetailGallerySection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  images: CmsProjectDetailGalleryItem[];
+
+  autoplay: boolean;
+  showNavigation: boolean;
+}
+
+// ─── Project Detail Materials ────────────────────────────────────────────────
+
+export interface CmsProjectDetailMaterialItem {
+  title: CmsBilingualText;
+  subtitle: CmsBilingualText;
+  description: CmsBilingualText;
+
+  image: CmsImage;
+
+  isVisible: boolean;
+  _id: string;
+}
+
+export interface CmsProjectDetailMaterialsSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  materials: CmsProjectDetailMaterialItem[];
+}
+
+// ─── Project Detail Info ─────────────────────────────────────────────────────
+
+export interface CmsProjectInfoDetail {
+  label?: CmsBilingualText;
+  value?: CmsBilingualText;
+  _id?: string;
+}
+
+export interface CmsProjectDetailInfoSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  details: CmsProjectInfoDetail[];
+
+  button: CmsButton;
+}
+
+// ─── Project Detail Testimonial ──────────────────────────────────────────────
+
+export interface CmsProjectDetailTestimonialItem {
+  quote?: CmsBilingualText;
+  author?: CmsBilingualText;
+  authorRole?: CmsBilingualText;
+
+  badge?: CmsBilingualText;
+  readTime?: CmsBilingualText;
+
+  image?: CmsImage;
+  avatar?: CmsImage;
+
+  videoUrl?: string;
+
+  _id?: string;
+}
+
+export interface CmsProjectDetailTestimonialSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  testimonials: CmsProjectDetailTestimonialItem[];
+
+  autoplay: boolean;
+}
+
+// ─── Project Detail Related Projects ─────────────────────────────────────────
+
+export interface CmsProjectDetailRelatedProject {
+  title?: CmsBilingualText;
+  description?: CmsBilingualText;
+  location?: CmsBilingualText;
+
+  image?: CmsImage;
+
+  href?: string;
+  slug?: string;
+
+  position?: string;
+
+  isVisible?: boolean;
+  _id?: string;
+}
+
+export interface CmsProjectDetailRelatedProjectsSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  projects: CmsProjectDetailRelatedProject[];
+
+  button: CmsButton;
+}
+
+// ─── Project Detail Consultation ─────────────────────────────────────────────
+
+export interface CmsProjectDetailConsultationSection {
+  isVisible: boolean;
+  order: number;
+
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+
+  image: CmsImage;
+
+  fields: CmsFormField[];
+
+  submitButtonLabel: CmsBilingualText;
+}
+
+// ─── Project Detail Sections ─────────────────────────────────────────────────
+
+export interface CmsProjectDetailSections {
+  hero: CmsProjectDetailHeroSection;
+
+  overview: CmsProjectDetailOverviewSection;
+
+  beforeAfter: CmsProjectDetailBeforeAfterSection;
+
+  gallery: CmsProjectDetailGallerySection;
+
+  materials: CmsProjectDetailMaterialsSection;
+
+  projectInfo: CmsProjectDetailInfoSection;
+
+  testimonial: CmsProjectDetailTestimonialSection;
+
+  relatedProjects: CmsProjectDetailRelatedProjectsSection;
+
+  consultation: CmsProjectDetailConsultationSection;
+}
+
+// ─── Project Detail SEO ──────────────────────────────────────────────────────
+
+export interface CmsProjectDetailSeo {
+  keywords: CmsBilingualText;
+
+  metaTitle: CmsBilingualText;
+
+  metaDescription: CmsBilingualText;
+
+  canonicalUrl: string;
+
+  ogImage: CmsImage;
+
+  noIndex: boolean;
+
+  noFollow: boolean;
+}
+
+// ─── Full Project Detail Page ────────────────────────────────────────────────
+
+export interface CmsProjectDetail {
+  _id?: string;
+
+  slug: string;
+
+  pageName: string;
+
+  projectName: CmsBilingualText;
+
+  projectCategory: string;
+
+  status: string;
+
+  sections: CmsProjectDetailSections;
+
+  seo: CmsProjectDetailSeo;
+
+  publishedAt: string | null;
+
+  createdAt?: string;
+
+  updatedAt?: string;
+}
