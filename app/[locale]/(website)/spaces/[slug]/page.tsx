@@ -98,7 +98,6 @@ export default async function SpaceDetailPage({ params }: Props) {
     src: img.image.url,
     alt: img.image.alt as string,
   }));
-  console.log(s?.relatedSpaces)
   const galleryGridItems = galleryImages.slice(3, 5).map((img) => ({
     src: img.image.url,
     alt: img.image.alt as string,
@@ -114,8 +113,6 @@ export default async function SpaceDetailPage({ params }: Props) {
     })) ?? [];
 
 
-console.log(s.styles, 114)
-console.log(s.relatedProjects)
   return (
     <main>
       {s?.hero?.isVisible && (
