@@ -326,7 +326,7 @@ export interface CmsMaterialInspirationSection {
   isVisible: boolean;
   order: number;
   heading: string;
-  materials: CmsMaterialItem[];
+  values: CmsMaterialItem[];
 }
 
 // ─── Inspiration CTA banner ───────────────────────────────────────────────────
