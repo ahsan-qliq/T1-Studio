@@ -29,6 +29,7 @@ export default async function InspirationPage({
   ]);
 
   const s = cms?.sections;
+  console.log(s)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -46,7 +47,7 @@ export default async function InspirationPage({
           heading={s.rooms.heading as string}
           viewAllLabel={s.rooms.button.label as string}
           viewAllHref="/spaces"
-          spaces={s.rooms.spaces
+          spaces={s.rooms.rooms
             .filter((sp) => sp.isVisible)
             .map((sp) => ({
               id: sp._id,
@@ -104,7 +105,7 @@ export default async function InspirationPage({
           heading={s.designTips.heading as string}
           viewAllLabel={s.designTips.button.label as string}
           viewAllHref="/projects"
-          projects={s.designTips.projects
+          projects={s.designTips.articles
             .filter((pr) => pr.isVisible)
             .map((pr, i) => ({
               id: pr._id,
