@@ -17,6 +17,7 @@ import { MaterialInspirationSection } from "@/components/sections/MaterialInspir
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { WhyT1GridSection } from "@/components/sections/WhyT1GridSection";
 import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
+import { ChallengeSection } from "@/components/sections/ChallengeSection";
 import { SpaceIntroSection } from "@/components/sections/SpaceIntroSection";
 import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
@@ -79,6 +80,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
           { src: '/assets/videos/Video 1.mp4' },
           { src: '/assets/videos/Video 2.mp4' },
         ]}
+      />
+      <ChallengeSection
+        heading="A Strict Deadline, Without Compromising Quality"
+        description="The client had a clear deadline but the physical work at the villa needed to be completed within 45 days, allowing the family to return from vacation and move straight back into their renovated home."
       />
       <BeforeAfterSection
         heading={tBeforeAfter("heading")}
