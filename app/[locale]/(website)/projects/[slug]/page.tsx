@@ -235,16 +235,15 @@ export default async function ProjectDetailsPage({ params }: Props) {
       {/* =====================================================
           HERO
       ===================================================== */}
-
       {isVisible(hero) && (
         <HeroBanner
           badge={getText(hero.eyebrow, locale)}
           heading={getText(hero.heading, locale)}
           description={getText(hero.description, locale)}
           cta={getText(hero.location, locale)}
-          backgroundImage={hero.backgroundImage?.url || ""}
-          mobileImage={hero.mobileImage?.url || ""}
-          overlayOpacity={hero.overlayOpacity}
+          imageSrc={hero.backgroundImage?.url || ""}
+          // mobileImage={hero.mobileImage?.url || ""}
+          // overlayOpacity={hero.overlayOpacity}
         />
       )}
 
