@@ -85,7 +85,7 @@ export interface CmsFeaturedSpacesSection {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
-  spaces: CmsSpaceItem[];
+  rooms: CmsSpaceItem[];
   button: CmsButton;
 }
 
@@ -108,7 +108,7 @@ export interface CmsSignatureProjectsSection {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
-  projects: CmsProjectItem[];
+  articles: CmsProjectItem[];
   button: CmsButton;
 }
 
@@ -326,7 +326,7 @@ export interface CmsMaterialInspirationSection {
   isVisible: boolean;
   order: number;
   heading: string;
-  values: CmsMaterialItem[];
+  materials: CmsMaterialItem[];
 }
 
 // ─── Inspiration CTA banner ───────────────────────────────────────────────────
