@@ -14,7 +14,12 @@ import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSec
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 
-const VALID_MILESTONE_ICONS = new Set(["Globe", "Lightbulb", "BarChart2", "BookMarked"]);
+const VALID_MILESTONE_ICONS = new Set([
+  "Globe",
+  "Lightbulb",
+  "BarChart2",
+  "BookMarked",
+]);
 
 export const revalidate = 3600;
 
@@ -33,7 +38,7 @@ export default async function AboutPage({
   ]);
 
   const s = cms?.sections;
-
+  console.log(s, 36);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -75,7 +80,7 @@ export default async function AboutPage({
         <ServicesSection
           label={s.philosophy.eyebrow as string}
           heading={s.philosophy.heading as string}
-          services={s.philosophy.services
+          services={s.philosophy.items
             .filter((svc) => svc.isVisible)
             .map((svc) => ({
               title: svc.title as string,
@@ -87,7 +92,7 @@ export default async function AboutPage({
       {s?.values?.isVisible && (
         <MaterialInspirationSection
           heading={s.values.heading}
-          items={s.values.materials.map((item) => ({
+          items={s.values.values.map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
             label: item.label,
@@ -98,9 +103,12 @@ export default async function AboutPage({
       {s?.stats?.isVisible && (
         <FadeUp>
           <StatsBar
-            items={s.stats.statistics
+            items={s.stats.stats
               .filter((stat) => stat.isVisible)
-              .map((stat) => ({ value: stat.value, label: stat.label as string }))}
+              .map((stat) => ({
+                value: stat.value,
+                label: stat.label as string,
+              }))}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
