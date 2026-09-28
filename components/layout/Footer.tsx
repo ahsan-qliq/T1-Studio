@@ -1,7 +1,9 @@
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
 import { Link } from '@/app/i18n/navigation';
 import { MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
 import { FooterNewsletterForm } from './FooterNewsletterForm';
+import logo from '@/public/assets/images/Logo.png';
 
 // ─── Inline social SVG icons ──────────────────────────────────────────────────
 
@@ -46,13 +48,9 @@ function FooterLogo({ label }: { label: string }) {
     <Link
       href="/"
       aria-label={label}
-      className="inline-flex items-center gap-2 rounded-sm border border-gold/60 px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
+      className="inline-flex rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
     >
-      <span className="text-xl font-semibold tracking-tight text-white select-none">
-        T<span className="text-gold">.</span>one
-      </span>
-      <span className="text-xl font-light text-white/40 select-none" aria-hidden="true">|</span>
-      <span className="text-xl font-light tracking-widest text-white select-none">keller</span>
+      <Image src={logo} alt={label} height={40} />
     </Link>
   );
 }
