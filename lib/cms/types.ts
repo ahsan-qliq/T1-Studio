@@ -45,7 +45,7 @@ export interface CmsStatItem {
 export interface CmsStatsSection {
   isVisible: boolean;
   order: number;
-  statistics: CmsStatItem[];
+  stats: CmsStatItem[];
 }
 
 // ─── Services ─────────────────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ export interface CmsServicesSection {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
-  services: CmsServiceItem[];
+  items: CmsServiceItem[];
   button: CmsButton;
 }
 
