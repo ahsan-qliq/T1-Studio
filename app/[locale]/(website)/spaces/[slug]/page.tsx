@@ -30,8 +30,10 @@ import {
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
+import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 const JOURNEY_ICONS: LucideIcon[] = [
   Globe,
@@ -67,14 +69,16 @@ export const revalidate = 3600;
 export default async function SpaceDetailPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const [cms, tJourney] = await Promise.all([
+  const [cms, tJourney, tDreamSpace] = await Promise.all([
     getSpaceDetailCms(slug, locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
+    getTranslations({ locale, namespace: "DreamSpace" }),
   ]);
 
   if (!cms) notFound();
 
   const s = cms.sections;
+  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
   const journeySteps =
     s?.journey?.steps
@@ -235,6 +239,21 @@ const  styleRange = s.styles.items.map((sp)=>({
           steps={journeySteps}
         />
       )}
+
+      <DreamSpaceSection
+        {...dreamSpaceConfig}
+        heading={tDreamSpace("heading")}
+        imageAlt={tDreamSpace("imageAlt")}
+        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
+        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
+        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
+        timelineLabel={tDreamSpace("timelineLabel")}
+        firstNameLabel={tDreamSpace("firstNameLabel")}
+        lastNameLabel={tDreamSpace("lastNameLabel")}
+        emailLabel={tDreamSpace("emailLabel")}
+        phoneLabel={tDreamSpace("phoneLabel")}
+        submitLabel={tDreamSpace("submitLabel")}
+      />
 
       {s?.faq?.isVisible && (
         <FaqSection
