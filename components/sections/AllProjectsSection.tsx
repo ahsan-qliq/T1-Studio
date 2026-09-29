@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-const INITIAL_COUNT = 4;
+const INITIAL_COUNT = 4; // 1 featured + 3 compact
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
@@ -24,6 +24,7 @@ export interface ProjectItem {
   serviceKeys: string[];
   styleKey: string;
   propertyTypeKey: string;
+  readTime?: string;
 }
 
 export interface AllProjectsSectionProps {
@@ -50,62 +51,64 @@ export interface AllProjectsSectionProps {
   projects: ProjectItem[];
 }
 
-// ─── Meta row ─────────────────────────────────────────────────────────────────
+// ─── Badge ────────────────────────────────────────────────────────────────────
 
-function MetaRow({ label, value }: { label: string; value: string }) {
+function Badge({ label }: { label: string }) {
   return (
-    <div className="flex items-baseline gap-4">
-      <dt className="min-w-[9rem] text-sm font-semibold text-white/50">{label}</dt>
-      <dd className="text-sm text-white/80">{value}</dd>
-    </div>
+    <span className="rounded-full border border-white/25 bg-black/20 px-3 py-1 text-xs font-medium text-white/80">
+      {label}
+    </span>
   );
 }
 
-// ─── Featured card (first project) ───────────────────────────────────────────
+// ─── Featured card ────────────────────────────────────────────────────────────
+// Two sibling grid items: image (col 1) + content (col 2-3)
 
 function FeaturedCard({
   project,
   viewCaseStudyLabel,
-  propertyTypeMeta,
-  completionYearMeta,
-  locationMeta,
 }: {
   project: ProjectItem;
   viewCaseStudyLabel: string;
-  propertyTypeMeta: string;
-  completionYearMeta: string;
-  locationMeta: string;
 }) {
   return (
-    <article
-      aria-label={project.title}
-      className="grid items-center gap-8 border-b border-white/10 pb-14 lg:grid-cols-2 lg:gap-14"
-    >
-      <div className="relative aspect-4/3 w-full overflow-hidden">
-        <Image
-          src={project.image.src}
-          alt={project.image.alt}
-          fill
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover motion-safe:transition-transform motion-safe:duration-500 motion-safe:hover:scale-[1.03]"
-          priority
-        />
+    <>
+      {/* Image — col 1, stretches to row height via CSS Grid */}
+      <div className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch">
+        {project.image.src ? (
+          <Image
+            src={project.image.src}
+            alt={project.image.alt}
+            fill
+            sizes="(max-width: 1024px) 100vw, 33vw"
+            className="object-cover"
+            priority
+          />
+        ) : (
+          <div className="absolute inset-0 bg-white/5" />
+        )}
       </div>
 
-      <div className="flex flex-col gap-5">
-        <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]">
+      {/* Content — col 2-3 */}
+      <div className="flex flex-col justify-center gap-6 border-b border-white/10 px-8 py-12 lg:col-span-2 lg:px-14 lg:py-20">
+        {(project.propertyType || project.readTime) && (
+          <div className="flex items-center gap-3">
+            {project.propertyType && <Badge label={project.propertyType} />}
+            {project.readTime && (
+              <span className="text-sm text-white/50">{project.readTime}</span>
+            )}
+          </div>
+        )}
+
+        <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {project.title}
         </h2>
 
-        <dl className="flex flex-col gap-2">
-          <MetaRow label={propertyTypeMeta} value={project.propertyType} />
-          <MetaRow label={completionYearMeta} value={String(project.completionYear)} />
-          <MetaRow label={locationMeta} value={project.location} />
-        </dl>
-
-        <p className="text-sm leading-relaxed text-white/60 sm:text-base">
-          {project.description}
-        </p>
+        {project.description && (
+          <p className="max-w-lg text-sm leading-relaxed text-white/60 sm:text-[0.9375rem]">
+            {project.description}
+          </p>
+        )}
 
         <div>
           <Link
@@ -114,111 +117,82 @@ function FeaturedCard({
           >
             {viewCaseStudyLabel}
             <ArrowRight
-              className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+              className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
               aria-hidden="true"
             />
           </Link>
         </div>
       </div>
-    </article>
+    </>
   );
 }
 
-// ─── Compact card (grid items) ────────────────────────────────────────────────
+// ─── Compact card ─────────────────────────────────────────────────────────────
+// isRight → cols 2-3 (landscape 4/3)
+// !isRight → cols 1-2 (portrait 3/4)
 
-function CompactCard({ project }: { project: ProjectItem }) {
+function CompactCard({
+  project,
+  isRight,
+}: {
+  project: ProjectItem;
+  isRight: boolean;
+}) {
+  const secondaryInfo =
+    project.readTime ??
+    (project.completionYear ? String(project.completionYear) : null);
+
   return (
-    <article>
-      <Link
-        href={project.href}
-        aria-label={`${project.title} — ${project.location}`}
-        className="group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    <Link
+      href={project.href}
+      aria-label={project.title}
+      className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    >
+      {/* Image with title overlay */}
+      <div
+        className={cn(
+          "relative w-full overflow-hidden",
+          isRight ? "aspect-4/3" : "aspect-3/4",
+        )}
       >
-        <div className="relative aspect-4/3 overflow-hidden">
+        {project.image.src ? (
           <Image
             src={project.image.src}
             alt={project.image.alt}
             fill
-            sizes="(max-width: 768px) 100vw, 50vw"
+            sizes="(max-width: 1024px) 100vw, 66vw"
             className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
           />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 45%, transparent 75%)",
-            }}
-          />
-          <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-            <h3 className="mb-1 text-xl font-bold leading-tight text-white sm:text-2xl">
-              {project.title}
-            </h3>
-            <p className="text-sm text-white/70">{project.location}</p>
-          </div>
+        ) : (
+          <div className="absolute inset-0 bg-white/5" />
+        )}
+
+        {/* Gradient */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 75%)",
+          }}
+        />
+
+        {/* Title overlaid at image bottom */}
+        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+          <h3 className="text-xl font-bold leading-tight text-white sm:text-2xl">
+            {project.title}
+          </h3>
         </div>
-      </Link>
-    </article>
-  );
-}
+      </div>
 
-// ─── Filter bar ───────────────────────────────────────────────────────────────
-
-function FilterBar({
-  filterLabels,
-  filterOptions,
-  values,
-  onChange,
-}: {
-  filterLabels: AllProjectsSectionProps["filterLabels"];
-  filterOptions: AllProjectsSectionProps["filterOptions"];
-  values: {
-    location: string | null;
-    service: string | null;
-    style: string | null;
-    propertyType: string | null;
-  };
-  onChange: (key: keyof typeof values, value: string | null) => void;
-}) {
-  return (
-    <div
-      role="search"
-      aria-label="Filter projects"
-      className="flex flex-wrap items-center gap-3"
-    >
-      <Select
-        placeholder={filterLabels.locations}
-        options={filterOptions.locations}
-        value={values.location ?? undefined}
-        onValueChange={(v) => onChange("location", v)}
-        aria-label={filterLabels.locations}
-        className="w-40"
-      />
-      <Select
-        placeholder={filterLabels.services}
-        options={filterOptions.services}
-        value={values.service ?? undefined}
-        onValueChange={(v) => onChange("service", v)}
-        aria-label={filterLabels.services}
-        className="w-40"
-      />
-      <Select
-        placeholder={filterLabels.style}
-        options={filterOptions.styles}
-        value={values.style ?? undefined}
-        onValueChange={(v) => onChange("style", v)}
-        aria-label={filterLabels.style}
-        className="w-36"
-      />
-      <Select
-        placeholder={filterLabels.propertyType}
-        options={filterOptions.propertyTypes}
-        value={values.propertyType ?? undefined}
-        onValueChange={(v) => onChange("propertyType", v)}
-        aria-label={filterLabels.propertyType}
-        className="w-40 bg-foreground text-background [&_span]:text-background/80"
-      />
-    </div>
+      {/* Badge + secondary info below the image */}
+      <div className="flex items-center gap-3 px-5 py-4 sm:px-6">
+        {project.propertyType && <Badge label={project.propertyType} />}
+        {secondaryInfo && (
+          <span className="text-sm text-white/50">{secondaryInfo}</span>
+        )}
+      </div>
+    </Link>
   );
 }
 
@@ -228,145 +202,217 @@ export function AllProjectsSection({
   heading,
   viewCaseStudyLabel,
   loadMoreLabel,
-  propertyTypeMeta,
-  completionYearMeta,
-  locationMeta,
+  propertyTypeMeta: _pt,
+  completionYearMeta: _cy,
+  locationMeta: _lm,
   noResultsLabel,
   clearFiltersLabel,
   filterLabels,
   filterOptions,
   projects,
 }: AllProjectsSectionProps) {
+  const [activePropertyType, setActivePropertyType] = useState<string | null>(null);
   const [filters, setFilters] = useState<{
     location: string | null;
     service: string | null;
     style: string | null;
-    propertyType: string | null;
-  }>({ location: null, service: null, style: null, propertyType: null });
-
+  }>({ location: null, service: null, style: null });
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
-  const handleFilterChange = (
-    key: keyof typeof filters,
-    value: string | null,
-  ) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-    setVisibleCount(INITIAL_COUNT);
-  };
+  const hasSecondaryFilters =
+    filterOptions.locations.length > 0 ||
+    filterOptions.services.length > 0 ||
+    filterOptions.styles.length > 0;
 
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
+        if (activePropertyType && p.propertyTypeKey !== activePropertyType) return false;
         if (filters.location && p.locationKey !== filters.location) return false;
-        if (filters.service && !p.serviceKeys.includes(filters.service))
-          return false;
+        if (filters.service && !p.serviceKeys.includes(filters.service)) return false;
         if (filters.style && p.styleKey !== filters.style) return false;
-        if (
-          filters.propertyType &&
-          p.propertyTypeKey !== filters.propertyType
-        )
-          return false;
         return true;
       }),
-    [projects, filters],
+    [projects, activePropertyType, filters],
   );
 
-  const hasActiveFilter = Object.values(filters).some(Boolean);
+  const hasActiveFilter =
+    activePropertyType !== null || Object.values(filters).some(Boolean);
 
   const featured = filtered[0];
   const restAll = filtered.slice(1);
   const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
   const hasMore = restAll.length > visibleRest.length;
 
-  return (
-    <section
-      aria-labelledby="all-projects-heading"
-      className="px-4 py-16 sm:px-8 lg:px-16"
-    >
-      {/* Header row */}
-      <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
-        <h1
-          id="all-projects-heading"
-          className="text-3xl font-bold text-white sm:text-4xl"
-        >
-          {heading}
-        </h1>
-        <FilterBar
-          filterLabels={filterLabels}
-          filterOptions={filterOptions}
-          values={filters}
-          onChange={handleFilterChange}
-        />
-      </div>
+  const handleSecondaryFilter = (
+    key: "location" | "service" | "style",
+    value: string | null,
+  ) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+    setVisibleCount(INITIAL_COUNT);
+  };
 
-      {/* Results */}
-      {filtered.length === 0 ? (
-        <div className="flex flex-col items-center gap-4 py-20 text-center">
-          <p className="text-white/50">{noResultsLabel}</p>
-          {hasActiveFilter && (
-            <button
-              type="button"
-              onClick={() => {
-                setFilters({
-                  location: null,
-                  service: null,
-                  style: null,
-                  propertyType: null,
-                });
-                setVisibleCount(INITIAL_COUNT);
-              }}
-              className="text-sm font-medium text-gold underline underline-offset-4 hover:text-gold/80"
+  const handleClearFilters = () => {
+    setActivePropertyType(null);
+    setFilters({ location: null, service: null, style: null });
+    setVisibleCount(INITIAL_COUNT);
+  };
+
+  return (
+    <section aria-labelledby="all-projects-heading">
+      <div className="mx-auto max-w-7xl">
+
+        {/* ── Header: heading + category pill tabs ── */}
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
+          <h1
+            id="all-projects-heading"
+            className="text-3xl font-bold text-white sm:text-4xl"
+          >
+            {heading}
+          </h1>
+
+          {filterOptions.propertyTypes.length > 0 && (
+            <nav
+              aria-label={filterLabels.propertyType || "Filter by category"}
+              className="flex flex-wrap items-center gap-2"
             >
-              {clearFiltersLabel}
-            </button>
+              {filterOptions.propertyTypes.map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  onClick={() => {
+                    setActivePropertyType((prev) =>
+                      prev === opt.value ? null : opt.value,
+                    );
+                    setVisibleCount(INITIAL_COUNT);
+                  }}
+                  aria-pressed={activePropertyType === opt.value}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
+                    activePropertyType === opt.value
+                      ? "border-white/70 text-white"
+                      : "border-white/25 text-white/60 hover:border-white/40 hover:text-white/90",
+                  )}
+                >
+                  {opt.label}
+                  <ChevronDown className="size-3 opacity-70" aria-hidden="true" />
+                </button>
+              ))}
+            </nav>
           )}
         </div>
-      ) : (
-        <>
-          {/* Featured project */}
-          {featured && (
-            <FeaturedCard
-              project={featured}
-              viewCaseStudyLabel={viewCaseStudyLabel}
-              propertyTypeMeta={propertyTypeMeta}
-              completionYearMeta={completionYearMeta}
-              locationMeta={locationMeta}
-            />
-          )}
 
-          {/* Compact grid */}
-          {visibleRest.length > 0 && (
-            <ul
-              role="list"
-              aria-label="More projects"
-              className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2"
-            >
-              {visibleRest.map((project) => (
-                <li key={project.id}>
-                  <CompactCard project={project} />
-                </li>
-              ))}
-            </ul>
-          )}
+        {/* ── Secondary filters: locations / services / styles ── */}
+        {hasSecondaryFilters && (
+          <div
+            role="search"
+            aria-label="Additional filters"
+            className="flex flex-wrap items-center gap-3 border-b border-white/10 px-4 py-4 sm:px-8 lg:px-12"
+          >
+            {filterOptions.locations.length > 0 && (
+              <Select
+                placeholder={filterLabels.locations}
+                options={filterOptions.locations}
+                value={filters.location ?? undefined}
+                onValueChange={(v) => handleSecondaryFilter("location", v)}
+                aria-label={filterLabels.locations}
+                className="w-40"
+              />
+            )}
+            {filterOptions.services.length > 0 && (
+              <Select
+                placeholder={filterLabels.services}
+                options={filterOptions.services}
+                value={filters.service ?? undefined}
+                onValueChange={(v) => handleSecondaryFilter("service", v)}
+                aria-label={filterLabels.services}
+                className="w-40"
+              />
+            )}
+            {filterOptions.styles.length > 0 && (
+              <Select
+                placeholder={filterLabels.style}
+                options={filterOptions.styles}
+                value={filters.style ?? undefined}
+                onValueChange={(v) => handleSecondaryFilter("style", v)}
+                aria-label={filterLabels.style}
+                className="w-36"
+              />
+            )}
+          </div>
+        )}
 
-          {/* Load more */}
-          {hasMore && (
-            <div className="mt-14 flex justify-center">
+        {/* ── Results ── */}
+        {filtered.length === 0 ? (
+          <div className="flex flex-col items-center gap-4 py-20 text-center">
+            <p className="text-white/50">{noResultsLabel}</p>
+            {hasActiveFilter && (
               <button
                 type="button"
-                onClick={() => setVisibleCount((c) => c + INITIAL_COUNT)}
-                className={cn(
-                  "rounded-full border border-white/20 px-8 py-3 text-sm font-medium text-white",
-                  "transition-colors duration-200 hover:border-white/50 hover:bg-white/5",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                )}
+                onClick={handleClearFilters}
+                className="text-sm font-medium text-gold underline underline-offset-4 hover:text-gold/80"
               >
-                {loadMoreLabel}
+                {clearFiltersLabel}
               </button>
-            </div>
-          )}
-        </>
-      )}
+            )}
+          </div>
+        ) : (
+          <div className="lg:grid lg:grid-cols-3">
+
+            {/* Featured: image (col 1) | content (col 2-3) */}
+            {featured && (
+              <FeaturedCard
+                project={featured}
+                viewCaseStudyLabel={viewCaseStudyLabel}
+              />
+            )}
+
+            {/* Compact cards — staggered right / left */}
+            {visibleRest.map((project, i) => {
+              const isRight = i % 2 === 0;
+              return isRight ? (
+                <React.Fragment key={project.id}>
+                  {/* Empty placeholder — col 1 */}
+                  <div
+                    className="hidden border-b border-r border-white/10 lg:block"
+                    aria-hidden="true"
+                  />
+                  {/* Card — cols 2-3 */}
+                  <div className="border-b border-white/10 lg:col-span-2">
+                    <CompactCard project={project} isRight />
+                  </div>
+                </React.Fragment>
+              ) : (
+                <React.Fragment key={project.id}>
+                  {/* Card — cols 1-2 */}
+                  <div className="border-b border-r border-white/10 lg:col-span-2">
+                    <CompactCard project={project} isRight={false} />
+                  </div>
+                  {/* Empty placeholder — col 3 */}
+                  <div
+                    className="hidden border-b border-white/10 lg:block"
+                    aria-hidden="true"
+                  />
+                </React.Fragment>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Load more ── */}
+        {hasMore && (
+          <div className="flex justify-center border-t border-white/10 py-12">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((c) => c + INITIAL_COUNT)}
+              className="rounded-full border border-white/25 px-8 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            >
+              {loadMoreLabel}
+            </button>
+          </div>
+        )}
+
+      </div>
     </section>
   );
 }
