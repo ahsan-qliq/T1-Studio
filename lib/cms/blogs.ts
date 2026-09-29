@@ -3,8 +3,8 @@ import type { CmsBlogsPage } from "./types";
 
 export async function getBlogsPageCms(locale: string): Promise<CmsBlogsPage | null> {
   return cmsGet<CmsBlogsPage>(
-    "/blogs-page",
-    { slug: "blogs", lang: locale },
+    "/blog-page",
+    { slug: "blog", lang: locale },
     { tags: [`blogs-page-${locale}`] },
   );
 }
