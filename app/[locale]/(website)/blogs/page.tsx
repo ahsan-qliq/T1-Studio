@@ -1,8 +1,7 @@
 import { getBlogsPageCms } from "@/lib/cms/blogs";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
-import { FaqSection } from "@/components/sections/FaqSection";
+import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
 
@@ -12,10 +11,44 @@ export default async function BlogsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const cms = await getBlogsPageCms(locale);
+  const [cms, tBlog] = await Promise.all([
+    getBlogsPageCms(locale),
+    getTranslations({ locale, namespace: "Blog" }),
+  ]);
   const s = cms?.sections;
+  const listing = s?.blogListing;
 
-  const listing = s?.listing;
+  // Combine featuredArticle + articles into one ordered list
+  const allArticles = listing
+    ? [
+        ...(listing.featuredArticle?.isVisible ? [listing.featuredArticle] : []),
+        ...listing.articles.filter((a) => a.isVisible),
+      ]
+    : [];
+
+  const projects = allArticles.map((article) => ({
+    id: article._id,
+    title: article.title,
+    propertyType: article.category,
+    completionYear: article.publishedDate
+      ? new Date(article.publishedDate).getFullYear()
+      : new Date().getFullYear(),
+    location: article.author,
+    description: article.excerpt,
+    readTime: article.readTime || undefined,
+    image: article.image?.url
+      ? { src: article.image.url, alt: article.image.alt as string }
+      : { src: "", alt: article.title },
+    href: article.href || `/blogs/${article.blogSlug}`,
+    locationKey: "",
+    serviceKeys: [],
+    styleKey: "",
+    propertyTypeKey: article.categoryKey,
+  }));
+
+  const categoryOptions = (listing?.categories ?? [])
+    .filter((c) => c.isVisible)
+    .map((c) => ({ value: c.key, label: c.label }));
 
   return (
     <main>
@@ -29,80 +62,29 @@ export default async function BlogsPage({
         />
       )}
 
-      {listing?.isVisible && (
+      {listing?.isVisible && projects.length > 0 && (
         <AllProjectsSection
-          heading={listing.heading}
-          viewCaseStudyLabel={listing.viewCaseStudyLabel}
-          loadMoreLabel={listing.loadMoreLabel}
-          propertyTypeMeta={listing.propertyTypeMeta}
-          completionYearMeta={listing.completionYearMeta}
-          locationMeta={listing.locationMeta}
-          noResultsLabel={listing.noResultsLabel}
-          clearFiltersLabel={listing.clearFiltersLabel}
-          filterLabels={listing.filterLabels}
-          filterOptions={{
-            locations: listing.filterOptions.locations.map((o) => ({
-              value: o.value,
-              label: o.label,
-            })),
-            services: listing.filterOptions.services.map((o) => ({
-              value: o.value,
-              label: o.label,
-            })),
-            styles: listing.filterOptions.styles.map((o) => ({
-              value: o.value,
-              label: o.label,
-            })),
-            propertyTypes: listing.filterOptions.propertyTypes.map((o) => ({
-              value: o.value,
-              label: o.label,
-            })),
+          heading={listing.heading || tBlog("heading")}
+          viewCaseStudyLabel={tBlog("readArticleLabel")}
+          loadMoreLabel={(listing.loadMoreButton?.label as string) || tBlog("loadMoreLabel")}
+          propertyTypeMeta={tBlog("categoryMeta")}
+          completionYearMeta={tBlog("publishedMeta")}
+          locationMeta={tBlog("authorMeta")}
+          noResultsLabel={tBlog("noResultsLabel")}
+          clearFiltersLabel={tBlog("clearFiltersLabel")}
+          filterLabels={{
+            locations: "",
+            services: "",
+            style: "",
+            propertyType: tBlog("categoryFilterLabel"),
           }}
-          projects={listing.projects
-            .filter((p) => p.isVisible)
-            .map((p) => ({
-              id: p._id,
-              title: p.title,
-              propertyType: p.propertyType,
-              completionYear: p.completionYear,
-              location: p.location,
-              description: p.description,
-              image: { src: p.image.url, alt: p.image.alt as string },
-              href: p.href,
-              locationKey: p.locationKey,
-              serviceKeys: p.serviceKeys,
-              styleKey: p.styleKey,
-              propertyTypeKey: p.propertyTypeKey,
-            }))}
-        />
-      )}
-
-      {s?.partnership?.isVisible && (
-        <ReferralPartnerSection
-          heading={s.partnership.heading as string}
-          description={s.partnership.description as string}
-          imageSrc={s.partnership.image.url}
-          imageAlt={s.partnership.image.alt as string}
-          ctaLabel={s.partnership.button.label as string}
-          ctaHref={s.partnership.button.href || "/"}
-          steps={s.partnership.steps.map((step) => ({
-            label: step.title as string,
-            iconName: step.icon,
-          }))}
-          benefits={[]}
-        />
-      )}
-
-      {s?.faq?.isVisible && (
-        <FaqSection
-          label={s.faq.eyebrow as string}
-          heading={s.faq.heading as string}
-          items={s.faq.faqs
-            .filter((f) => f.isVisible)
-            .map((f) => ({
-              question: f.question as string,
-              answer: f.answer as string,
-            }))}
+          filterOptions={{
+            locations: [],
+            services: [],
+            styles: [],
+            propertyTypes: categoryOptions,
+          }}
+          projects={projects}
         />
       )}
     </main>
