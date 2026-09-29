@@ -47,7 +47,11 @@ export interface CmsStatsSection {
   order: number;
   stats: CmsStatItem[];
 }
-
+export interface CmsStatsSectionT {
+  isVisible: boolean;
+  order: number;
+  statistics: CmsStatItem[];
+}
 // ─── Services ─────────────────────────────────────────────────────────────────
 
 export interface CmsServiceItem {
@@ -66,6 +70,16 @@ export interface CmsServicesSection {
   heading: CmsBilingualText;
   description: CmsBilingualText;
   items: CmsServiceItem[];
+  button: CmsButton;
+}
+
+export interface CmsServicesSectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  services: CmsServiceItem[];
   button: CmsButton;
 }
 
@@ -89,6 +103,15 @@ export interface CmsFeaturedSpacesSection {
   button: CmsButton;
 }
 
+export interface CmsFeaturedSpacesSectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  spaces: CmsSpaceItem[];
+  button: CmsButton;
+}
 // ─── Signature projects ───────────────────────────────────────────────────────
 
 export interface CmsProjectItem {
@@ -112,6 +135,24 @@ export interface CmsSignatureProjectsSection {
   button: CmsButton;
 }
 
+export interface CmsSignatureProjectsSectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  projects: CmsProjectItem[];
+  button: CmsButton;
+}
+export interface CmsSignatureProjectsSectionT{
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  articles: CmsProjectItem[];
+  button: CmsButton;
+}
 // ─── Journey ──────────────────────────────────────────────────────────────────
 
 export interface CmsJourneyStep {
@@ -187,6 +228,12 @@ export interface CmsTab {
   value: string;
   _id: string;
 }
+export interface CmsTabT {
+  title: CmsBilingualText;
+  description: CmsBilingualText;
+  value: string;
+  _id: string;
+}
 
 export interface CmsFormField {
   type: string;
@@ -203,7 +250,7 @@ export interface CmsConsultationCTASection {
   heading: CmsBilingualText;
   description: CmsBilingualText;
   image: CmsImage;
-  tabs: CmsTab[];
+  items: CmsTabT[];
   fields: CmsFormField[];
   submitButtonLabel: CmsBilingualText;
 }
@@ -224,10 +271,19 @@ export interface CmsPartnershipSection {
   heading: CmsBilingualText;
   description: CmsBilingualText;
   image: CmsImage;
+  services: CmsPartnerStep[];
+  button: CmsButton;
+}
+export interface CmsPartnershipSectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  image: CmsImage;
   steps: CmsPartnerStep[];
   button: CmsButton;
 }
-
 // ─── Awards & Recognition ─────────────────────────────────────────────────────
 
 export interface CmsAwardItem {
@@ -328,7 +384,12 @@ export interface CmsMaterialInspirationSection {
   heading: string;
   materials: CmsMaterialItem[];
 }
-
+export interface CmsMaterialInspirationSectionT {
+  isVisible: boolean;
+  order: number;
+  heading: string;
+  items: CmsMaterialItem[];
+}
 // ─── Inspiration CTA banner ───────────────────────────────────────────────────
 
 export interface CmsInspirationCTASection {
@@ -359,7 +420,7 @@ export interface CmsInspirationPageSections {
   showcase: CmsGallerySection;
   materials: CmsMaterialInspirationSection;
   inspirationCTA: CmsInspirationCTASection;
-  designTips: CmsSignatureProjectsSection;
+  designTips: CmsSignatureProjectsSectionT;
   followJourney: CmsJourneyGallerySection;
 }
 
@@ -406,8 +467,8 @@ export interface CmsWhyT1PageSections {
   benefits: CmsServicesSection;
   clientTestimonials: CmsClientTestimonialsSection;
   brands: CmsAwardsRecognitionSection;
-  partnership: CmsPartnershipSection;
-  designTips: CmsSignatureProjectsSection;
+  partnership: CmsPartnershipSectionT;
+  designTips: CmsSignatureProjectsSectionT;
   faq: CmsFaqSection;
 }
 
@@ -427,13 +488,13 @@ export interface CmsWhyT1Page {
 export interface CmsTradePageSections {
   hero: CmsHeroSection;
   awardsRecognition: CmsAwardsRecognitionSection;
-  materialInspiration: CmsMaterialInspirationSection;
+  whoWeWorkWith: CmsMaterialInspirationSectionT;
   journey: CmsJourneySection;
   stats: CmsStatsSection;
-  signatureProjects: CmsSignatureProjectsSection;
-  services: CmsServicesSection;
-  partnership: CmsPartnershipSection;
-  consultationCTA: CmsConsultationCTASection;
+  projects: CmsSignatureProjectsSectionT;
+  benefits: CmsServicesSection;
+  partnershipServices: CmsPartnershipSection;
+  industryServices: CmsConsultationCTASection;
   faq: CmsFaqSection;
 }
 
@@ -732,6 +793,9 @@ export interface CmsPhilosophySection {
 
 // ─── Gallery / Carousel ───────────────────────────────────────────────────────
 export interface CmsImageGallerySection {
+  _id:string;
+  title:string;
+  href:string;
   image: {
     url: string;
     key: string;
@@ -805,6 +869,7 @@ export interface CmsSpaceGallerySection {
   heading: string;
   description: string;
   items: CmsImageGallerySection[];
+  button: CmsButton
   autoplay: boolean;
   showNavigation: boolean;
 }
@@ -846,7 +911,7 @@ export interface CmsSpaceDetailSections {
   styles: CmsSpaceGallerySection;
   materials: CmsMaterialInspirationSection;
   brands: CmsSpaceBrandsSection;
-  relatedProjects: CmsSignatureProjectsSection;
+  relatedProjects: CmsSignatureProjectsSectionT;
   journey: CmsJourneySection;
   faq: CmsFaqSection;
   relatedSpaces: CmsSpaceRelatedSpacesSection;
@@ -868,15 +933,15 @@ export interface CmsSpaceDetail {
 
 export interface CmsHomePageSections {
   hero: CmsHeroSection;
-  stats: CmsStatsSection;
-  services: CmsServicesSection;
-  featuredSpaces: CmsFeaturedSpacesSection;
-  signatureProjects: CmsSignatureProjectsSection;
+  stats: CmsStatsSectionT;
+  services: CmsServicesSectionT;
+  featuredSpaces: CmsFeaturedSpacesSectionT;
+  signatureProjects: CmsSignatureProjectsSectionT;
   journey: CmsJourneySection;
   whyChooseT1: CmsWhyChooseT1Section;
   testimonials: CmsTestimonialsSection;
   consultationCTA: CmsConsultationCTASection;
-  partnership: CmsPartnershipSection;
+  partnership: CmsPartnershipSectionT;
   awardsRecognition: CmsAwardsRecognitionSection;
   designTips: CmsDesignTipsSection;
   faq: CmsFaqSection;
