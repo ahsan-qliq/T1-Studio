@@ -255,6 +255,9 @@
     "socialX": "Follow us on X",
     "socialLinkedin": "Connect on LinkedIn",
     "socialYoutube": "Watch us on YouTube",
+    "socialInstagram": "Follow us on Instagram",
+    "socialTikTok": "Follow us on TikTok",
+    "socialGmb": "Find us on Google Maps",
     "copyright": "© 2026 T1 Studio. All rights reserved.",
     "legalNavLabel": "Legal",
     "privacyPolicy": "Privacy",
@@ -278,7 +281,15 @@
     "post3Title": "Top 5 Interior Design Trends Shaping UAE Homes in 2025",
     "post4ReadTime": "5 min read",
     "post4Title": "Best Efficient Walk-in Wardrobe Designs for Dubai Homes",
-    "post4ImageAlt": "Elegant walk-in wardrobe with LED lighting and full-length mirror"
+    "post4ImageAlt": "Elegant walk-in wardrobe with LED lighting and full-length mirror",
+    "readArticleLabel": "Read Article",
+    "loadMoreLabel": "Load More",
+    "categoryMeta": "Category",
+    "publishedMeta": "Published",
+    "authorMeta": "Author",
+    "noResultsLabel": "No articles found",
+    "clearFiltersLabel": "Clear filters",
+    "categoryFilterLabel": "Category"
   },
   "Awards": {
     "label": "Awards & Recognition",
