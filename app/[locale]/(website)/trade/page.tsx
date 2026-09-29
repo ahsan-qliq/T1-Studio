@@ -11,7 +11,6 @@ import {
 import { StatsBar } from "@/components/sections/StatsBar";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
@@ -30,9 +29,22 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
 
-const JOURNEY_ICONS: LucideIcon[] = [Globe, Lightbulb, Building2, Rocket, TrendingUp];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [User, Maximize2, Shield, CheckCircle2, RefreshCw];
+const JOURNEY_ICONS: LucideIcon[] = [
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+];
+const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+];
 
 const PROJECT_SIZES = [
   { width: 700, height: 500 },
@@ -49,50 +61,46 @@ export default async function TradePage({
 }) {
   const { locale } = await params;
 
-  const [cms, tJourney, tStats] = await Promise.all([
+  const [cms, tJourney, tStats, tDreamSpace] = await Promise.all([
     getTradePageCms(locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "Stats" }),
+    getTranslations("DreamSpace"),
   ]);
-
+const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
   const s = cms?.sections;
 
   // ── Journey steps ─────────────────────────────────────────────────────────
-  const journeySteps = s?.journey?.steps
-    .filter((step) => step.isVisible)
-    .map((step, i) => ({
-      number: String(i + 1).padStart(2, "0"),
-      icon: JOURNEY_ICONS[i] ?? Globe,
-      title: step.title as string,
-      subtitle: step.subtitle as string,
-      description: step.description as string,
-      advantageText: step.advantageTitle as string,
-      highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
-      highlightText: step.highlight as string,
-      extraContent:
-        i === 1
-          ? createElement(SmartSpaceDiagram, {
-              badge: tJourney("smartSpaceBadge"),
-              items: [
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
-              ],
-            })
-          : i === 2
-            ? createElement(KellerBadge, {
-                line1: tJourney("kellerLine1"),
-                line2: tJourney("kellerLine2"),
+  const journeySteps =
+    s?.journey?.steps
+      .filter((step) => step.isVisible)
+      .map((step, i) => ({
+        number: String(i + 1).padStart(2, "0"),
+        icon: JOURNEY_ICONS[i] ?? Globe,
+        title: step.title as string,
+        subtitle: step.subtitle as string,
+        description: step.description as string,
+        advantageText: step.advantageTitle as string,
+        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
+        highlightText: step.highlight as string,
+        extraContent:
+          i === 1
+            ? createElement(SmartSpaceDiagram, {
+                badge: tJourney("smartSpaceBadge"),
+                items: [
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
+                ],
               })
-            : undefined,
-    })) ?? [];
-
-  // ── Dream Space field helpers ──────────────────────────────────────────────
-  const cta = s?.consultationCTA;
-  const getField = (name: string) => cta?.fields.find((f) => f.name === name);
-  const mapFieldOptions = (name: string) =>
-    getField(name)?.options?.map((o) => ({ value: o.value, label: o.label as string })) ?? [];
-
+            : i === 2
+              ? createElement(KellerBadge, {
+                  line1: tJourney("kellerLine1"),
+                  line2: tJourney("kellerLine2"),
+                })
+              : undefined,
+      })) ?? [];
+      console.log(s?.stats)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -119,10 +127,10 @@ export default async function TradePage({
         </FadeUp>
       )}
 
-      {s?.materialInspiration?.isVisible && (
+      {s?.whoWeWorkWith?.isVisible && (
         <MaterialInspirationSection
-          heading={s.materialInspiration.heading}
-          items={s.materialInspiration.materials.map((item) => ({
+          heading={s.whoWeWorkWith.heading}
+          items={s.whoWeWorkWith.items.map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
             label: item.label,
@@ -146,20 +154,23 @@ export default async function TradePage({
       {s?.stats?.isVisible && (
         <FadeUp>
           <StatsBar
-            items={s.stats.statistics
+            items={s.stats.stats
               .filter((stat) => stat.isVisible)
-              .map((stat) => ({ value: stat.value, label: stat.label as string }))}
+              .map((stat) => ({
+                value: stat.value,
+                label: stat.label as string,
+              }))}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
       )}
 
-      {s?.signatureProjects?.isVisible && (
+      {s?.projects?.isVisible && (
         <SignatureProjectsSection
-          heading={s.signatureProjects.heading as string}
-          viewAllLabel={s.signatureProjects.button.label as string}
+          heading={s.projects.heading as string}
+          viewAllLabel={s.projects.button.label as string}
           viewAllHref="/projects"
-          projects={s.signatureProjects.projects
+          projects={s.projects.projects
             .filter((pr) => pr.isVisible)
             .map((pr, i) => ({
               id: pr._id,
@@ -175,11 +186,11 @@ export default async function TradePage({
         />
       )}
 
-      {s?.services?.isVisible && (
+      {s?.benefits?.isVisible && (
         <ServicesSection
-          label={s.services.eyebrow as string}
-          heading={s.services.heading as string}
-          services={s.services.services
+          label={s.benefits.eyebrow as string}
+          heading={s.benefits.heading as string}
+          services={s.benefits.items
             .filter((svc) => svc.isVisible)
             .map((svc) => ({
               title: svc.title as string,
@@ -188,48 +199,43 @@ export default async function TradePage({
         />
       )}
 
-      {s?.partnership?.isVisible && (
+      {/* {s?.partnershipServices?.isVisible && (
         <FadeUp>
           <ReferralPartnerSection
-            heading={s.partnership.heading as string}
-            description={s.partnership.description as string}
-            imageSrc={s.partnership.image.url}
-            imageAlt={s.partnership.image.alt as string}
-            ctaLabel={s.partnership.button.label as string}
-            ctaHref={s.partnership.button.href || "/"}
-            steps={s.partnership.steps.map((step) => ({
+            heading={s.partnershipServices.heading as string}
+            description={s.partnershipServices.description as string}
+            imageSrc={s.partnershipServices.image.url}
+            imageAlt={s.partnershipServices.image.alt as string}
+            ctaLabel={s.partnershipServices.button.label as string}
+            ctaHref={s.partnershipServices.button.href || "/"}
+            steps={s.partnershipServices.services.map((step) => ({
               label: step.title as string,
               iconName: step.icon,
             }))}
             benefits={[]}
           />
         </FadeUp>
-      )}
+      )} */}
 
-      {cta?.isVisible && (
-        <DreamSpaceSection
-          heading={cta.heading as string}
-          imageSrc={cta.image?.url || ""}
-          imageAlt={cta.image?.alt as string}
-          audienceTabs={cta.tabs.map((tab) => ({
-            id: tab.value,
-            label: tab.label as string,
-          }))}
-          propertyTypeLabel={getField("propertyType")?.label as string ?? ""}
-          propertyTypeOptions={mapFieldOptions("propertyType")}
-          spaceRequiredLabel={getField("spaceRequired")?.label as string ?? ""}
-          spaceRequiredOptions={mapFieldOptions("spaceRequired")}
-          typeOfServiceLabel={getField("typeOfService")?.label as string ?? ""}
-          typeOfServiceOptions={mapFieldOptions("typeOfService")}
-          timelineLabel={getField("timeline")?.label as string ?? ""}
-          timelineOptions={mapFieldOptions("timeline")}
-          firstNameLabel={getField("firstName")?.label as string ?? ""}
-          lastNameLabel={getField("lastName")?.label as string ?? ""}
-          emailLabel={getField("email")?.label as string ?? ""}
-          phoneLabel={getField("phone")?.label as string ?? ""}
-          submitLabel={cta.submitButtonLabel as string}
-        />
-      )}
+      <DreamSpaceSection
+        heading={tDreamSpace("heading")}
+        imageSrc={dreamSpaceConfig.imageSrc}
+        imageAlt={tDreamSpace("imageAlt")}
+        audienceTabs={dreamSpaceConfig.audienceTabs}
+        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
+        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
+        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
+        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
+        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
+        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
+        timelineLabel={tDreamSpace("timelineLabel")}
+        timelineOptions={dreamSpaceConfig.timelineOptions}
+        firstNameLabel={tDreamSpace("firstNameLabel")}
+        lastNameLabel={tDreamSpace("lastNameLabel")}
+        emailLabel={tDreamSpace("emailLabel")}
+        phoneLabel={tDreamSpace("phoneLabel")}
+        submitLabel={tDreamSpace("submitLabel")}
+      />
 
       {s?.faq?.isVisible && (
         <FaqSection
