@@ -230,6 +230,9 @@
     "socialX": "تابعنا على X",
     "socialLinkedin": "تواصل معنا على لينكدإن",
     "socialYoutube": "شاهدنا على يوتيوب",
+    "socialInstagram": "تابعنا على إنستغرام",
+    "socialTikTok": "تابعنا على تيك توك",
+    "socialGmb": "اعثر علينا على خرائط جوجل",
     "copyright": "© 2026 T1 Studio. جميع الحقوق محفوظة.",
     "legalNavLabel": "قانوني",
     "privacyPolicy": "الخصوصية",
@@ -253,7 +256,15 @@
     "post3Title": "أبرز 5 اتجاهات في التصميم الداخلي تُشكّل منازل الإمارات في 2025",
     "post4ReadTime": "5 دقائق قراءة",
     "post4Title": "أفضل تصاميم غرف الملابس المتكاملة لمنازل دبي",
-    "post4ImageAlt": "غرفة ملابس أنيقة بإضاءة LED ومرآة كاملة الطول"
+    "post4ImageAlt": "غرفة ملابس أنيقة بإضاءة LED ومرآة كاملة الطول",
+    "readArticleLabel": "اقرأ المقالة",
+    "loadMoreLabel": "تحميل المزيد",
+    "categoryMeta": "الفئة",
+    "publishedMeta": "نُشر في",
+    "authorMeta": "الكاتب",
+    "noResultsLabel": "لا توجد مقالات",
+    "clearFiltersLabel": "مسح الفلاتر",
+    "categoryFilterLabel": "الفئة"
   },
   "Awards": {
     "label": "الجوائز والتقدير",
