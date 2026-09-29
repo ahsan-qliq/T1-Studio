@@ -33,8 +33,20 @@ import { MaterialInspirationSection } from "@/components/sections/MaterialInspir
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 
-const JOURNEY_ICONS: LucideIcon[] = [Globe, Lightbulb, Building2, Rocket, TrendingUp];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [User, Maximize2, Shield, CheckCircle2, RefreshCw];
+const JOURNEY_ICONS: LucideIcon[] = [
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+];
+const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+];
 
 const PROJECT_SIZES = [
   { width: 700, height: 500 },
@@ -64,34 +76,35 @@ export default async function SpaceDetailPage({ params }: Props) {
 
   const s = cms.sections;
 
-  const journeySteps = s?.journey?.steps
-    .filter((step) => step.isVisible)
-    .map((step, i) => ({
-      number: String(i + 1).padStart(2, "0"),
-      icon: JOURNEY_ICONS[i] ?? Globe,
-      title: step.title as string,
-      subtitle: step.subtitle as string,
-      description: step.description as string,
-      advantageText: step.advantageTitle as string,
-      highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
-      highlightText: step.highlight as string,
-      extraContent:
-        i === 1
-          ? createElement(SmartSpaceDiagram, {
-              badge: tJourney("smartSpaceBadge"),
-              items: [
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
-                { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
-              ],
-            })
-          : i === 2
-            ? createElement(KellerBadge, {
-                line1: tJourney("kellerLine1"),
-                line2: tJourney("kellerLine2"),
+  const journeySteps =
+    s?.journey?.steps
+      .filter((step) => step.isVisible)
+      .map((step, i) => ({
+        number: String(i + 1).padStart(2, "0"),
+        icon: JOURNEY_ICONS[i] ?? Globe,
+        title: step.title as string,
+        subtitle: step.subtitle as string,
+        description: step.description as string,
+        advantageText: step.advantageTitle as string,
+        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
+        highlightText: step.highlight as string,
+        extraContent:
+          i === 1
+            ? createElement(SmartSpaceDiagram, {
+                badge: tJourney("smartSpaceBadge"),
+                items: [
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
+                ],
               })
-            : undefined,
-    })) ?? [];
+            : i === 2
+              ? createElement(KellerBadge, {
+                  line1: tJourney("kellerLine1"),
+                  line2: tJourney("kellerLine2"),
+                })
+              : undefined,
+      })) ?? [];
 
   const galleryImages = s?.styles?.items ?? [];
   const gallerySlides = galleryImages.slice(0, 3).map((img) => ({
@@ -102,17 +115,22 @@ export default async function SpaceDetailPage({ params }: Props) {
     src: img.image.url,
     alt: img.image.alt as string,
   }));
-
-  const relatedSpaces = s?.relatedSpaces?.spaces
-    .filter((sp) => sp.isVisible)
-    .map((sp) => ({
+const  styleRange = s.styles.items.map((sp)=>({
       id: sp._id,
-      title: sp.title as string,
-      href: sp.href,
-      image: { src: sp.image.url, alt: sp.image.alt as string },
-    })) ?? [];
+        title: sp.title as string,
+        href: sp.href,
+        image: { src: sp.image.url, alt: sp.image.alt as string },
+}))
+  const relatedSpaces =
+    s?.relatedSpaces?.spaces
+      .filter((sp) => sp.isVisible)
+      .map((sp) => ({
+        id: sp._id,
+        title: sp.title as string,
+        href: sp.href,
+        image: { src: sp.image.url, alt: sp.image.alt as string },
+      })) ?? [];
 
-console.log(s)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -142,6 +160,15 @@ console.log(s)
           items={s.features.items.map((item) => item.description)}
           image={s.features.image.url}
           imageAlt={s.features.image.alt as string}
+        />
+      )}
+
+      {s?.styles?.isVisible && styleRange.length > 0 && (
+        <SpacesAccordionSection
+          heading={s.styles.heading}
+          viewAllLabel={s.styles.button.label as string}
+          viewAllHref={s.styles.button.href}
+          spaces={styleRange}
         />
       )}
 
