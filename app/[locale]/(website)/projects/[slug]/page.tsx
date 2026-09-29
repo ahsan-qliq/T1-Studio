@@ -1,4 +1,5 @@
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
+import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ImageCarouselSection } from "@/components/sections/ImageCarouselSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
@@ -6,6 +7,7 @@ import { ClientTestimonialSection } from "@/components/sections/ClientTestimonia
 import { SpaceIntroSection } from "@/components/sections/SpaceIntroSection";
 import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 import { getProjectDetailCms } from "@/lib/cms/project-detail-page";
 
@@ -93,7 +95,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
    * ---------------------------------------------------------
    */
 
-  const [tBeforeAfter, tCarousel, tTestimonials] = await Promise.all([
+  const [tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] = await Promise.all([
     getTranslations({
       locale,
       namespace: "BeforeAfter",
@@ -108,7 +110,14 @@ export default async function ProjectDetailsPage({ params }: Props) {
       locale,
       namespace: "Testimonials",
     }),
+
+    getTranslations({
+      locale,
+      namespace: "DreamSpace",
+    }),
   ]);
+
+  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
   /*
    * ---------------------------------------------------------
@@ -551,64 +560,20 @@ export default async function ProjectDetailsPage({ params }: Props) {
           CONSULTATION
       ===================================================== */}
 
-      {isVisible(consultation) &&
-        (consultation.image?.url ||
-          getText(consultation.eyebrow, locale) ||
-          getText(consultation.heading, locale) ||
-          getText(consultation.description, locale) ||
-          getText(consultation.submitButtonLabel, locale)) && (
-          <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 lg:py-24">
-            <div className="grid overflow-hidden bg-black md:grid-cols-2">
-              {/* Image */}
-
-              {consultation.image?.url && (
-                <div className="min-h-[350px]">
-                  <img
-                    src={consultation.image.url}
-                    alt={
-                      getText(consultation.image.alt, locale) ||
-                      project.pageName ||
-                      project.projectName ||
-                      "Project consultation"
-                    }
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              )}
-
-              {/* Content */}
-
-              <div className="flex flex-col justify-center p-8 text-white md:p-12 lg:p-16">
-                {getText(consultation.eyebrow, locale) && (
-                  <p className="mb-3 text-sm uppercase tracking-[0.2em] text-white/60">
-                    {getText(consultation.eyebrow, locale)}
-                  </p>
-                )}
-
-                {getText(consultation.heading, locale) && (
-                  <h2 className="text-3xl font-semibold md:text-4xl">
-                    {getText(consultation.heading, locale)}
-                  </h2>
-                )}
-
-                {getText(consultation.description, locale) && (
-                  <p className="mt-5 max-w-xl leading-7 text-white/70">
-                    {getText(consultation.description, locale)}
-                  </p>
-                )}
-
-                {getText(consultation.submitButtonLabel, locale) && (
-                  <button
-                    type="button"
-                    className="mt-8 w-fit border border-white px-6 py-3 text-sm transition hover:bg-white hover:text-black"
-                  >
-                    {getText(consultation.submitButtonLabel, locale)}
-                  </button>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
+      <DreamSpaceSection
+        {...dreamSpaceConfig}
+        heading={tDreamSpace("heading")}
+        imageAlt={tDreamSpace("imageAlt")}
+        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
+        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
+        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
+        timelineLabel={tDreamSpace("timelineLabel")}
+        firstNameLabel={tDreamSpace("firstNameLabel")}
+        lastNameLabel={tDreamSpace("lastNameLabel")}
+        emailLabel={tDreamSpace("emailLabel")}
+        phoneLabel={tDreamSpace("phoneLabel")}
+        submitLabel={tDreamSpace("submitLabel")}
+      />
     </main>
   );
 }
