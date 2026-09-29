@@ -38,6 +38,7 @@ export default async function AboutPage({
   ]);
 
   const s = cms?.sections;
+  console.log(s, 41)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -144,7 +145,7 @@ export default async function AboutPage({
         <FadeUp>
           <AwardsSection
             label={s.brands.heading as string}
-            logos={s.brands.awards.map((award) => ({
+            logos={s.brands.brands.map((award) => ({
               src: award.logo.url,
               alt: award.logo.alt as string,
               width: 120,
