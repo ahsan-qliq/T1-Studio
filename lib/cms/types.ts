@@ -694,7 +694,7 @@ export interface CmsBlogArticleListingSection {
   eyebrow: string;
   heading: string;
   description: string;
-  categories: string[];
+  categories: Array<{ key: string; label: string; isVisible: boolean; _id: string }>;
   featuredArticle: CmsBlogArticle;
   articles: CmsBlogArticle[];
   enableCategoryFilter: boolean;
