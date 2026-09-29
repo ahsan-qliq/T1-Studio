@@ -21,6 +21,7 @@ export default async function ContactPage({
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
+  console.log(s?.location)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -37,11 +38,11 @@ export default async function ContactPage({
         <ServicesSection
           label={s.contactInfo.eyebrow as string}
           heading={s.contactInfo.heading as string}
-          services={s.contactInfo.services
+          services={s.contactInfo.items
             .filter((svc) => svc.isVisible)
             .map((svc) => ({
               title: svc.title as string,
-              subtitle: svc.description as string,
+              subtitle: svc.value as string,
             }))}
         />
       )}
