@@ -163,19 +163,14 @@ export default async function LandingPage({ params }: Props) {
         ]}
       />
       <FaqSection {...faqConfig} />
-          <DreamSpaceSection
+      <DreamSpaceSection
+        {...dreamSpaceConfig}
         heading={tDreamSpace("heading")}
-        imageSrc={dreamSpaceConfig.imageSrc}
         imageAlt={tDreamSpace("imageAlt")}
-        audienceTabs={dreamSpaceConfig.audienceTabs}
         propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
         spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
         typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
         timelineLabel={tDreamSpace("timelineLabel")}
-        timelineOptions={dreamSpaceConfig.timelineOptions}
         firstNameLabel={tDreamSpace("firstNameLabel")}
         lastNameLabel={tDreamSpace("lastNameLabel")}
         emailLabel={tDreamSpace("emailLabel")}
