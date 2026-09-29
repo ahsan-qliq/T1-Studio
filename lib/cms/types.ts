@@ -57,7 +57,7 @@ export interface CmsStatsSectionT {
 export interface CmsServiceItem {
   icon: string;
   title: CmsBilingualText;
-  description: CmsBilingualText;
+  value: CmsBilingualText;
   href: string;
   isVisible: boolean;
   _id: string;
@@ -672,12 +672,55 @@ export interface CmsBlogListingSection {
   projects: CmsBlogProjectItem[];
 }
 
+export interface CmsBlogArticle {
+  _id: string;
+  blogSlug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  categoryKey: string;
+  author: string;
+  readTime: string;
+  publishedDate: string | null;
+  image: CmsImage;
+  href: string;
+  featured: boolean;
+  isVisible: boolean;
+}
+
+export interface CmsBlogArticleListingSection {
+  isVisible: boolean;
+  order: number;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  categories: string[];
+  featuredArticle: CmsBlogArticle;
+  articles: CmsBlogArticle[];
+  enableCategoryFilter: boolean;
+  enableLoadMore: boolean;
+  initialDisplayCount: number;
+  loadMoreCount: number;
+  loadMoreButton: CmsButton;
+}
+
+export interface CmsBlogPagePartnershipSection {
+  isVisible: boolean;
+  order: number;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  image: CmsImage;
+  button: CmsButton;
+  steps: Array<{ title: string; icon: string; _id?: string }>;
+}
+
 // ─── Full blogs page ──────────────────────────────────────────────────────────
 
 export interface CmsBlogsPageSections {
   hero: CmsHeroSection;
-  listing: CmsBlogListingSection;
-  partnership: CmsPartnershipSection;
+  blogListing: CmsBlogArticleListingSection;
+  partnership: CmsBlogPagePartnershipSection;
   faq: CmsFaqSection;
 }
 
