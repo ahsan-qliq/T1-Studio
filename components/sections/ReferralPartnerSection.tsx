@@ -45,13 +45,13 @@ function ProcessStep({ iconName, label, isLast }: PartnerStep & { isLast: boolea
     <>
       <li className="flex flex-col items-center gap-2 text-center">
         <div className="flex size-11 items-center justify-center" aria-hidden="true">
-          <Icon className="size-5 text-white" strokeWidth={2} />
+          <Icon className="size-10 text-white" strokeWidth={2} />
         </div>
         <span className="text-xs leading-snug text-secondary w-10 text-center">{label}</span>
       </li>
       {!isLast && (
         <li aria-hidden="true" className="mb-4 shrink-0 self-start pt-3">
-          <ArrowRight className="size-4 text-muted-foreground" />
+          <ArrowRight className="size-5 text-muted-foreground" />
         </li>
       )}
     </>
