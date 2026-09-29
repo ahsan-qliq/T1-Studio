@@ -113,11 +113,12 @@ export default async function HomePage({
     cta: s?.hero ? p(s.hero.primaryButton.label) : tHero("cta"),
     imageSrc: s?.hero?.backgroundImage.url,
   };
+
   // ── Stats ─────────────────────────────────────────────────────────────────
   const statsItems = s?.stats?.statistics
     ?.filter((stat) => stat.isVisible)
     .map((stat) => ({ value: stat.value, label: p(stat.label) }));
-
+console.log(s.services.services)
   // ── Services ──────────────────────────────────────────────────────────────
   const serviceItems = s?.services
     ? s.services.services
