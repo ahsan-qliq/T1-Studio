@@ -100,7 +100,6 @@ const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
                 })
               : undefined,
       })) ?? [];
-      console.log(s?.stats)
   return (
     <main>
       {s?.hero?.isVisible && (

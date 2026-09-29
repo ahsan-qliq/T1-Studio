@@ -113,7 +113,6 @@ export default async function HomePage({
     cta: s?.hero ? p(s.hero.primaryButton.label) : tHero("cta"),
     imageSrc: s?.hero?.backgroundImage.url,
   };
-console.log(s)
   // ── Stats ─────────────────────────────────────────────────────────────────
   const statsItems = s?.stats?.statistics
     ?.filter((stat) => stat.isVisible)
