@@ -64,7 +64,7 @@ export default async function BlogsDetailsPage({
         ]
       : []),
   ];
-
+console.log(s, 67)
   return (
     <main>
       {s?.hero?.isVisible && (
