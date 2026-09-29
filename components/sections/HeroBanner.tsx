@@ -1,9 +1,14 @@
 import Image from "next/image";
 import { getTranslations } from "next-intl/server";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
 
 interface HeroBannerProps {
   badge?: string;
@@ -12,6 +17,7 @@ interface HeroBannerProps {
   cta?: string;
   imageSrc?: string;
   videoSrc?: string;
+  breadcrumbs?: BreadcrumbItem[];
 }
 
 // CSS stagger timings — delay increases per element so they cascade in.
@@ -25,6 +31,7 @@ export async function HeroBanner({
   cta,
   imageSrc,
   videoSrc,
+  breadcrumbs,
 }: HeroBannerProps) {
   const t = await getTranslations("Hero");
   return (
@@ -90,21 +97,50 @@ export async function HeroBanner({
               {description}
             </p> */}
 
-            <div style={{ animation: ANIM, animationDelay: "0.6s" }}>
-              <Link
-                href="/contact"
-                className={cn(
-                  buttonVariants({ size: "lg" }),
-                  "group py-3",
-                )}
+            {breadcrumbs ? (
+              <nav
+                aria-label="Breadcrumb"
+                style={{ animation: ANIM, animationDelay: "0.6s" }}
               >
-                {cta}
-                <ArrowRight
-                  className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </Link>
-            </div>
+                <ol className="flex items-center justify-center gap-1 text-sm text-white/70">
+                  {breadcrumbs.map((crumb, i) => (
+                    <li key={i} className="flex items-center gap-1">
+                      {i > 0 && (
+                        <ChevronRight className="size-3.5 shrink-0 text-white/40" aria-hidden="true" />
+                      )}
+                      {crumb.href ? (
+                        <Link
+                          href={crumb.href}
+                          className="hover:text-white transition-colors"
+                        >
+                          {crumb.label}
+                        </Link>
+                      ) : (
+                        <span className="text-white font-medium" aria-current="page">
+                          {crumb.label}
+                        </span>
+                      )}
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            ) : (
+              <div style={{ animation: ANIM, animationDelay: "0.6s" }}>
+                <Link
+                  href="/contact"
+                  className={cn(
+                    buttonVariants({ size: "lg" }),
+                    "group py-3",
+                  )}
+                >
+                  {cta}
+                  <ArrowRight
+                    className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
