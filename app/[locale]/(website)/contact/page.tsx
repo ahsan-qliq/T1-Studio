@@ -4,6 +4,8 @@ import { ServicesSection } from "@/components/sections/ServicesSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { MapSection } from "@/components/sections/MapSection";
 import { FaqSection } from "@/components/sections/FaqSection";
+import { getTranslations } from "next-intl/server";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 export const revalidate = 3600;
 
@@ -13,32 +15,12 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const cms = await getContactPageCms(locale);
+  const [cms, tDreamSpace] = await Promise.all([
+    getContactPageCms(locale),
+    getTranslations({ locale, namespace: "DreamSpace" }),
+  ]);
   const s = cms?.sections;
-
-  const cta = (
-    s as typeof s & {
-      consultationCTA?: {
-        fields: Array<{
-          name: string;
-          label?: unknown;
-          options?: Array<{ value: string; label: unknown }>;
-        }>;
-        contactForm?: { isVisible?: boolean };
-        heading?: unknown;
-        image?: { url?: string; alt?: unknown };
-        tabs: Array<{ value: string; label: unknown }>;
-        submitButtonLabel?: unknown;
-      };
-    }
-  )?.consultationCTA;
-  const getField = (name: string) =>
-    cta?.fields.find((f: { name: string }) => f.name === name);
-  const mapFieldOptions = (name: string) =>
-    getField(name)?.options?.map((o: { value: string; label: unknown }) => ({
-      value: o.value,
-      label: o.label as string,
-    })) ?? [];
+  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -64,30 +46,20 @@ export default async function ContactPage({
         />
       )}
 
-      {cta?.contactForm?.isVisible && (
-        <DreamSpaceSection
-          heading={cta.heading as string}
-          imageSrc={cta.image?.url || ""}
-          imageAlt={cta.image?.alt as string}
-          audienceTabs={cta.tabs.map((tab: { value: string; label: unknown }) => ({
-            id: tab.value,
-            label: tab.label as string,
-          }))}
-          propertyTypeLabel={getField("propertyType")?.label as string ?? ""}
-          propertyTypeOptions={mapFieldOptions("propertyType")}
-          spaceRequiredLabel={getField("spaceRequired")?.label as string ?? ""}
-          spaceRequiredOptions={mapFieldOptions("spaceRequired")}
-          typeOfServiceLabel={getField("typeOfService")?.label as string ?? ""}
-          typeOfServiceOptions={mapFieldOptions("typeOfService")}
-          timelineLabel={getField("timeline")?.label as string ?? ""}
-          timelineOptions={mapFieldOptions("timeline")}
-          firstNameLabel={getField("firstName")?.label as string ?? ""}
-          lastNameLabel={getField("lastName")?.label as string ?? ""}
-          emailLabel={getField("email")?.label as string ?? ""}
-          phoneLabel={getField("phone")?.label as string ?? ""}
-          submitLabel={cta.submitButtonLabel as string}
-        />
-      )}
+      <DreamSpaceSection
+        {...dreamSpaceConfig}
+        heading={tDreamSpace("heading")}
+        imageAlt={tDreamSpace("imageAlt")}
+        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
+        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
+        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
+        timelineLabel={tDreamSpace("timelineLabel")}
+        firstNameLabel={tDreamSpace("firstNameLabel")}
+        lastNameLabel={tDreamSpace("lastNameLabel")}
+        emailLabel={tDreamSpace("emailLabel")}
+        phoneLabel={tDreamSpace("phoneLabel")}
+        submitLabel={tDreamSpace("submitLabel")}
+      />
 
       {s?.location?.isVisible && s.location.embedUrl && (
         <MapSection
