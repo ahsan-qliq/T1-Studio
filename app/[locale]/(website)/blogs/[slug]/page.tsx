@@ -1,17 +1,10 @@
 import { getBlogDetailCms } from "@/lib/cms/blog-detail";
-import { HeroBanner } from "@/components/sections/HeroBanner";
-import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
-import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import { BlogDetailContentSection } from "@/components/sections/BlogDetailContentSection";
-import { BlogAuthorQuoteSection } from "@/components/sections/BlogAuthorQuoteSection";
 import { getTranslations } from "next-intl/server";
 import { getDreamSpaceConfig } from "@/app/config/home.config";
-
-const PROJECT_SIZES = [
-  { width: 700, height: 500 },
-  { width: 280, height: 180 },
-  { width: 560, height: 480 },
-];
+import { BlogDetailHeroSection } from "@/components/sections/BlogDetailHeroSection";
+import { BlogDetailArticleLayout } from "@/components/sections/BlogDetailArticleLayout";
+import { BlogSection } from "@/components/sections/BlogSection";
+import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 
 export const revalidate = 3600;
 
@@ -21,33 +14,105 @@ export default async function BlogsDetailsPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const [cms, tDreamSpace] = await Promise.all([
+  const [cms, tDreamSpace, tBlog] = await Promise.all([
     getBlogDetailCms(slug, locale),
     getTranslations({ locale, namespace: "DreamSpace" }),
+    getTranslations({ locale, namespace: "Blog" }),
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
+  const blocks = s?.contentBlocks?.isVisible
+    ? s.contentBlocks.blocks.map((block, i) => ({
+        id: `section-${i}`,
+        label: block.label,
+        body: block.body,
+        image: block.image?.url
+          ? { src: block.image.url, alt: block.image.alt as string }
+          : undefined,
+        bodyAfter: block.bodyAfter || undefined,
+      }))
+    : [];
+
+  const relatedPosts = s?.signatureProjects?.isVisible
+    ? s.signatureProjects.articles
+        .filter((a) => a.isVisible)
+        .map((a) => ({
+          slug: a._id,
+          tag: (a.location as string) || tBlog("tag"),
+          readTime: "",
+          title: a.title as string,
+          href: a.href || "#",
+          image: a.image?.url
+            ? { src: a.image.url, alt: a.image.alt as string }
+            : undefined,
+        }))
+    : [];
+
+  const breadcrumbs = [
+    { label: "Home", href: "/" },
+    { label: "Insights", href: "/blogs" },
+    ...(s?.hero?.eyebrow ? [{ label: s.hero.eyebrow as string }] : []),
+    ...(s?.hero?.heading
+      ? [
+          {
+            label:
+              (s.hero.heading as string).length > 40
+                ? (s.hero.heading as string).slice(0, 40) + "..."
+                : (s.hero.heading as string),
+          },
+        ]
+      : []),
+  ];
+
   return (
     <main>
       {s?.hero?.isVisible && (
-        <HeroBanner
-          badge={s.hero.eyebrow as string}
-          heading={s.hero.heading as string}
-          description={s.hero.description as string}
-          cta={s.hero.primaryButton.label as string}
-          imageSrc={s.hero.backgroundImage.url || undefined}
+        <BlogDetailHeroSection
+          category={s.hero.eyebrow as string}
+          title={s.hero.heading as string}
+          excerpt={s.hero.description as string}
+          publishedAt={cms?.publishedAt}
+          updatedAt={cms?.updatedAt}
+          authorName={s.author?.name}
+          authorRole={s.author?.role}
+          authorImage={
+            s.author?.image?.url
+              ? { src: s.author.image.url, alt: s.author.image.alt as string }
+              : undefined
+          }
+          heroImage={
+            s.hero.backgroundImage?.url
+              ? {
+                  src: s.hero.backgroundImage.url,
+                  alt: s.hero.backgroundImage.alt as string,
+                }
+              : undefined
+          }
+          breadcrumbs={breadcrumbs}
         />
       )}
 
-      {s?.contentBlocks?.isVisible && (
-        <BlogDetailContentSection
-          blocks={s.contentBlocks.blocks.map((block) => ({
-            label: block.label,
-            body: block.body,
-            image: { src: block.image.url, alt: block.image.alt as string },
-            bodyAfter: block.bodyAfter,
-          }))}
+      {blocks.length > 0 && (
+        <BlogDetailArticleLayout
+          blocks={blocks}
+          authorQuote={s?.author?.isVisible ? s.author.quote : undefined}
+          authorName={s?.author?.name}
+          authorRole={s?.author?.role}
+          authorExperience={s?.author?.experience}
+          authorImage={
+            s?.author?.image?.url
+              ? { src: s.author.image.url, alt: s.author.image.alt as string }
+              : undefined
+          }
+          sidebarImage={
+            s?.hero?.backgroundImage?.url
+              ? {
+                  src: s.hero.backgroundImage.url,
+                  alt: s.hero.backgroundImage.alt as string,
+                }
+              : undefined
+          }
         />
       )}
 
@@ -66,37 +131,18 @@ export default async function BlogsDetailsPage({
         submitLabel={tDreamSpace("submitLabel")}
       />
 
-      {s?.signatureProjects?.isVisible && (
-        <SignatureProjectsSection
-          heading={s.signatureProjects.heading as string}
-          viewAllLabel={s.signatureProjects.button.label as string}
-          viewAllHref="/projects"
-          projects={s.signatureProjects.projects
-            .filter((pr) => pr.isVisible)
-            .map((pr, i) => ({
-              id: pr._id,
-              title: pr.title as string,
-              location: pr.location as string,
-              href: pr.href,
-              image: {
-                src: pr.image.url,
-                alt: pr.image.alt as string,
-                ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
-              },
-            }))}
-        />
-      )}
-
-      {s?.author?.isVisible && (
-        <BlogAuthorQuoteSection
-          quote={s.author.quote}
-          authorName={s.author.name}
-          authorRole={s.author.role}
-          authorExperience={s.author.experience}
-          authorImage={{
-            src: s.author.image.url,
-            alt: s.author.image.alt as string,
-          }}
+      {relatedPosts.length > 0 && (
+        <BlogSection
+          label=""
+          heading={
+            (s?.signatureProjects?.heading as string) ||
+            tBlog("relatedHeading") ||
+            "Related Articles"
+          }
+          posts={relatedPosts}
+          viewAllLabel={tBlog("viewAllLabel")}
+          viewAllHref="/blogs"
+          learnMoreLabel={tBlog("learnMoreLabel")}
         />
       )}
     </main>
