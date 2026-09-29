@@ -113,7 +113,7 @@ export default async function HomePage({
     cta: s?.hero ? p(s.hero.primaryButton.label) : tHero("cta"),
     imageSrc: s?.hero?.backgroundImage.url,
   };
-
+console.log(s)
   // ── Stats ─────────────────────────────────────────────────────────────────
   const statsItems = s?.stats?.statistics
     ?.filter((stat) => stat.isVisible)
@@ -155,7 +155,6 @@ export default async function HomePage({
     { width: 280, height: 180 },
     { width: 560, height: 480 },
   ];
-
   const signatureProjects = s?.signatureProjects
     ? s.signatureProjects.projects
         .filter((pr) => pr.isVisible)
@@ -252,50 +251,19 @@ export default async function HomePage({
       }));
 
   // ── Dream Space (Consultation CTA) ────────────────────────────────────────
-  const cta = s?.consultationCTA;
-  const getField = (name: string) => cta?.fields.find((f) => f.name === name);
-  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
-
-  const mapFieldOptions = (name: string, fallback: { value: string; label: string }[]) => {
-    const field = getField(name);
-    if (field?.options?.length) {
-      return field.options.map((o) => ({ value: o.value, label: p(o.label) }));
-    }
-    return fallback;
-  };
-
   const dreamSpaceProps = {
-    heading: cta ? p(cta.heading) : tDreamSpace("heading"),
-    imageSrc: cta?.image?.url || dreamSpaceConfig.imageSrc,
-    imageAlt: cta ? p(cta.image?.alt) : tDreamSpace("imageAlt"),
-    audienceTabs: cta?.tabs?.length
-      ? cta.tabs.map((tab) => ({ id: tab.value, label: p(tab.label) }))
-      : dreamSpaceConfig.audienceTabs,
-    propertyTypeLabel:
-      p(getField("propertyType")?.label) || tDreamSpace("propertyTypeLabel"),
-    propertyTypeOptions: mapFieldOptions(
-      "propertyType",
-      dreamSpaceConfig.propertyTypeOptions,
-    ),
-    spaceRequiredLabel:
-      p(getField("spaceRequired")?.label) || tDreamSpace("spaceRequiredLabel"),
-    spaceRequiredOptions: mapFieldOptions(
-      "spaceRequired",
-      dreamSpaceConfig.spaceRequiredOptions,
-    ),
-    typeOfServiceLabel:
-      p(getField("typeOfService")?.label) || tDreamSpace("typeOfServiceLabel"),
-    typeOfServiceOptions: mapFieldOptions(
-      "typeOfService",
-      dreamSpaceConfig.typeOfServiceOptions,
-    ),
-    timelineLabel: p(getField("timeline")?.label) || tDreamSpace("timelineLabel"),
-    timelineOptions: mapFieldOptions("timeline", dreamSpaceConfig.timelineOptions),
-    firstNameLabel: p(getField("firstName")?.label) || tDreamSpace("firstNameLabel"),
-    lastNameLabel: p(getField("lastName")?.label) || tDreamSpace("lastNameLabel"),
-    emailLabel: p(getField("email")?.label) || tDreamSpace("emailLabel"),
-    phoneLabel: p(getField("phone")?.label) || tDreamSpace("phoneLabel"),
-    submitLabel: cta ? p(cta.submitButtonLabel) || tDreamSpace("submitLabel") : tDreamSpace("submitLabel"),
+    ...getDreamSpaceConfig(tDreamSpace),
+    heading: tDreamSpace("heading"),
+    imageAlt: tDreamSpace("imageAlt"),
+    propertyTypeLabel: tDreamSpace("propertyTypeLabel"),
+    spaceRequiredLabel: tDreamSpace("spaceRequiredLabel"),
+    typeOfServiceLabel: tDreamSpace("typeOfServiceLabel"),
+    timelineLabel: tDreamSpace("timelineLabel"),
+    firstNameLabel: tDreamSpace("firstNameLabel"),
+    lastNameLabel: tDreamSpace("lastNameLabel"),
+    emailLabel: tDreamSpace("emailLabel"),
+    phoneLabel: tDreamSpace("phoneLabel"),
+    submitLabel: tDreamSpace("submitLabel"),
   };
 
   // ── Referral Partner ──────────────────────────────────────────────────────
