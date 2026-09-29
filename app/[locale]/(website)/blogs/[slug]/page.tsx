@@ -4,6 +4,8 @@ import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { BlogDetailContentSection } from "@/components/sections/BlogDetailContentSection";
 import { BlogAuthorQuoteSection } from "@/components/sections/BlogAuthorQuoteSection";
+import { getTranslations } from "next-intl/server";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 const PROJECT_SIZES = [
   { width: 700, height: 500 },
@@ -19,13 +21,12 @@ export default async function BlogsDetailsPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const cms = await getBlogDetailCms(slug, locale);
+  const [cms, tDreamSpace] = await Promise.all([
+    getBlogDetailCms(slug, locale),
+    getTranslations({ locale, namespace: "DreamSpace" }),
+  ]);
   const s = cms?.sections;
-
-  const cta = s?.consultationCTA;
-  const getField = (name: string) => cta?.fields.find((f) => f.name === name);
-  const mapFieldOptions = (name: string) =>
-    getField(name)?.options?.map((o) => ({ value: o.value, label: o.label as string })) ?? [];
+  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
   return (
     <main>
@@ -50,30 +51,20 @@ export default async function BlogsDetailsPage({
         />
       )}
 
-      {cta?.isVisible && (
-        <DreamSpaceSection
-          heading={cta.heading as string}
-          imageSrc={cta.image?.url || ""}
-          imageAlt={cta.image?.alt as string}
-          audienceTabs={cta.tabs.map((tab) => ({
-            id: tab.value,
-            label: tab.label as string,
-          }))}
-          propertyTypeLabel={getField("propertyType")?.label as string ?? ""}
-          propertyTypeOptions={mapFieldOptions("propertyType")}
-          spaceRequiredLabel={getField("spaceRequired")?.label as string ?? ""}
-          spaceRequiredOptions={mapFieldOptions("spaceRequired")}
-          typeOfServiceLabel={getField("typeOfService")?.label as string ?? ""}
-          typeOfServiceOptions={mapFieldOptions("typeOfService")}
-          timelineLabel={getField("timeline")?.label as string ?? ""}
-          timelineOptions={mapFieldOptions("timeline")}
-          firstNameLabel={getField("firstName")?.label as string ?? ""}
-          lastNameLabel={getField("lastName")?.label as string ?? ""}
-          emailLabel={getField("email")?.label as string ?? ""}
-          phoneLabel={getField("phone")?.label as string ?? ""}
-          submitLabel={cta.submitButtonLabel as string}
-        />
-      )}
+      <DreamSpaceSection
+        {...dreamSpaceConfig}
+        heading={tDreamSpace("heading")}
+        imageAlt={tDreamSpace("imageAlt")}
+        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
+        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
+        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
+        timelineLabel={tDreamSpace("timelineLabel")}
+        firstNameLabel={tDreamSpace("firstNameLabel")}
+        lastNameLabel={tDreamSpace("lastNameLabel")}
+        emailLabel={tDreamSpace("emailLabel")}
+        phoneLabel={tDreamSpace("phoneLabel")}
+        submitLabel={tDreamSpace("submitLabel")}
+      />
 
       {s?.signatureProjects?.isVisible && (
         <SignatureProjectsSection
