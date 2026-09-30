@@ -797,14 +797,17 @@ export interface CmsBlogDetailHeroSection {
 }
 
 export interface CmsBlogDetailArticleBlock {
-  type: 'heading' | 'paragraph' | 'list' | 'button' | 'image' | string;
+  type: 'heading' | 'paragraph' | 'list' | 'table' | 'button' | 'image' | string;
   level?: number;
-  heading?: CmsBilingualText;
+  heading?: CmsBilingualText | string;
   content?: CmsBilingualText;
   caption?: CmsBilingualText;
   images?: CmsImage[];
   listItems?: CmsBilingualText[];
   listStyle?: string;
+  headers?: string[];
+  rows?: string[][];
+  faqItems?: Array<{ question: CmsBilingualText | string; answer: CmsBilingualText | string; _id?: string }>;
   isVisible: boolean;
   _id: string;
   button?: {
