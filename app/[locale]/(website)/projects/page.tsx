@@ -229,7 +229,7 @@ export default async function ProjectsPage({
 
         location: t(p.location),
 
-        description: t(p.shortDescription),
+        description: t(p.description),
 
         image: {
           src: p.image?.url || "",
@@ -301,7 +301,7 @@ export default async function ProjectsPage({
             locale === "ar" ? "عرض دراسة الحالة" : "View Case Study"
           }
           loadMoreLabel={
-            t(projectsSection.loadMoreButton?.label) ||
+            projectsSection.loadMoreLabel ||
             (locale === "ar" ? "عرض المزيد" : "Load More")
           }
           propertyTypeMeta={locale === "ar" ? "نوع العقار" : "Property Type"}
@@ -345,7 +345,7 @@ export default async function ProjectsPage({
           testimonials={(testimonials.testimonials || [])
             .filter((item) => item.isVisible)
             .map((item, index) => ({
-              id: item._id || index,
+              id: index,
               name: t(item.clientName),
               quote: t(item.testimonial),
               image: item.image?.url || "",
