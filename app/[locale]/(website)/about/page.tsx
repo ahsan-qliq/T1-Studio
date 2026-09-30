@@ -92,7 +92,7 @@ export default async function AboutPage({
       {s?.values?.isVisible && (
         <MaterialInspirationSection
           heading={s.values.heading}
-          items={s.values.values.map((item) => ({
+          items={(s.values.values || []).map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
             label: item.label,
@@ -145,7 +145,7 @@ export default async function AboutPage({
         <FadeUp>
           <AwardsSection
             label={s.brands.heading as string}
-            logos={s.brands.brands.map((award) => ({
+            logos={(s.brands.brands || []).map((award) => ({
               src: award.logo.url,
               alt: award.logo.alt as string,
               width: 120,
