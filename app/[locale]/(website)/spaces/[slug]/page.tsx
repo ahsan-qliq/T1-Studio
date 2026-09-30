@@ -110,7 +110,7 @@ export default async function SpaceDetailPage({ params }: Props) {
               : undefined,
       })) ?? [];
 
-  const galleryImages = s?.styles?.items ?? [];
+  const galleryImages = s?.gallery?.images ?? [];
   const gallerySlides = galleryImages.slice(0, 3).map((img) => ({
     src: img.image.url,
     alt: img.image.alt as string,
@@ -134,7 +134,7 @@ const  styleRange = s.styles.items.map((sp)=>({
         href: sp.href,
         image: { src: sp.image.url, alt: sp.image.alt as string },
       })) ?? [];
-
+console.log(s, 137)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -176,7 +176,7 @@ const  styleRange = s.styles.items.map((sp)=>({
         />
       )}
 
-      {s?.styles?.isVisible && gallerySlides.length > 0 && (
+      {s?.gallery?.isVisible && gallerySlides.length > 0 && (
         <ImageCarouselSection
           slides={gallerySlides}
           gridItems={galleryGridItems.length > 0 ? galleryGridItems : undefined}
