@@ -58,6 +58,7 @@ export interface CmsServiceItem {
   icon: string;
   title: CmsBilingualText;
   value: CmsBilingualText;
+  description?: CmsBilingualText;
   href: string;
   isVisible: boolean;
   _id: string;
@@ -142,15 +143,7 @@ export interface CmsSignatureProjectsSectionT {
   heading: CmsBilingualText;
   description: CmsBilingualText;
   projects: CmsProjectItem[];
-  button: CmsButton;
-}
-export interface CmsSignatureProjectsSectionT{
-  isVisible: boolean;
-  order: number;
-  eyebrow: CmsBilingualText;
-  heading: CmsBilingualText;
-  description: CmsBilingualText;
-  articles: CmsProjectItem[];
+  articles?: CmsProjectItem[];
   button: CmsButton;
 }
 // ─── Journey ──────────────────────────────────────────────────────────────────
@@ -302,6 +295,7 @@ export interface CmsAwardsRecognitionSection {
   heading: CmsBilingualText;
   description: CmsBilingualText;
   awards: CmsAwardItem[];
+  brands?: CmsAwardItem[];
 }
 
 // ─── Design Tips (Blog) ───────────────────────────────────────────────────────
@@ -383,6 +377,7 @@ export interface CmsMaterialInspirationSection {
   order: number;
   heading: string;
   materials: CmsMaterialItem[];
+  values?: CmsMaterialItem[];
 }
 export interface CmsMaterialInspirationSectionT {
   isVisible: boolean;
@@ -644,6 +639,8 @@ export interface CmsBlogProjectItem {
   propertyTypeKey: string;
   isVisible: boolean;
   _id: string;
+  category?: string;
+  slug?: string;
 }
 
 export interface CmsBlogListingSection {
@@ -762,10 +759,10 @@ export interface CmsBeforeAfterSection {
 
 export interface CmsProjectsPageSections {
   hero: CmsHeroSection;
-  listing: CmsBlogListingSection;
+  projects: CmsBlogListingSection;
   testimonials: CmsTestimonialsSection;
   beforeAfter: CmsBeforeAfterSection;
-  partnership: CmsPartnershipSection;
+  partnership: CmsPartnershipSectionT;
   faq: CmsFaqSection;
 }
 
@@ -954,10 +951,10 @@ export interface CmsGallerySection {
 export interface CmsSpacesPageSections {
   hero: CmsHeroSection;
   intro: CmsPhilosophySection;
-  featuredSpaces: CmsFeaturedSpacesSection;
+  featuredSpaces: CmsFeaturedSpacesSectionT;
   gallery: CmsGallerySection;
   whyChooseT1: CmsWhyChooseT1Section;
-  signatureProjects: CmsSignatureProjectsSection;
+  signatureProjects: CmsSignatureProjectsSectionT;
   journey: CmsJourneySection;
   partnership: CmsPartnershipSection;
   faq: CmsFaqSection;
