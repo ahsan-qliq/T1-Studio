@@ -21,7 +21,6 @@ export default async function ContactPage({
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
-  console.log(s?.location)
   return (
     <main>
       {s?.hero?.isVisible && (
