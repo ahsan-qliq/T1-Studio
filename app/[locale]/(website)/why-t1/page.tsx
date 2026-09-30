@@ -217,7 +217,7 @@ export default async function WhyT1Page({
           heading={s.designTips.heading as string}
           viewAllLabel={s.designTips.button.label as string}
           viewAllHref="/projects"
-          projects={s.designTips.articles
+          projects={(s.designTips.articles || [])
             .filter((pr) => pr.isVisible)
             .map((pr, i) => ({
               id: pr._id,
