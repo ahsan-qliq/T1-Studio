@@ -1,116 +1,137 @@
-import { HeroBanner } from "@/components/sections/HeroBanner";
-import { getTranslations } from "next-intl/server";
-
-import { getFaqConfig } from "@/app/config/space.config";
-import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
+import { getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+import { HeroBanner } from '@/components/sections/HeroBanner';
 import {
-  getProjectFilterOptions,
-  getProjects,
-} from "@/app/config/project.config";
-import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
-import { FaqSection } from "@/components/sections/FaqSection";
-import {
-  getAccordionSpaces,
-  getDreamSpaceConfig,
-  getReferralPartnerConfig,
-  getSignatureProjects,
-} from "@/app/config/home.config";
-import { SpacesAccordionSection } from "@/components/sections/SpacesAccordionSection";
-import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
-import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import {
-  BlogDetailContentSection,
-  type BlogContentBlock,
-} from "@/components/sections/BlogDetailContentSection";
-import { BlogAuthorQuoteSection } from "@/components/sections/BlogAuthorQuoteSection";
+  BlogDetailContent,
+  type ArticleBlock,
+} from '@/components/sections/BlogDetailContent';
+import { BlogSection, type BlogPost } from '@/components/sections/BlogSection';
+import { getBlogDetailCms } from '@/lib/cms/blog-detail';
+import type { CmsBlogDetail } from '@/lib/cms/types';
 
-export default async function BlogsDetailsPage() {
-  const [tHero, tDreamSpace, tprojects, tBlogDetail] = await Promise.all([
-    getTranslations("Hero"),
-    getTranslations("DreamSpace"),
-    getTranslations("SignatureProject"),
-    getTranslations("BlogDetail"),
-  ]);
+interface Props {
+  params: Promise<{ slug: string; locale: string }>;
+}
 
-  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
-  const signatureProjects = getSignatureProjects(tprojects);
+function getText(value: { en?: string; ar?: string } | string | undefined | null, locale: string): string {
+  if (!value) return '';
+  if (typeof value === 'string') return value;
+  if (locale === 'ar') return value.ar || value.en || '';
+  return value.en || value.ar || '';
+}
 
-  const blogContentBlocks: BlogContentBlock[] = [
-    {
-      label: tBlogDetail("block1Label"),
-      body: tBlogDetail("block1Body"),
-      image: {
-        src: "/assets/images/Banner.webp",
-        alt: tBlogDetail("block1ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block1BodyAfter"),
+function mapBreadcrumbs(
+  crumbs: CmsBlogDetail['sections']['hero']['breadcrumbs'],
+  locale: string,
+) {
+  return crumbs.map((c) => ({ label: getText(c.label, locale), href: c.href }));
+}
+
+export default async function BlogsDetailsPage({ params }: Props) {
+  const { slug, locale } = await params;
+
+
+  const blog = await getBlogDetailCms(slug, locale);
+
+  if (!blog) notFound();
+
+  const tBlog = await getTranslations({ locale, namespace: 'BlogDetail' }).catch(() => null);
+  const hero = blog.sections.hero;
+  const articleContent = blog.sections.articleContent;
+  const relatedArticles = blog.sections.relatedArticles;
+  const authorInfo = blog.sections.authorInfo;
+
+  const heroBadge = getText(hero.eyebrow, locale) || getText(blog.categoryLabel, locale) || blog.category;
+  const heroHeading = getText(hero.title, locale) || getText(blog.title, locale);
+  const heroDescription = getText(hero.excerpt, locale) || getText(blog.excerpt, locale);
+  const heroImage = hero.backgroundImage?.url || blog.featuredImage?.url || '/assets/images/BlogBanner.jpg';
+  const breadcrumbs =
+    hero.breadcrumbs?.length > 0
+      ? mapBreadcrumbs(hero.breadcrumbs, locale)
+      : undefined;
+
+  const blocks: ArticleBlock[] = articleContent.blocks
+    .filter((b) => b.isVisible !== false)
+    .map((b) => {
+      if (b.type === 'heading' || b.type === 'paragraph') {
+        return {
+          type: 'paragraph' as const,
+          id: b._id,
+          heading: getText(b.heading, locale),
+          body: getText(b.content, locale),
+        };
+      }
+      if (b.type === 'list') {
+        return {
+          type: 'list' as const,
+          id: b._id,
+          heading: getText(b.heading, locale),
+          items: (b.listItems ?? []).map((item) => getText(item, locale)),
+        };
+      }
+      return {
+        type: 'paragraph' as const,
+        id: b._id,
+        heading: getText(b.heading, locale),
+        body: getText(b.content, locale),
+      };
+    });
+
+  const authorBio = {
+    name: getText(authorInfo.author.name, locale),
+    role: getText(authorInfo.author.designation, locale),
+    experience: getText(authorInfo.author.bio, locale),
+    image: {
+      src: authorInfo.author.image?.url || '',
+      alt: getText(authorInfo.author.image?.alt, locale),
     },
-    {
-      label: tBlogDetail("block2Label"),
-      body: tBlogDetail("block2Body"),
-      image: {
-        src: "/assets/images/Home.webp",
-        alt: tBlogDetail("block2ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block2BodyAfter"),
+  };
+
+  const relatedPosts: BlogPost[] = relatedArticles.articles.map((a) => ({
+    slug: a.slug,
+    tag: a.category,
+    readTime: getText(a.readTime, locale),
+    title: getText(a.title, locale),
+    href: `/blogs/${a.slug}`,
+    image: {
+      src: a.featuredImage?.url || '',
+      alt: getText(a.featuredImage?.alt, locale),
     },
-    {
-      label: tBlogDetail("block3Label"),
-      body: tBlogDetail("block3Body"),
-      image: {
-        src: "/assets/images/why-t1.webp",
-        alt: tBlogDetail("block3ImageAlt"),
-      },
-      bodyAfter: tBlogDetail("block3BodyAfter"),
-    },
-  ];
+  }));
+
+  const relatedHeading =
+    getText(relatedArticles.heading, locale) ||
+    tBlog?.('relatedHeading') ||
+    'Related Articles';
+
+  const viewAllLabel =
+    getText(relatedArticles.button?.label, locale) || 'View all articles';
+  const viewAllHref = relatedArticles.button?.href || '/blogs';
 
   return (
     <main>
       <HeroBanner
-        badge={tHero("badge")}
-        heading={tHero("heading")}
-        description={tHero("description")}
-        cta={tHero("cta")}
+        badge={heroBadge}
+        heading={heroHeading}
+        description={heroDescription}
+        imageSrc={heroImage}
+        breadcrumbs={breadcrumbs}
       />
-      <BlogDetailContentSection blocks={blogContentBlocks} />
 
-      <DreamSpaceSection
-        heading={tDreamSpace("heading")}
-        imageSrc={dreamSpaceConfig.imageSrc}
-        imageAlt={tDreamSpace("imageAlt")}
-        audienceTabs={dreamSpaceConfig.audienceTabs}
-        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
-        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
-        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
-        timelineLabel={tDreamSpace("timelineLabel")}
-        timelineOptions={dreamSpaceConfig.timelineOptions}
-        firstNameLabel={tDreamSpace("firstNameLabel")}
-        lastNameLabel={tDreamSpace("lastNameLabel")}
-        emailLabel={tDreamSpace("emailLabel")}
-        phoneLabel={tDreamSpace("phoneLabel")}
-        submitLabel={tDreamSpace("submitLabel")}
-      />
-      <SignatureProjectsSection
-        heading={tprojects("heading")}
-        viewAllLabel={tprojects("viewAllLabel")}
-        viewAllHref="/projects"
-        projects={signatureProjects}
-      />
-      <BlogAuthorQuoteSection
-        quote={tBlogDetail("authorQuote")}
-        authorName={tBlogDetail("authorName")}
-        authorRole={tBlogDetail("authorRole")}
-        authorExperience={tBlogDetail("authorExperience")}
-        authorImage={{
-          src: "/assets/images/Banner.webp",
-          alt: tBlogDetail("authorImageAlt"),
-        }}
-      />
+      {articleContent.isVisible && (
+        <BlogDetailContent blocks={blocks} authorBio={authorBio} />
+      )}
+
+      {relatedArticles.isVisible && relatedPosts.length > 0 && (
+        <BlogSection
+          label={getText(relatedArticles.eyebrow, locale) || 'Blog'}
+          heading={relatedHeading}
+          posts={relatedPosts}
+          viewAllLabel={viewAllLabel}
+          viewAllHref={viewAllHref}
+          learnMoreLabel="Read more"
+        />
+      )}
     </main>
   );
 }

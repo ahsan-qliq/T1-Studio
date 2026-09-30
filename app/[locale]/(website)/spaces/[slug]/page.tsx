@@ -1,31 +1,60 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { createElement } from "react";
+import {
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+  LayoutGrid,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { getSpaceDetailCms } from "@/lib/cms/space-detail";
+import { SPACE_SLUGS } from "@/app/config/space.config";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { SpaceIntroSection } from "@/components/sections/SpaceIntroSection";
 import { SpaceApproachSection } from "@/components/sections/SpaceApproachSection";
 import { ImageCarouselSection } from "@/components/sections/ImageCarouselSection";
 import { SpacesAccordionSection } from "@/components/sections/SpacesAccordionSection";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
-import { FaqSection } from "@/components/sections/FaqSection";
-import { FadeUp } from "@/components/ui/animate";
 import {
-  getAccordionSpaces,
-  getAwardsConfig,
-  getDreamSpaceConfig,
-  getJourneySteps,
-  getReferralPartnerConfig,
-  getSignatureProjects,
-} from "@/app/config/home.config";
-import {
-  getFaqConfig,
-  getSpaceDetailConfig,
-  SPACE_SLUGS,
-} from "@/app/config/space.config";
+  SmartSpaceDiagram,
+  KellerBadge,
+} from "@/components/sections/ProjectJourneySection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
-import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
+import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
+import { FaqSection } from "@/components/sections/FaqSection";
+import { FadeUp } from "@/components/ui/animate";
+import { getDreamSpaceConfig } from "@/app/config/home.config";
+
+const JOURNEY_ICONS: LucideIcon[] = [
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+];
+const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+];
+
+const PROJECT_SIZES = [
+  { width: 700, height: 500 },
+  { width: 280, height: 180 },
+  { width: 560, height: 480 },
+];
 
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
@@ -35,151 +64,218 @@ export function generateStaticParams() {
   return SPACE_SLUGS.map((slug) => ({ slug }));
 }
 
-export default async function SpaceDetailPage({ params }: Props) {
-  const { slug } = await params;
+export const revalidate = 3600;
 
-  const [
-    tDetail,
-    tSpaces,
-    tJourney,
-    tReferral,
-    tFaq,
-    tAwards,
-    tProjects,
-    tDreamSpace,
-  ] = await Promise.all([
-    getTranslations("SpaceDetail"),
-    getTranslations("FeaturedSpaces"),
-    getTranslations("ProjectJourney"),
-    getTranslations("ReferralPartner"),
-    getTranslations("Faq"),
-    getTranslations("Awards"),
-    getTranslations("SignatureProject"),
-    getTranslations("DreamSpace"),
+export default async function SpaceDetailPage({ params }: Props) {
+  const { slug, locale } = await params;
+
+  const [cms, tJourney, tDreamSpace] = await Promise.all([
+    getSpaceDetailCms(slug, locale),
+    getTranslations({ locale, namespace: "ProjectJourney" }),
+    getTranslations({ locale, namespace: "DreamSpace" }),
   ]);
 
-  const spaceDetail = getSpaceDetailConfig(slug, tDetail);
-  if (!spaceDetail) notFound();
+  if (!cms) notFound();
 
-  const accordionSpaces = getAccordionSpaces(tSpaces).filter(
-    (s) => s.id !== slug && s.id !== `${slug}s`,
-  );
-  const journeySteps = getJourneySteps(tJourney);
-  const referralPartnerConfig = getReferralPartnerConfig(tReferral);
-  const faqConfig = getFaqConfig(tFaq);
-  const awardsConfig = getAwardsConfig(tAwards);
-  const signatureProjects = getSignatureProjects(tProjects);
+  const s = cms.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
-  const gallerySlides = [
-    { src: "/assets/images/spaces.png", alt: spaceDetail.heroImageAlt },
-    { src: "/assets/images/why-t1.webp", alt: spaceDetail.heroImageAlt },
-    { src: "/assets/images/Banner.webp", alt: spaceDetail.heroImageAlt },
-  ];
+  const journeySteps =
+    s?.journey?.steps
+      .filter((step) => step.isVisible)
+      .map((step, i) => ({
+        number: String(i + 1).padStart(2, "0"),
+        icon: JOURNEY_ICONS[i] ?? Globe,
+        title: step.title as string,
+        subtitle: step.subtitle as string,
+        description: step.description as string,
+        advantageText: step.advantageTitle as string,
+        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
+        highlightText: step.highlight as string,
+        extraContent:
+          i === 1
+            ? createElement(SmartSpaceDiagram, {
+                badge: tJourney("smartSpaceBadge"),
+                items: [
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
+                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
+                ],
+              })
+            : i === 2
+              ? createElement(KellerBadge, {
+                  line1: tJourney("kellerLine1"),
+                  line2: tJourney("kellerLine2"),
+                })
+              : undefined,
+      })) ?? [];
+
+  const galleryImages = s?.styles?.items ?? [];
+  const gallerySlides = galleryImages.slice(0, 3).map((img) => ({
+    src: img.image.url,
+    alt: img.image.alt as string,
+  }));
+  const galleryGridItems = galleryImages.slice(3, 5).map((img) => ({
+    src: img.image.url,
+    alt: img.image.alt as string,
+  }));
+const  styleRange = s.styles.items.map((sp)=>({
+      id: sp._id,
+        title: sp.title as string,
+        href: sp.href,
+        image: { src: sp.image.url, alt: sp.image.alt as string },
+}))
+  const relatedSpaces =
+    s?.relatedSpaces?.spaces
+      .filter((sp) => sp.isVisible)
+      .map((sp) => ({
+        id: sp._id,
+        title: sp.title as string,
+        href: sp.href,
+        image: { src: sp.image.url, alt: sp.image.alt as string },
+      })) ?? [];
 
   return (
     <main>
-      <HeroBanner
-        badge={tDetail("badge")}
-        heading={spaceDetail.heroHeading}
-        description={spaceDetail.heroDescription}
-        cta={tDetail("ctaLabel")}
-        imageSrc="/assets/images/spaces.png"
-      />
+      {s?.hero?.isVisible && (
+        <HeroBanner
+          badge={s.hero.eyebrow as string}
+          heading={s.hero.heading as string}
+          description={s.hero.description as string}
+          cta={s.hero.primaryButton.label as string}
+          imageSrc={s.hero.backgroundImage.url || undefined}
+        />
+      )}
 
-      <SpaceIntroSection
-        label={spaceDetail.overviewLabel}
-        heading={spaceDetail.overviewHeading}
-        description={spaceDetail.overviewDescription}
-        image="/assets/images/Banner.webp"
-        imageAlt={spaceDetail.heroImageAlt}
-      />
+      {s?.intro?.isVisible && (
+        <SpaceIntroSection
+          label={s.intro.eyebrow}
+          heading={s.intro.heading}
+          description={s.intro.description}
+          image={s.intro.image.url}
+          imageAlt={s.intro.image.alt as string}
+        />
+      )}
 
-      <SpaceApproachSection
-        label={tDetail("approachLabel")}
-        heading={spaceDetail.approachHeading}
-        items={spaceDetail.approachItems}
-        image="/assets/images/why-t1.webp"
-        imageAlt={spaceDetail.heroImageAlt}
-      />
+      {s?.features?.isVisible && (
+        <SpaceApproachSection
+          label={s.features.eyebrow}
+          heading={s.features.heading}
+          items={s.features.items.map((item) => item.description)}
+          image={s.features.image.url}
+          imageAlt={s.features.image.alt as string}
+        />
+      )}
 
-      <SpacesAccordionSection
-        heading={tDetail("otherSpacesHeading")}
-        viewAllLabel={tDetail("otherSpacesViewAll")}
-        viewAllHref="/spaces"
-        spaces={accordionSpaces}
-      />
-      <ImageCarouselSection
-        slides={gallerySlides}
-        aria-label={tDetail("galleryAriaLabel")}
-        prevLabel={tDetail("prevLabel")}
-        nextLabel={tDetail("nextLabel")}
-        gridItems={[
-          { src: "/assets/images/Banner.webp", alt: spaceDetail.heroImageAlt },
-          { src: "/assets/images/why-t1.webp", alt: spaceDetail.heroImageAlt },
-        ]}
-      />
+      {s?.styles?.isVisible && styleRange.length > 0 && (
+        <SpacesAccordionSection
+          heading={s.styles.heading}
+          viewAllLabel={s.styles.button.label as string}
+          viewAllHref={s.styles.button.href}
+          spaces={styleRange}
+        />
+      )}
 
-      <MaterialInspirationSection
-        heading={tDetail("materialInspirationHeading")}
-        items={[
-          {
-            src: "/assets/images/Banner.webp",
-            alt: spaceDetail.heroImageAlt,
-            label: "Marble",
-          },
-          {
-            src: "/assets/images/why-t1.webp",
-            alt: spaceDetail.heroImageAlt,
-            label: "Oak",
-          },
-        ]}
-      />
+      {s?.styles?.isVisible && gallerySlides.length > 0 && (
+        <ImageCarouselSection
+          slides={gallerySlides}
+          gridItems={galleryGridItems.length > 0 ? galleryGridItems : undefined}
+        />
+      )}
 
-      <FadeUp>
-        <AwardsSection {...awardsConfig} />
-      </FadeUp>
-      <SignatureProjectsSection
-        heading={tProjects("heading")}
-        viewAllLabel={tProjects("viewAllLabel")}
-        viewAllHref="/projects"
-        projects={signatureProjects}
-      />
+      {s?.materials?.isVisible && (
+        <MaterialInspirationSection
+          heading={s.materials.heading}
+          items={s.materials.materials.map((item) => ({
+            src: item.image.url,
+            alt: item.image.alt as string,
+            label: item.label,
+          }))}
+        />
+      )}
 
-      <ProjectJourneySection
-        label={tJourney("label")}
-        heading={tJourney("heading")}
-        advantageLabel={tJourney("advantageLabel")}
-        prevLabel={tJourney("prevLabel")}
-        nextLabel={tJourney("nextLabel")}
-        steps={journeySteps}
-      />
-      <FaqSection {...faqConfig} />
-      <SpacesAccordionSection
-        heading={tDetail("otherSpacesHeading")}
-        viewAllLabel={tDetail("otherSpacesViewAll")}
-        viewAllHref="/spaces"
-        spaces={accordionSpaces}
-      />
+      {s?.brands?.isVisible && s.brands.brands.length > 0 && (
+        <FadeUp>
+          <AwardsSection
+            label={s.brands.heading}
+            logos={s.brands.brands.map((brand) => ({
+              src: brand.logo.url,
+              alt: brand.logo.alt as string,
+              width: 120,
+              height: 40,
+            }))}
+          />
+        </FadeUp>
+      )}
+
+      {s?.relatedProjects?.isVisible && (
+        <SignatureProjectsSection
+          heading={s.relatedProjects.heading as string}
+          viewAllLabel={s.relatedProjects.button.label as string}
+          viewAllHref="/projects"
+          projects={s.relatedProjects.projects
+            .filter((pr) => pr.isVisible)
+            .map((pr, i) => ({
+              id: pr._id,
+              title: pr.title as string,
+              location: pr.location as string,
+              href: pr.href,
+              image: {
+                src: pr.image.url,
+                alt: pr.image.alt as string,
+                ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
+              },
+            }))}
+        />
+      )}
+
+      {s?.journey?.isVisible && journeySteps.length > 0 && (
+        <ProjectJourneySection
+          label={s.journey.eyebrow as string}
+          heading={s.journey.heading as string}
+          advantageLabel={tJourney("advantageLabel")}
+          prevLabel={tJourney("prevLabel")}
+          nextLabel={tJourney("nextLabel")}
+          steps={journeySteps}
+        />
+      )}
+
       <DreamSpaceSection
+        {...dreamSpaceConfig}
         heading={tDreamSpace("heading")}
-        imageSrc={dreamSpaceConfig.imageSrc}
         imageAlt={tDreamSpace("imageAlt")}
-        audienceTabs={dreamSpaceConfig.audienceTabs}
         propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        propertyTypeOptions={dreamSpaceConfig.propertyTypeOptions}
         spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        spaceRequiredOptions={dreamSpaceConfig.spaceRequiredOptions}
         typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        typeOfServiceOptions={dreamSpaceConfig.typeOfServiceOptions}
         timelineLabel={tDreamSpace("timelineLabel")}
-        timelineOptions={dreamSpaceConfig.timelineOptions}
         firstNameLabel={tDreamSpace("firstNameLabel")}
         lastNameLabel={tDreamSpace("lastNameLabel")}
         emailLabel={tDreamSpace("emailLabel")}
         phoneLabel={tDreamSpace("phoneLabel")}
         submitLabel={tDreamSpace("submitLabel")}
       />
+
+      {s?.faq?.isVisible && (
+        <FaqSection
+          label={s.faq.eyebrow as string}
+          heading={s.faq.heading as string}
+          items={s.faq.faqs
+            .filter((faq) => faq.isVisible)
+            .map((faq) => ({
+              question: faq.question as string,
+              answer: faq.answer as string,
+            }))}
+        />
+      )}
+
+      {s?.relatedSpaces?.isVisible && relatedSpaces.length > 0 && (
+        <SpacesAccordionSection
+          heading={s.relatedSpaces.heading}
+          viewAllLabel={s.relatedSpaces.button.label as string}
+          viewAllHref="/spaces"
+          spaces={relatedSpaces}
+        />
+      )}
     </main>
   );
 }

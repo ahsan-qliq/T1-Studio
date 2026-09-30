@@ -56,7 +56,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
         >
           {logos.map((logo, i) => (
             <motion.li
-              key={logo.alt}
+              key={logo.alt || i}
               className="flex items-center justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -67,7 +67,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
                 alt={logo.alt}
                 width={logo.width ?? 120}
                 height={logo.height ?? 40}
-                className="max-h-10 w-auto object-contain grayscale transition-all duration-300 hover:grayscale-0"
+                className="size-24 object-contain grayscale transition-all duration-300 hover:grayscale-0"
               />
             </motion.li>
           ))}

@@ -93,7 +93,7 @@ export function JourneyGallerySection({
       >
         <Link
           href={ctaHref}
-          className="group inline-flex items-center gap-2 rounded-full border border-white/30 px-8 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white px-7 py-3 text-sm font-medium text-[#0C0C0C] transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
         >
           {ctaLabel}
           <ArrowRight

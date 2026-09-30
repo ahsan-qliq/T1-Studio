@@ -1,6 +1,9 @@
 import { getTranslations } from 'next-intl/server';
+import Image from 'next/image';
 import { Link } from '@/app/i18n/navigation';
-import { MapPin, Phone, Mail } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, ArrowUpRight } from 'lucide-react';
+import { FooterNewsletterForm } from './FooterNewsletterForm';
+import logo from '@/public/assets/images/Logo.png';
 
 // ─── Inline social SVG icons ──────────────────────────────────────────────────
 
@@ -12,23 +15,6 @@ function IconFacebook() {
   );
 }
 
-function IconInstagram() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4" aria-hidden="true">
-      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-    </svg>
-  );
-}
-
-function IconX() {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
 
 function IconLinkedin() {
   return (
@@ -48,6 +34,32 @@ function IconYoutube() {
   );
 }
 
+function IconInstagram() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
+function IconTikTok() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z" />
+    </svg>
+  );
+}
+
+function IconGmb() {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className="size-4" aria-hidden="true">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+    </svg>
+  );
+}
+
 // ─── Logo ─────────────────────────────────────────────────────────────────────
 
 function FooterLogo({ label }: { label: string }) {
@@ -55,13 +67,9 @@ function FooterLogo({ label }: { label: string }) {
     <Link
       href="/"
       aria-label={label}
-      className="inline-flex items-center gap-2 rounded-sm border border-gold/60 px-4 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
+      className="inline-flex rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50"
     >
-      <span className="text-xl font-semibold tracking-tight text-white select-none">
-        T<span className="text-gold">.</span>one
-      </span>
-      <span className="text-xl font-light text-white/40 select-none" aria-hidden="true">|</span>
-      <span className="text-xl font-light tracking-widest text-white select-none">keller</span>
+      <Image src={logo} alt={label} height={40} />
     </Link>
   );
 }
@@ -106,14 +114,14 @@ export async function Footer() {
     { label: t('spacesBathrooms'),   href: '/spaces/bathrooms' },
   ];
 
-  const projectsLinks = [
+  const propertyLinks = [
     { label: t('projectsResidential'),   href: '/projects/residential' },
     { label: t('projectsCommercial'),    href: '/projects/commercial' },
     { label: t('projectsHospitality'),   href: '/projects/hospitality' },
     { label: t('projectsDevelopers'),    href: '/projects/developers' },
   ];
 
-  const studioLinks = [
+  const companyLinks = [
     { label: t('studioConsultation'),  href: '/design-studio/consultation' },
     { label: t('studioProcess'),       href: '/design-studio/process' },
     { label: t('studioMaterials'),     href: '/design-studio/materials' },
@@ -121,19 +129,45 @@ export async function Footer() {
   ];
 
   const socialLinks = [
-    { Icon: IconFacebook,  label: t('socialFacebook'),  href: 'https://facebook.com' },
-    { Icon: IconInstagram, label: t('socialInstagram'), href: 'https://instagram.com' },
-    { Icon: IconX,         label: t('socialX'),         href: 'https://x.com' },
-    { Icon: IconLinkedin,  label: t('socialLinkedin'),  href: 'https://linkedin.com' },
-    { Icon: IconYoutube,   label: t('socialYoutube'),   href: 'https://youtube.com' },
+    { Icon: IconFacebook,  label: t('socialFacebook'),  href: 'https://www.facebook.com/t1studiomena' },
+    { Icon: IconInstagram, label: t('socialInstagram'), href: 'https://www.instagram.com/t1studiomena' },
+    { Icon: IconLinkedin,  label: t('socialLinkedin'),  href: 'https://www.linkedin.com/company/t1studiomena' },
+    { Icon: IconYoutube,   label: t('socialYoutube'),   href: 'https://www.youtube.com/@t1studiomena' },
+    { Icon: IconTikTok,    label: t('socialTikTok'),    href: 'https://www.tiktok.com/@t1studiomena' },
+    { Icon: IconGmb,       label: t('socialGmb'),       href: 'https://maps.app.goo.gl/cSeCLPK35HYuK3gk6' },
+  ];
+
+  const legalLinks = [
+    { label: t('privacyPolicy'),        href: '/privacy-policy' },
+    { label: t('termsOfService'),       href: '/terms-of-service' },
+    { label: t('cookies'),              href: '/cookies' },
+    { label: t('sitemap'),              href: '/sitemap' },
+    { label: t('support'),              href: '/support' },
   ];
 
   return (
     <footer className="bg-foreground" aria-label={t('footerLabel')}>
 
+      {/* Newsletter banner */}
+      <div className="border-b border-white/10">
+        <div className="mx-auto flex flex-col gap-4 px-4 py-8 sm:px-8 sm:flex-row sm:items-center sm:justify-between lg:px-16">
+          <div className="max-w-md">
+            <h2 className="text-base font-semibold text-white">{t('newsletterHeading')}</h2>
+            <p className="mt-1 text-sm text-white/55">{t('newsletterDescription')}</p>
+          </div>
+          <div className="w-full max-w-sm shrink-0">
+            <FooterNewsletterForm
+              emailPlaceholder={t('newsletterEmailPlaceholder')}
+              submitLabel={t('newsletterSubmitLabel')}
+              formLabel={t('newsletterFormLabel')}
+            />
+          </div>
+        </div>
+      </div>
+
       {/* Main content */}
       <div className="mx-auto px-4 py-14 sm:px-8 lg:px-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1.4fr]">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1.4fr]">
 
           {/* Brand column */}
           <div className="flex flex-col gap-6">
@@ -161,13 +195,26 @@ export async function Footer() {
           </div>
 
           {/* Nav columns */}
-          <FooterNavColumn heading={t('spacesHeading')}      links={spacesLinks}   />
-          <FooterNavColumn heading={t('projectsHeading')}    links={projectsLinks} />
-          <FooterNavColumn heading={t('studioHeading')}      links={studioLinks}   />
+          <FooterNavColumn heading={t('spacesHeading')}    links={spacesLinks}    />
+          <FooterNavColumn heading={t('propertyHeading')}  links={propertyLinks}  />
+          <FooterNavColumn heading={t('companyHeading')}   links={companyLinks}   />
 
-          {/* Contact */}
+          {/* Opening Hours */}
           <div>
-            <h3 className="mb-5 text-sm font-semibold text-white">{t('contactHeading')}</h3>
+            <h3 className="mb-5 text-sm font-semibold text-white">{t('openingHoursHeading')}</h3>
+            <ul role="list" className="flex flex-col gap-3">
+              {[t('openingHours1'), t('openingHours2')].map((hour) => (
+                <li key={hour} className="flex items-center gap-2 text-sm text-white/60">
+                  <Clock className="size-4 shrink-0 text-gold" aria-hidden="true" strokeWidth={1.5} />
+                  <span>{hour}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Showroom */}
+          <div>
+            <h3 className="mb-5 text-sm font-semibold text-white">{t('showroomHeading')}</h3>
             <address className="not-italic">
               <ul role="list" className="flex flex-col gap-4">
                 <li className="flex items-start gap-3 text-sm text-white/60">
@@ -192,6 +239,17 @@ export async function Footer() {
                     <span>{t('contactEmail')}</span>
                   </a>
                 </li>
+                <li>
+                  <a
+                    href={t('showroomDirectionsHref')}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-sm text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/50 rounded-sm"
+                  >
+                    <ArrowUpRight className="size-4 shrink-0 text-gold" aria-hidden="true" strokeWidth={1.5} />
+                    <span>{t('showroomDirectionsLabel')}</span>
+                  </a>
+                </li>
               </ul>
             </address>
           </div>
@@ -206,11 +264,7 @@ export async function Footer() {
 
           <nav aria-label={t('legalNavLabel')}>
             <ul role="list" className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              {[
-                { label: t('privacyPolicy'),        href: '/privacy-policy' },
-                { label: t('termsOfService'),       href: '/terms-of-service' },
-                { label: t('regulatoryCompliance'), href: '/regulatory-compliance' },
-              ].map((link) => (
+              {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
