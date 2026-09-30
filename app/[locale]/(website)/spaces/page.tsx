@@ -85,7 +85,6 @@ console.log(s)
               })
             : undefined,
     })) ?? [];
-    console.log(s, 89)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -124,9 +123,9 @@ console.log(s)
         />
       )}
 
-      {s?.gallery?.isVisible && s.gallery.gallery.length > 0 && (
+      {s?.showcase?.isVisible && s.showcase.gallery.length > 0 && (
         <ImageCarouselSection
-          slides={s.gallery.gallery.map((img) => ({
+          slides={s.showcase.gallery.map((img) => ({
             src: img.image.url,
             alt: img.image.alt as string,
           }))}
