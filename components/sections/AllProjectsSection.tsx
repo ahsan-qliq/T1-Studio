@@ -128,8 +128,8 @@ function FeaturedCard({
 }
 
 // ─── Compact card ─────────────────────────────────────────────────────────────
-// isRight → cols 2-3 (landscape 4/3)
-// !isRight → cols 1-2 (portrait 3/4)
+// isRight → cols 2-3 (landscape 4/3) — badge + readtime overlaid inside image
+// !isRight → cols 1-2 (portrait 3/4) — badge + readtime below image
 
 function CompactCard({
   project,
@@ -148,7 +148,7 @@ function CompactCard({
       aria-label={project.title}
       className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
     >
-      {/* Image with title overlay */}
+      {/* Image with overlay */}
       <div
         className={cn(
           "relative w-full overflow-hidden",
@@ -167,7 +167,6 @@ function CompactCard({
           <div className="absolute inset-0 bg-white/5" />
         )}
 
-        {/* Gradient */}
         <div
           aria-hidden="true"
           className="absolute inset-0"
@@ -177,21 +176,32 @@ function CompactCard({
           }}
         />
 
-        {/* Title overlaid at image bottom */}
         <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-          <h3 className="text-xl font-bold leading-tight text-white sm:text-2xl">
+          <h3 className="mb-3 text-xl font-bold leading-tight text-white sm:text-2xl">
             {project.title}
           </h3>
+
+          {/* Landscape (right): badge + readtime inside image at bottom */}
+          {isRight && (project.propertyType || secondaryInfo) && (
+            <div className="flex items-center justify-between">
+              {project.propertyType && <Badge label={project.propertyType} />}
+              {secondaryInfo && (
+                <span className="text-sm text-white/60">{secondaryInfo}</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Badge + secondary info below the image */}
-      <div className="flex items-center gap-3 px-5 py-4 sm:px-6">
-        {project.propertyType && <Badge label={project.propertyType} />}
-        {secondaryInfo && (
-          <span className="text-sm text-white/50">{secondaryInfo}</span>
-        )}
-      </div>
+      {/* Portrait (left): badge + readtime below the image */}
+      {!isRight && (project.propertyType || secondaryInfo) && (
+        <div className="flex items-center justify-between px-5 py-4 sm:px-6">
+          {project.propertyType && <Badge label={project.propertyType} />}
+          {secondaryInfo && (
+            <span className="text-sm text-white/50">{secondaryInfo}</span>
+          )}
+        </div>
+      )}
     </Link>
   );
 }
