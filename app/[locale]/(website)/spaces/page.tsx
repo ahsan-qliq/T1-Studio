@@ -55,7 +55,6 @@ export default async function SpacesPage({
   ]);
 
   const s = cms?.sections;
-console.log(s)
   // ── Journey steps ─────────────────────────────────────────────────────────
   const journeySteps = s?.journey?.steps
     .filter((step) => step.isVisible)
