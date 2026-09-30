@@ -1015,7 +1015,17 @@ export interface CmsSpaceGallerySection {
   autoplay: boolean;
   showNavigation: boolean;
 }
-
+export interface CmsSpaceGallerySectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  images: CmsImageGallerySection[];
+  button: CmsButton
+  autoplay: boolean;
+  showNavigation: boolean;
+}
 export interface CmsBrandItem {
   logo: CmsImage;
   _id: string;
@@ -1050,7 +1060,8 @@ export interface CmsSpaceDetailSections {
   hero: CmsHeroSection;
   intro: CmsSpaceIntroSection;
   features: CmsSpaceFeaturesSection;
-  styles: CmsSpaceGallerySection;
+  styles: CmsSpaceGallerySection
+  gallery: CmsSpaceGallerySectionT;
   materials: CmsMaterialInspirationSection;
   brands: CmsSpaceBrandsSection;
   relatedProjects: CmsSignatureProjectsSectionT;
