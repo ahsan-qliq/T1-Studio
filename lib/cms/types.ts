@@ -782,45 +782,142 @@ export interface CmsProjectsPage {
 
 // ─── Blog detail ─────────────────────────────────────────────────────────────
 
-export interface CmsBlogContentBlock {
-  label: string;
-  body: string;
-  image: CmsImage;
-  bodyAfter: string;
+export interface CmsBlogDetailBreadcrumb {
+  label: CmsBilingualText;
+  href: string;
+}
+
+export interface CmsBlogDetailHeroSection {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  title: CmsBilingualText;
+  excerpt: CmsBilingualText;
+  backgroundImage: CmsImage;
+  mobileImage: CmsImage;
+  overlayOpacity: number;
+  breadcrumbs: CmsBlogDetailBreadcrumb[];
+}
+
+export interface CmsBlogDetailArticleBlock {
+  type: 'heading' | 'paragraph' | 'list' | 'button' | 'image' | string;
+  level?: number;
+  heading?: CmsBilingualText;
+  content?: CmsBilingualText;
+  caption?: CmsBilingualText;
+  images?: CmsImage[];
+  listItems?: CmsBilingualText[];
+  listStyle?: string;
+  isVisible: boolean;
+  _id: string;
+  button?: {
+    label: CmsBilingualText;
+    href: string;
+    openInNewTab: boolean;
+  };
+}
+
+export interface CmsBlogDetailArticleContent {
+  isVisible: boolean;
+  order: number;
+  intro: CmsBilingualText;
+  blocks: CmsBlogDetailArticleBlock[];
+}
+
+export interface CmsBlogDetailConsultationField {
+  name: string;
+  label: CmsBilingualText;
+  placeholder: CmsBilingualText;
+  type: string;
+  required: boolean;
+  options: Array<{ label: CmsBilingualText; value: string; _id: string }>;
   _id: string;
 }
 
-export interface CmsBlogAuthorSection {
+export interface CmsBlogDetailConsultationSection {
   isVisible: boolean;
   order: number;
-  quote: string;
-  name: string;
-  role: string;
-  experience: string;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
   image: CmsImage;
+  fields: CmsBlogDetailConsultationField[];
+  submitButtonLabel: CmsBilingualText;
+  successMessage: CmsBilingualText;
+}
+
+export interface CmsBlogDetailRelatedArticle {
+  _id: string;
+  title: CmsBilingualText;
+  slug: string;
+  excerpt: CmsBilingualText;
+  category: string;
+  featuredImage: CmsImage;
+  readTime: CmsBilingualText;
+}
+
+export interface CmsBlogDetailRelatedArticlesSection {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  articles: CmsBlogDetailRelatedArticle[];
+  button: CmsButton;
+}
+
+export interface CmsBlogDetailAuthor {
+  name: CmsBilingualText;
+  designation: CmsBilingualText;
+  bio: CmsBilingualText;
+  image: CmsImage;
+  linkedinUrl: string;
+  websiteUrl: string;
+}
+
+export interface CmsBlogDetailAuthorInfoSection {
+  isVisible: boolean;
+  order: number;
+  heading: CmsBilingualText;
+  author: CmsBlogDetailAuthor;
 }
 
 export interface CmsBlogDetailSections {
-  hero: CmsHeroSection;
-  contentBlocks: {
-    isVisible: boolean;
-    order: number;
-    blocks: CmsBlogContentBlock[];
-  };
-  consultationCTA: CmsConsultationCTASection;
-  signatureProjects: CmsSignatureProjectsSection;
-  author: CmsBlogAuthorSection;
+  hero: CmsBlogDetailHeroSection;
+  articleContent: CmsBlogDetailArticleContent;
+  consultation: CmsBlogDetailConsultationSection;
+  relatedArticles: CmsBlogDetailRelatedArticlesSection;
+  authorInfo: CmsBlogDetailAuthorInfoSection;
+}
+
+export interface CmsBlogDetailSeo {
+  keywords: { en: string[]; ar: string[] };
+  metaTitle: CmsBilingualText;
+  metaDescription: CmsBilingualText;
+  canonicalUrl: string;
+  ogImage: CmsImage;
+  noIndex: boolean;
+  noFollow: boolean;
 }
 
 export interface CmsBlogDetail {
   _id: string;
+  title: CmsBilingualText;
   slug: string;
-  pageName: string;
+  excerpt: CmsBilingualText;
+  category: string;
+  categoryLabel: CmsBilingualText;
+  author: CmsBlogDetailAuthor;
+  readTime: CmsBilingualText;
+  featuredImage: CmsImage;
   status: string;
+  isFeatured: boolean;
+  tags: { en: string[]; ar: string[] };
   sections: CmsBlogDetailSections;
+  seo: CmsBlogDetailSeo;
+  publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
-  publishedAt: string | null;
 }
 
 // ─── Philosophy ───────────────────────────────────────────────────────────────
