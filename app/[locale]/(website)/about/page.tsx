@@ -38,7 +38,6 @@ export default async function AboutPage({
   ]);
 
   const s = cms?.sections;
-  console.log(s, 41)
   return (
     <main>
       {s?.hero?.isVisible && (
