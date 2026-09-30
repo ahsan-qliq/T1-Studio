@@ -61,7 +61,7 @@ export async function Navbar() {
 
           {/* CTA — desktop only; mobile gets it inside the drawer */}
           <Link
-            href="/spaces/kitchen"
+            href="/spaces/kitchens"
             className={cn(
               buttonVariants({ size: 'lg' }),
               'group hidden lg:inline-flex',
@@ -75,7 +75,7 @@ export async function Navbar() {
           <NavMobileMenu
             links={navLinks}
             ctaLabel={t('startKitchenDesign')}
-            ctaHref="/spaces/kitchen"
+            ctaHref="/spaces/kitchens"
             openLabel={t('openMenu')}
             closeLabel={t('closeMenu')}
           />
