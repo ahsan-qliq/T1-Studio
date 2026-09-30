@@ -55,7 +55,7 @@ export default async function SpacesPage({
   ]);
 
   const s = cms?.sections;
-
+console.log(s)
   // ── Journey steps ─────────────────────────────────────────────────────────
   const journeySteps = s?.journey?.steps
     .filter((step) => step.isVisible)
@@ -123,9 +123,9 @@ export default async function SpacesPage({
         />
       )}
 
-      {s?.gallery?.isVisible && s.gallery.items.length > 0 && (
+      {s?.showcase?.isVisible && s.showcase.gallery.length > 0 && (
         <ImageCarouselSection
-          slides={s.gallery.items.map((img) => ({
+          slides={s.showcase.gallery.map((img) => ({
             src: img.image.url,
             alt: img.image.alt as string,
           }))}
