@@ -1,27 +1,30 @@
-import { getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
-import { HeroBanner } from '@/components/sections/HeroBanner';
+import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
   BlogDetailContent,
   type ArticleBlock,
-} from '@/components/sections/BlogDetailContent';
-import { BlogSection, type BlogPost } from '@/components/sections/BlogSection';
-import { getBlogDetailCms } from '@/lib/cms/blog-detail';
-import type { CmsBlogDetail } from '@/lib/cms/types';
+} from "@/components/sections/BlogDetailContent";
+import { BlogSection, type BlogPost } from "@/components/sections/BlogSection";
+import { getBlogDetailCms } from "@/lib/cms/blog-detail";
+import type { CmsBlogDetail } from "@/lib/cms/types";
 
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
 }
 
-function getText(value: { en?: string; ar?: string } | string | undefined | null, locale: string): string {
-  if (!value) return '';
-  if (typeof value === 'string') return value;
-  if (locale === 'ar') return value.ar || value.en || '';
-  return value.en || value.ar || '';
+function getText(
+  value: { en?: string; ar?: string } | string | undefined | null,
+  locale: string,
+): string {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+  if (locale === "ar") return value.ar || value.en || "";
+  return value.en || value.ar || "";
 }
 
 function mapBreadcrumbs(
-  crumbs: CmsBlogDetail['sections']['hero']['breadcrumbs'],
+  crumbs: CmsBlogDetail["sections"]["hero"]["breadcrumbs"],
   locale: string,
 ) {
   return crumbs.map((c) => ({ label: getText(c.label, locale), href: c.href }));
@@ -30,47 +33,86 @@ function mapBreadcrumbs(
 export default async function BlogsDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-
   const blog = await getBlogDetailCms(slug, locale);
 
   if (!blog) notFound();
 
-  const tBlog = await getTranslations({ locale, namespace: 'BlogDetail' }).catch(() => null);
+  const tBlog = await getTranslations({
+    locale,
+    namespace: "BlogDetail",
+  }).catch(() => null);
   const hero = blog.sections.hero;
   const articleContent = blog.sections.articleContent;
   const relatedArticles = blog.sections.relatedArticles;
   const authorInfo = blog.sections.authorInfo;
 
-  const heroBadge = getText(hero.eyebrow, locale) || getText(blog.categoryLabel, locale) || blog.category;
-  const heroHeading = getText(hero.title, locale) || getText(blog.title, locale);
-  const heroDescription = getText(hero.excerpt, locale) || getText(blog.excerpt, locale);
-  const heroImage = hero.backgroundImage?.url || blog.featuredImage?.url || '/assets/images/BlogBanner.jpg';
+  const heroBadge =
+    getText(hero.eyebrow, locale) ||
+    getText(blog.categoryLabel, locale) ||
+    blog.category;
+  const heroHeading =
+    getText(hero.title, locale) || getText(blog.title, locale);
+  const heroDescription =
+    getText(hero.excerpt, locale) || getText(blog.excerpt, locale);
+  const heroImage =
+    hero.backgroundImage?.url ||
+    blog.featuredImage?.url ||
+    "/assets/images/BlogBanner.jpg";
   const breadcrumbs =
     hero.breadcrumbs?.length > 0
       ? mapBreadcrumbs(hero.breadcrumbs, locale)
       : undefined;
-
-  const blocks: ArticleBlock[] = articleContent.blocks
-    .filter((b) => b.isVisible !== false)
+  const rawBlocks = articleContent.blocks.filter((b) => b.isVisible !== false);
+  const blocks: ArticleBlock[] = rawBlocks
+    .filter((b, i) => {
+      // The CMS emits a standalone `heading` block immediately before `table`
+      // and `faq` blocks. Those sections render their own headings, so skip
+      // the redundant preceding heading to avoid a double render.
+      const next = rawBlocks[i + 1]?.type;
+      if (b.type === "heading" && (next === "table" || next === "faq"))
+        return false;
+      return true;
+    })
     .map((b) => {
-      if (b.type === 'heading' || b.type === 'paragraph') {
+      if (b.type === "heading" || b.type === "paragraph") {
         return {
-          type: 'paragraph' as const,
+          type: "paragraph" as const,
           id: b._id,
           heading: getText(b.heading, locale),
           body: getText(b.content, locale),
         };
       }
-      if (b.type === 'list') {
+      if (b.type === "list") {
         return {
-          type: 'list' as const,
+          type: "list" as const,
           id: b._id,
           heading: getText(b.heading, locale),
           items: (b.listItems ?? []).map((item) => getText(item, locale)),
         };
       }
+      if (b.type === "table") {
+        return {
+          type: "table" as const,
+          id: b._id,
+          heading: getText(b.heading, locale),
+          headers: b.headers ?? [],
+          rows: b.rows ?? [],
+        };
+      }
+      if (b.type === "faq") {
+        return {
+          type: "faq" as const,
+          id: b._id,
+          heading: getText(b.heading, locale),
+          faqs: (b.faqItems ?? []).map((item) => ({
+            question: getText(item.question, locale),
+            answer: getText(item.answer, locale),
+          })),
+        };
+      }
+
       return {
-        type: 'paragraph' as const,
+        type: "paragraph" as const,
         id: b._id,
         heading: getText(b.heading, locale),
         body: getText(b.content, locale),
@@ -82,7 +124,7 @@ export default async function BlogsDetailsPage({ params }: Props) {
     role: getText(authorInfo.author.designation, locale),
     experience: getText(authorInfo.author.bio, locale),
     image: {
-      src: authorInfo.author.image?.url || '',
+      src: authorInfo.author.image?.url || "",
       alt: getText(authorInfo.author.image?.alt, locale),
     },
   };
@@ -94,19 +136,19 @@ export default async function BlogsDetailsPage({ params }: Props) {
     title: getText(a.title, locale),
     href: `/blogs/${a.slug}`,
     image: {
-      src: a.featuredImage?.url || '',
+      src: a.featuredImage?.url || "",
       alt: getText(a.featuredImage?.alt, locale),
     },
   }));
 
   const relatedHeading =
     getText(relatedArticles.heading, locale) ||
-    tBlog?.('relatedHeading') ||
-    'Related Articles';
+    tBlog?.("relatedHeading") ||
+    "Related Articles";
 
   const viewAllLabel =
-    getText(relatedArticles.button?.label, locale) || 'View all articles';
-  const viewAllHref = relatedArticles.button?.href || '/blogs';
+    getText(relatedArticles.button?.label, locale) || "View all articles";
+  const viewAllHref = relatedArticles.button?.href || "/blogs";
 
   return (
     <main>
@@ -119,12 +161,12 @@ export default async function BlogsDetailsPage({ params }: Props) {
       />
 
       {articleContent.isVisible && (
-        <BlogDetailContent blocks={blocks} authorBio={authorBio} />
+        <BlogDetailContent blocks={blocks} authorBio={authorBio} title={heroHeading} />
       )}
 
       {relatedArticles.isVisible && relatedPosts.length > 0 && (
         <BlogSection
-          label={getText(relatedArticles.eyebrow, locale) || 'Blog'}
+          label={getText(relatedArticles.eyebrow, locale) || "Blog"}
           heading={relatedHeading}
           posts={relatedPosts}
           viewAllLabel={viewAllLabel}
