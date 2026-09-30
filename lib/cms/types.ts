@@ -957,7 +957,7 @@ export interface CmsSpacesPageSections {
   hero: CmsHeroSection;
   intro: CmsPhilosophySection;
   featuredSpaces: CmsFeaturedSpacesSectionT;
-  gallery: CmsGallerySectionT;
+  showcase: CmsGallerySectionT;
   whyChooseT1: CmsWhyChooseT1Section;
   signatureProjects: CmsSignatureProjectsSectionT;
   journey: CmsJourneySection;
