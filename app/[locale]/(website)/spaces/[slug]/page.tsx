@@ -134,7 +134,6 @@ const  styleRange = s.styles.items.map((sp)=>({
         href: sp.href,
         image: { src: sp.image.url, alt: sp.image.alt as string },
       })) ?? [];
-console.log(s, 137)
   return (
     <main>
       {s?.hero?.isVisible && (
