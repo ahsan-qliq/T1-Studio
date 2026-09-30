@@ -151,7 +151,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         getText(item.image.alt, locale) ||
         getText(item.title, locale) ||
         project.pageName ||
-        project.projectName ||
+        getText(project.projectName, locale) ||
         "Project image",
 
       title: getText(item.title, locale),
@@ -174,7 +174,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         getText(item.image.alt, locale) ||
         getText(item.title, locale) ||
         project.pageName ||
-        project.projectName ||
+        getText(project.projectName, locale) ||
         "Material",
 
       label: getText(item.title, locale),
@@ -215,21 +215,15 @@ export default async function ProjectDetailsPage({ params }: Props) {
 
       readTime: getText(item.readTime, locale),
 
-      image: item.image?.url
-        ? {
-            src: item.image.url,
-            alt:
-              getText(item.image.alt, locale) || getText(item.author, locale),
-          }
-        : undefined,
+      image: {
+        src: item.image?.url || "",
+        alt: getText(item.image?.alt, locale) || getText(item.author, locale),
+      },
 
-      avatar: item.avatar?.url
-        ? {
-            src: item.avatar.url,
-            alt:
-              getText(item.avatar.alt, locale) || getText(item.author, locale),
-          }
-        : undefined,
+      avatar: {
+        src: item.avatar?.url || "",
+        alt: getText(item.avatar?.alt, locale) || getText(item.author, locale),
+      },
     }))
     .filter((item) => item.quote || item.author);
 
@@ -290,7 +284,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           imageAlt={
             getText(overview.image?.alt, locale) ||
             project.pageName ||
-            project.projectName ||
+            getText(project.projectName, locale) ||
             "Project"
           }
           className={
