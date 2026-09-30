@@ -118,7 +118,6 @@ export default async function HomePage({
   const statsItems = s?.stats?.statistics
     ?.filter((stat) => stat.isVisible)
     .map((stat) => ({ value: stat.value, label: p(stat.label) }));
-console.log(s.services.services)
   // ── Services ──────────────────────────────────────────────────────────────
   const serviceItems = s?.services
     ? s.services.services
