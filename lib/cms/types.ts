@@ -946,13 +946,18 @@ export interface CmsGallerySection {
   items: CmsImageGallerySection[];
 }
 
+export interface CmsGallerySectionT {
+  isVisible: boolean;
+  order: number;
+  gallery: CmsImageGallerySection[];
+}
 // ─── Full spaces page ─────────────────────────────────────────────────────────
 
 export interface CmsSpacesPageSections {
   hero: CmsHeroSection;
   intro: CmsPhilosophySection;
   featuredSpaces: CmsFeaturedSpacesSectionT;
-  gallery: CmsGallerySection;
+  gallery: CmsGallerySectionT;
   whyChooseT1: CmsWhyChooseT1Section;
   signatureProjects: CmsSignatureProjectsSectionT;
   journey: CmsJourneySection;
