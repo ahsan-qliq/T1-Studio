@@ -730,7 +730,8 @@
     "authorName": "John Davis",
     "authorRole": "Admin",
     "authorExperience": "20+ Years Experience",
-    "authorImageAlt": "John Davis portrait"
+    "authorImageAlt": "John Davis portrait",
+    "relatedHeading": "Related Articles"
   },
   "ProjectStats": {
     "sectionLabel": "Project Stats",
