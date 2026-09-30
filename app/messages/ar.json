@@ -687,7 +687,8 @@
     "authorName": "جون ديفيس",
     "authorRole": "مدير",
     "authorExperience": "+20 سنة خبرة",
-    "authorImageAlt": "صورة جون ديفيس"
+    "authorImageAlt": "صورة جون ديفيس",
+    "relatedHeading": "مقالات ذات صلة"
   },
   "ProjectStats": {
     "sectionLabel": "إحصائيات المشروع",
