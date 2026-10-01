@@ -13,7 +13,7 @@ import {
 } from "@/app/config/home.config";
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { BlogSection } from "@/components/sections/BlogSection";
-import { LocationLinksSection } from "@/components/sections/LocationLinksSection";
+// import { LocationLinksSection } from "@/components/sections/LocationLinksSection";
 import { ComparisonSection } from "@/components/sections/ComparisonSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { FaqSection } from "@/components/sections/FaqSection";
@@ -407,7 +407,7 @@ export default async function HomePage({
       <FaqSection {...faqConfig} />
 
       {/* Location links — SEO-focused service × city grid */}
-      <LocationLinksSection columns={locationColumns} />
+      {/* <LocationLinksSection columns={locationColumns} /> */}
     </main>
   );
 }
