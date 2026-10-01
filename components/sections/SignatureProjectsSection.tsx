@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
@@ -22,26 +22,42 @@ interface SignatureProjectsSectionProps {
 }
 
 const GRID_PLACEMENT = [
-  "lg:col-start-1 lg:col-span-2 lg:row-start-1",
-  "lg:col-start-3 lg:col-span-2 lg:row-start-2",
-  "lg:col-start-2 lg:col-span-2 lg:row-start-3",
+  "lg:col-start-1 lg:row-start-1",
+  "lg:col-start-2 lg:row-start-2",
+  "lg:col-start-1 lg:row-start-3",
 ] as const;
+
+const CARD_STYLES = [
+  "lg:w-[70%] lg:justify-self-end", // card 1
+  "lg:w-[88%] lg:justify-self-start", // card 2
+  "lg:w-[58%] lg:justify-self-end", // card 3
+] as const;
+
+const CARD_ASPECTS = ["4 / 5", "16 / 10", "3 / 5"] as const;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const cardVariants = {
-  hidden: { opacity: 0, y: 56, scale: 0.97 },
+  hidden: { opacity: 0, y: 120 },
   show: (i: number) => ({
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.85, ease: EASE, delay: i * 0.14 },
+    transition: { duration: 1.1, ease: EASE, delay: i * 0.18 },
   }),
 };
 
-function ProjectCard({ project, index }: { project: SignatureProject; index: number }) {
+function ProjectCard({
+  project,
+  index,
+}: {
+  project: SignatureProject;
+  index: number;
+}) {
   const ref = useRef<HTMLElement>(null);
-  const inView = useInView(ref as React.RefObject<Element>, { once: true, margin: '-80px' });
+  const inView = useInView(ref as React.RefObject<Element>, {
+    once: true,
+    margin: "-80px",
+  });
 
   return (
     <motion.article
@@ -49,7 +65,7 @@ function ProjectCard({ project, index }: { project: SignatureProject; index: num
       custom={index}
       variants={cardVariants}
       initial="hidden"
-      animate={inView ? 'show' : 'hidden'}
+      animate={inView ? "show" : "hidden"}
     >
       <Link
         href={project.href}
@@ -58,7 +74,11 @@ function ProjectCard({ project, index }: { project: SignatureProject; index: num
       >
         <div
           className="relative w-full overflow-hidden"
-          style={{ aspectRatio: `${project.image.width} / ${project.image.height}` }}
+          style={{
+            aspectRatio:
+              CARD_ASPECTS[index] ??
+              `${project.image.width} / ${project.image.height}`,
+          }}
         >
           {/* Image — scales on hover */}
           <Image
@@ -116,13 +136,13 @@ export function SignatureProjectsSection({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef as React.RefObject<Element>, {
     once: true,
-    margin: '-60px',
+    margin: "-60px",
   });
 
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaInView = useInView(ctaRef as React.RefObject<Element>, {
     once: true,
-    margin: '-40px',
+    margin: "-40px",
   });
 
   return (
@@ -141,19 +161,26 @@ export function SignatureProjectsSection({
         {heading}
       </motion.h2>
 
-      <ul
-        role="list"
-        className="grid grid-cols-1 gap-y-6 lg:grid-cols-4 lg:gap-y-8"
-      >
-        {projects.map((project, i) => (
-          <li
-            key={project.id}
-            className={GRID_PLACEMENT[i] ?? ""}
-          >
-            <ProjectCard project={project} index={i} />
-          </li>
-        ))}
-      </ul>
+      <div className="relative overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px bg-white/30 lg:block"
+          aria-hidden="true"
+        />
+
+        <ul
+          role="list"
+          className="grid grid-cols-1 gap-y-6 lg:grid-cols-2 lg:gap-x-0 lg:gap-y-0"
+        >
+          {projects.map((project, i) => (
+            <li
+              key={project.id}
+              className={`${GRID_PLACEMENT[i] ?? ""} ${CARD_STYLES[i] ?? ""}`}
+            >
+              <ProjectCard project={project} index={i} />
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <motion.div
         ref={ctaRef}
