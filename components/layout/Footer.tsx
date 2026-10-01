@@ -149,7 +149,7 @@ export async function Footer() {
     <footer className="bg-foreground" aria-label={t('footerLabel')}>
 
       {/* Newsletter banner */}
-      <div className="border-b border-white/10">
+      {/* <div className="border-b border-white/10">
         <div className="mx-auto flex flex-col gap-4 px-4 py-8 sm:px-8 sm:flex-row sm:items-center sm:justify-between lg:px-16">
           <div className="max-w-md">
             <h2 className="text-base font-semibold text-white">{t('newsletterHeading')}</h2>
@@ -163,7 +163,7 @@ export async function Footer() {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Main content */}
       <div className="mx-auto px-4 py-14 sm:px-8 lg:px-16">
