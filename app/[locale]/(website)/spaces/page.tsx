@@ -84,7 +84,6 @@ export default async function SpacesPage({
               })
             : undefined,
     })) ?? [];
-    // console.log(s.hero,87)
   return (
     <main>
       {s?.hero?.isVisible && (
