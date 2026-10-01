@@ -76,7 +76,7 @@ function FeaturedCard({
       </div>
 
       {/* Content — 3fr column */}
-      <div className="flex flex-col justify-center gap-5 border-b border-white/10 px-8 py-12 lg:px-14 lg:py-20">
+      <div className="flex flex-col justify-center gap-5 border-b border-white/10 px-8 py-16 lg:px-14 lg:py-20">
         {(post.category || post.readTime) && (
           <div className="flex items-center gap-3">
             {post.category && <CategoryBadge label={post.category} />}
@@ -359,7 +359,7 @@ export function BlogsListingSection({
 
         {/* ── Load more ── */}
         {hasMore && (
-          <div className="flex justify-center border-t border-white/10 py-12">
+          <div className="flex justify-center border-t border-white/10 py-16">
             <button
               type="button"
               onClick={() => setVisibleCount((c) => c + loadMoreCount)}

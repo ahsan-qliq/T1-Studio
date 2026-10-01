@@ -112,8 +112,8 @@ export default async function SpacesPage({
       {s?.featuredSpaces?.isVisible && (
         <SpacesAccordionSection
           heading={s.featuredSpaces.heading as string}
-          viewAllLabel={s.featuredSpaces.button.label as string}
-          viewAllHref="/spaces"
+          // viewAllLabel={s.featuredSpaces.button.label as string}
+          // viewAllHref="/spaces"
           spaces={s.featuredSpaces.spaces
             .filter((sp) => sp.isVisible)
             .map((sp) => ({

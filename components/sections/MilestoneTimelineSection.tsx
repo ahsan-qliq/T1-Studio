@@ -99,7 +99,7 @@ export function MilestoneTimelineSection({
     <section
       ref={ref}
       aria-labelledby="milestone-timeline-heading"
-      className="page-wrap py-12"
+      className="page-wrap py-16"
     >
       {/* Decorative grid lines */}
       {/* <div

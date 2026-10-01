@@ -122,7 +122,7 @@ function FeaturedCard({
       </div>
 
       {/* Content — col 2-3 */}
-      <div className="flex flex-col justify-center gap-6 border-b border-white/10 px-8 py-12 lg:col-span-2 lg:px-14 lg:py-20">
+      <div className="flex flex-col justify-center gap-6 border-b border-white/10 px-8 py-16 lg:col-span-2 lg:px-14 lg:py-20">
         {(project.propertyType || project.readTime) && (
           <div className="flex items-center gap-3">
             {project.propertyType && <Badge label={project.propertyType} />}
@@ -479,7 +479,7 @@ export function AllProjectsSection({
 
         {/* ── Load more ── */}
         {hasMore && (
-          <div className="flex justify-center border-t border-white/10 py-12">
+          <div className="flex justify-center border-t border-white/10 py-16">
             <button
               type="button"
               onClick={() => setVisibleCount((c) => c + INITIAL_COUNT)}

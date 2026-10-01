@@ -104,7 +104,7 @@ export function BeforeAfterSection({
   };
 
   return (
-    <section aria-label={heading} className={cn(" page-wrap py-12", className)}>
+    <section aria-label={heading} className={cn(" page-wrap py-16", className)}>
       {/* Heading */}
       <h2 className="mb-10 text-center text-3xl font-bold text-white sm:text-4xl">
         {heading}

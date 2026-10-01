@@ -44,7 +44,7 @@ export function ServicesSection({
   return (
     <section
       aria-labelledby="services-heading"
-      className="page-wrap py-12"
+      className="page-wrap py-16"
     >
       {/* Animated header */}
       <motion.div

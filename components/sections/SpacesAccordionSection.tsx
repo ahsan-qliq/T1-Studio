@@ -15,8 +15,8 @@ export interface AccordionSpace {
 
 interface SpacesAccordionSectionProps {
   heading: string;
-  viewAllLabel: string;
-  viewAllHref: string;
+  viewAllLabel?: string;
+  viewAllHref?: string;
   spaces: AccordionSpace[];
 }
 
@@ -102,26 +102,23 @@ export function SpacesAccordionSection({
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef as React.RefObject<Element>, {
     once: true,
-    margin: '-60px',
+    margin: "-60px",
   });
 
   const accordionRef = useRef<HTMLDivElement>(null);
   const accordionInView = useInView(accordionRef as React.RefObject<Element>, {
     once: true,
-    margin: '-40px',
+    margin: "-40px",
   });
 
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaInView = useInView(ctaRef as React.RefObject<Element>, {
     once: true,
-    margin: '-40px',
+    margin: "-40px",
   });
 
   return (
-    <section
-      aria-labelledby="spaces-accordion-heading"
-      className="py-12"
-    >
+    <section aria-labelledby="spaces-accordion-heading" className="py-16">
       <motion.h2
         ref={headingRef}
         id="spaces-accordion-heading"
@@ -153,25 +150,26 @@ export function SpacesAccordionSection({
           />
         ))}
       </motion.div>
-
-      <motion.div
-        ref={ctaRef}
-        className="mt-10 flex justify-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
-      >
-        <Link
-          href={viewAllHref}
-          className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white px-7 py-3 text-sm font-medium text-primary transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+      {viewAllLabel && viewAllHref && (
+        <motion.div
+          ref={ctaRef}
+          className="mt-10 flex justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, ease: EASE, delay: 0.15 }}
         >
-          {viewAllLabel}
-          <ArrowRight
-            className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
-            aria-hidden="true"
-          />
-        </Link>
-      </motion.div>
+          <Link
+            href={viewAllHref}
+            className="group inline-flex items-center gap-2 rounded-full border border-white/30 bg-white px-7 py-3 text-sm font-medium text-primary transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+          >
+            {viewAllLabel}
+            <ArrowRight
+              className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+              aria-hidden="true"
+            />
+          </Link>
+        </motion.div>
+      )}
     </section>
   );
 }

@@ -450,7 +450,7 @@ function CardCarouselLayout({
   }, [api, updateState]);
 
   return (
-    <div className="page-wrap py-12 sm:py-18">
+    <div className="page-wrap py-16 sm:py-18">
       {/* Header row: label + heading left, nav controls right */}
       <motion.div
         className="mb-8 flex items-end justify-between gap-4"

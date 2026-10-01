@@ -149,7 +149,7 @@ export function ProjectJourneySection({
   nextLabel,
 }: ProjectJourneySectionProps) {
   return (
-    <section aria-labelledby="journey-heading" className="page-wrap py-12">
+    <section aria-labelledby="journey-heading" className="page-wrap py-16">
 
       {/* Label + heading */}
       <div className="mb-10 text-center">

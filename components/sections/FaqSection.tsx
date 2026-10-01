@@ -36,7 +36,7 @@ export function FaqSection({ label, heading, items }: FaqSectionProps) {
   });
 
   return (
-    <section aria-labelledby="faq-heading" className="page-wrap py-12">
+    <section aria-labelledby="faq-heading" className="page-wrap py-16">
       {/* Header */}
       <div ref={headingRef} className="mb-10 text-center">
         <motion.p

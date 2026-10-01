@@ -37,7 +37,7 @@ export function InspirationCTABanner({
     <section
       ref={ref}
       aria-labelledby="inspiration-cta-heading"
-      className="relative py-12 overflow-hidden"
+      className="relative py-16 overflow-hidden"
     >
       {/* Background image */}
       <div className="relative min-h-[220px] w-full sm:min-h-[260px]">

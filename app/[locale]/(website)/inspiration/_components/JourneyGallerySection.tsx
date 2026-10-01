@@ -40,7 +40,7 @@ export function JourneyGallerySection({
     <section
       ref={ref}
       aria-labelledby="journey-gallery-heading"
-      className="page-wrap py-12 sm:py-18"
+      className="page-wrap py-16 sm:py-18"
     >
       {/* Heading */}
       <motion.h2

@@ -148,7 +148,7 @@ export function SignatureProjectsSection({
   return (
     <section
       aria-labelledby="signature-projects-heading"
-      className="page-wrap py-12"
+      className="page-wrap py-16"
     >
       <motion.h2
         ref={headingRef}

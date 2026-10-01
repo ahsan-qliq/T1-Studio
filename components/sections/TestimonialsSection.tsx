@@ -130,7 +130,7 @@ export function TestimonialsSection({
   const EASE = [0.22, 1, 0.36, 1] as const;
 
   return (
-    <section aria-labelledby="testimonials-heading" className="page-wrap py-12">
+    <section aria-labelledby="testimonials-heading" className="page-wrap py-16">
       {/* Header */}
       <motion.div
         ref={sectionRef}

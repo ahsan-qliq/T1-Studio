@@ -116,7 +116,7 @@ export function TeamSection({
       className="relative overflow-hidden"
     >
 
-      <div className="relative z-10 page-wrap py-12 sm:py-16">
+      <div className="relative z-10 page-wrap py-16 sm:py-16">
         {/* Header: heading left, nav right */}
         <motion.div
           className="mb-8 flex items-center justify-between gap-4"
