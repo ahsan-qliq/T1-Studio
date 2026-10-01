@@ -88,7 +88,7 @@ export function JourneyCarouselClient({
   return (
     <>
       {/* Stepper row — prev / timeline / next */}
-      <div className="mb-8 flex items-center gap-2 sm:gap-3">
+      <div className={cn('mb-8 flex items-center gap-2 sm:gap-3', !showControls && 'sm:mx-14')}>
 
         {/* Prev */}
         {showControls && (
