@@ -66,7 +66,6 @@ export default async function ProjectsPage({
    *
    * If your CMS later adds service/style/filter keys, map them here.
    */
-  console.log("projectsSection?.projects", projectsSection?.projects);
   const projectItems =
     projectsSection?.projects
       ?.filter((p) => p.isVisible)
