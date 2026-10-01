@@ -379,6 +379,7 @@ export interface CmsLocationLinksSection {
 export interface CmsMaterialItem {
   image: CmsImage;
   label: string;
+  title: string;
   _id: string;
 }
 
