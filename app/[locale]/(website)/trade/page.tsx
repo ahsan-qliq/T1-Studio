@@ -11,7 +11,7 @@ import {
 import { StatsBar } from "@/components/sections/StatsBar";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
-import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
+import { PartnerLeadSection } from "@/components/sections/PartnerLeadSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 import {
@@ -29,7 +29,6 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
-import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 const JOURNEY_ICONS: LucideIcon[] = [
   Globe,
@@ -61,13 +60,11 @@ export default async function TradePage({
 }) {
   const { locale } = await params;
 
-  const [cms, tJourney, tStats, tDreamSpace] = await Promise.all([
+  const [cms, tJourney, tStats] = await Promise.all([
     getTradePageCms(locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "Stats" }),
-    getTranslations("DreamSpace"),
   ]);
-const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
   const s = cms?.sections;
 
   // ── Journey steps ─────────────────────────────────────────────────────────
@@ -219,19 +216,64 @@ const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
         </FadeUp>
       )} */}
 
-      <DreamSpaceSection
-        {...dreamSpaceConfig}
-        heading={tDreamSpace("heading")}
-        imageAlt={tDreamSpace("imageAlt")}
-        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        timelineLabel={tDreamSpace("timelineLabel")}
-        firstNameLabel={tDreamSpace("firstNameLabel")}
-        lastNameLabel={tDreamSpace("lastNameLabel")}
-        emailLabel={tDreamSpace("emailLabel")}
-        phoneLabel={tDreamSpace("phoneLabel")}
-        submitLabel={tDreamSpace("submitLabel")}
+      <PartnerLeadSection
+        heading="Partner With Us"
+        imageSrc="/assets/images/contact.webp"
+        imageAlt="Partner with T1 Studio"
+        submitLabel="Submit"
+        tradePartnerLabel="Trade Partner"
+        referralPartnerLabel="Referral Partner"
+        trade={{
+          companyNameLabel: "Company Name",
+          companyTypeLabel: "Company Type",
+          companyTypeOptions: [
+            { value: "architecture", label: "Architecture Firm" },
+            { value: "interior-design", label: "Interior Design Studio" },
+            { value: "construction", label: "Construction Company" },
+            { value: "real-estate", label: "Real Estate Developer" },
+            { value: "contractor", label: "General Contractor" },
+          ],
+          projectScaleLabel: "Project Scale",
+          projectScaleOptions: [
+            { value: "residential", label: "Residential" },
+            { value: "commercial", label: "Commercial" },
+            { value: "mixed-use", label: "Mixed Use" },
+            { value: "hospitality", label: "Hospitality" },
+          ],
+          locationLabel: "Location",
+          locationOptions: [
+            { value: "dubai", label: "Dubai" },
+            { value: "abu-dhabi", label: "Abu Dhabi" },
+            { value: "sharjah", label: "Sharjah" },
+            { value: "other-uae", label: "Other UAE" },
+            { value: "international", label: "International" },
+          ],
+          firstNameLabel: "First Name",
+          lastNameLabel: "Last Name",
+          emailLabel: "Email Address",
+          phoneLabel: "Phone Number",
+        }}
+        referral={{
+          firstNameLabel: "First Name",
+          lastNameLabel: "Last Name",
+          emailLabel: "Email Address",
+          phoneLabel: "Phone Number",
+          clientNameLabel: "Client Name",
+          referralSourceLabel: "How did you hear about us?",
+          referralSourceOptions: [
+            { value: "existing-client", label: "Existing Client" },
+            { value: "social-media", label: "Social Media" },
+            { value: "word-of-mouth", label: "Word of Mouth" },
+            { value: "online-search", label: "Online Search" },
+            { value: "event", label: "Event or Exhibition" },
+          ],
+          clientTypeLabel: "Client Type",
+          clientTypeOptions: [
+            { value: "residential", label: "Residential" },
+            { value: "commercial", label: "Commercial" },
+            { value: "both", label: "Both" },
+          ],
+        }}
       />
 
       {s?.faq?.isVisible && (
