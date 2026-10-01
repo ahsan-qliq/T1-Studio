@@ -99,6 +99,7 @@ function FeaturedCard({
   project: ProjectItem;
   viewCaseStudyLabel: string;
 }) {
+  console.log("project", project);
   return (
     <>
       {/* Image — col 1, stretches to row height via CSS Grid */}
@@ -125,7 +126,7 @@ function FeaturedCard({
       <div className="flex flex-col justify-center gap-6 border-b border-white/10 px-8 py-16 lg:col-span-2 lg:px-14 lg:py-20">
         {(project.propertyType || project.readTime) && (
           <div className="flex items-center gap-3">
-            {project.propertyType && <Badge label={project.propertyType} />}
+            {project.location && <Badge label={project.location} />}
             {project.readTime && (
               <span className="text-sm text-white/50">{project.readTime}</span>
             )}
@@ -225,10 +226,9 @@ function CompactCard({
               {project.title}
             </h3>
 
-            {isRight && (project.propertyType || secondaryInfo) && (
+            {(project.location || secondaryInfo) && (
               <div className="flex items-center justify-between">
-                {project.propertyType && <Badge label={project.propertyType} />}
-
+                {project.location && <Badge label={project.location} />}
                 {secondaryInfo && (
                   <span className="text-sm text-white/60">{secondaryInfo}</span>
                 )}
@@ -236,16 +236,6 @@ function CompactCard({
             )}
           </div>
         </div>
-
-        {!isRight && (project.propertyType || secondaryInfo) && (
-          <div className="flex items-center justify-between px-5 py-4 sm:px-6">
-            {project.propertyType && <Badge label={project.propertyType} />}
-
-            {secondaryInfo && (
-              <span className="text-sm text-white/50">{secondaryInfo}</span>
-            )}
-          </div>
-        )}
       </Link>
     </motion.article>
   );
@@ -279,7 +269,7 @@ export function AllProjectsSection({
     filterOptions.locations.length > 0 ||
     filterOptions.services.length > 0 ||
     filterOptions.styles.length > 0;
-
+console.log("projects", projects);
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
@@ -294,6 +284,7 @@ export function AllProjectsSection({
       }),
     [projects, activePropertyType, filters],
   );
+  console.log("filtered", filtered);
 
   const hasActiveFilter =
     activePropertyType !== null || Object.values(filters).some(Boolean);
@@ -450,15 +441,6 @@ export function AllProjectsSection({
                   {visibleRest.map((project, i) => {
                     const isLeft = i % 2 === 0;
                     return (
-                      // <li
-                      //   key={project.id}
-                      //   className={
-                      //     isLeft
-                      //       ? `lg:col-start-1 lg:row-start-${i + 1}`
-                      //       : `lg:col-start-2 lg:row-start-${i + 1}`
-                      //   }
-                      //   className={PLACEMENTS[i] ?? ""}
-                      // >
                       <li
                         key={project.id}
                         className={`${PLACEMENTS[i] ?? ""} ${CARD_WIDTHS[i] ?? ""}`}
