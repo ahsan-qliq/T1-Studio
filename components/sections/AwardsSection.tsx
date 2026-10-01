@@ -39,15 +39,6 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
           {label}
         </motion.p>
 
-        {/* Divider */}
-        <motion.div
-          className="hidden h-8 w-px bg-border sm:block"
-          aria-hidden="true"
-          initial={{ opacity: 0, scaleY: 0 }}
-          animate={inView ? { opacity: 1, scaleY: 1 } : {}}
-          transition={{ duration: 0.5, ease: EASE, delay: 0.15 }}
-        />
-
         {/* Logos — staggered */}
         <ul
           role="list"
