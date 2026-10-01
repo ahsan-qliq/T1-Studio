@@ -1145,7 +1145,7 @@ export interface CmsProjectDetailHeroSection {
 
   backgroundImage: CmsImage;
   mobileImage: CmsImage;
-
+breadcrumbs: Array<{ label: CmsBilingualText; href: string }>;
   stats: CmsProjectDetailHeroStat[];
 
   overlayOpacity: number;
