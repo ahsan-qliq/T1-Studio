@@ -645,7 +645,7 @@ export function BlogDetailContent({ blocks, authorBio, title }: BlogDetailConten
 
   return (
     <div className="bg-[#0C0C0C]">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-8 lg:px-12">
         <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-16 xl:gap-24">
           {/* Sticky sidebar TOC — desktop only */}
           <aside className="hidden lg:block">

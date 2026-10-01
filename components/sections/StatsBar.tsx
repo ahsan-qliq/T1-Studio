@@ -23,7 +23,7 @@ export function StatsBar({ items, sectionLabel }: StatsBarProps) {
   });
 
   return (
-    <section ref={ref} aria-label={sectionLabel} className="page-wrap py-12">
+    <section ref={ref} aria-label={sectionLabel} className="page-wrap py-16">
       <ul
         role="list"
         className="flex flex-wrap justify-between gap-8 sm:gap-12 lg:gap-16"

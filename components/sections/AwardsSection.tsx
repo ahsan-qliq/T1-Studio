@@ -27,7 +27,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
   });
 
   return (
-    <section ref={ref} aria-label={label} className="page-wrap py-12">
+    <section ref={ref} aria-label={label} className="page-wrap py-16">
       <div className="mx-auto flex flex-col items-center justify-between gap-8 sm:flex-row sm:gap-12">
         {/* Label */}
         <motion.p

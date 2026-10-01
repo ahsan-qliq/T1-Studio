@@ -157,7 +157,7 @@ export function ReferralPartnerSection({
           transition={{ duration: 0.65, ease: EASE, delay: 0.35 }}
         >
           <a
-            href={ctaHref}
+            href={"/trade"}
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
               "group gap-2 border-secondary text-primary hover:bg-secondary/5 hover:text-secondary/90",

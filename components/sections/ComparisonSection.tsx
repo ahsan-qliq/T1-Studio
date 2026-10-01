@@ -100,7 +100,7 @@ export function ComparisonSection({ heading, columns }: ComparisonSectionProps) 
   });
 
   return (
-    <section aria-labelledby="comparison-heading" className="page-wrap py-12">
+    <section aria-labelledby="comparison-heading" className="page-wrap py-16">
       <motion.h2
         ref={headingRef}
         id="comparison-heading"

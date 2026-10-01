@@ -23,12 +23,14 @@ export default async function InspirationPage({
 }) {
   const { locale } = await params;
 
-  const [cms, tCarousel] = await Promise.all([
+  const [cms, tCarousel, tInspirationCTA] = await Promise.all([
     getInspirationPageCms(locale),
     getTranslations({ locale, namespace: "SpacesCarousel" }),
+    getTranslations({ locale, namespace: "InspirationCTA" }),
   ]);
 
   const s = cms?.sections;
+  console.log("inspiration page cms",  s?.inspirationCTA);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -79,7 +81,7 @@ export default async function InspirationPage({
           items={s.materials.materials.map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
-            label: item.label,
+            label: item.title,
           }))}
         />
       )}
@@ -93,7 +95,7 @@ export default async function InspirationPage({
             href: s.inspirationCTA.button.href || "/spaces",
           }}
           secondaryCta={{
-            label: s.inspirationCTA.button.label as string,
+            label: tInspirationCTA("secondaryCta"),
             href: s.inspirationCTA.button.href || "/",
           }}
           image={{

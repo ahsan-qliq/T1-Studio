@@ -37,7 +37,7 @@ export function InspirationCTABanner({
     <section
       ref={ref}
       aria-labelledby="inspiration-cta-heading"
-      className="relative py-12 overflow-hidden"
+      className="relative py-16 overflow-hidden"
     >
       {/* Background image */}
       <div className="relative min-h-[220px] w-full sm:min-h-[260px]">
@@ -99,7 +99,7 @@ export function InspirationCTABanner({
               />
             </Link>
 
-            <Link
+            {/* <Link
               href={secondaryCta.href}
               className="group inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-medium text-white backdrop-blur-sm transition-colors duration-200 hover:border-white/70 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
@@ -108,7 +108,7 @@ export function InspirationCTABanner({
                 className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
-            </Link>
+            </Link> */}
           </motion.div>
 
         </div>

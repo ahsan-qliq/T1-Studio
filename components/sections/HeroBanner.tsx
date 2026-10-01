@@ -73,7 +73,7 @@ export async function HeroBanner({
         <div className="h-16 shrink-0 sm:h-20" aria-hidden="true" />
 
         {/* Hero copy — each element animates in via CSS (runs before JS hydration) */}
-        <div className="flex flex-1 flex-col justify-center px-4 py-12 sm:px-8 sm:py-16 lg:px-16">
+        <div className="flex flex-1 flex-col justify-center px-4 py-16 sm:px-8 sm:py-16 lg:px-16">
           <div className="text-center">
             <p
               className="mb-6 text-xs font-medium uppercase tracking-widest text-white/75 underline underline-offset-4 decoration-white/40"

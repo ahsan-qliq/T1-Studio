@@ -87,7 +87,7 @@ function GridLayout({
     <>
       {/* Centered heading */}
       <motion.div
-        className="px-4 py-10 text-center sm:py-12"
+        className="px-4 py-10 text-center sm:py-16"
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: EASE }}
@@ -165,7 +165,7 @@ function CarouselLayout({
     <>
       {/* Header row: heading left, nav controls right */}
       <motion.div
-        className="flex items-center justify-between gap-6 px-4 py-10 sm:px-8 sm:py-12 lg:px-16"
+        className="flex items-center justify-between gap-6 px-4 py-10 sm:px-8 sm:py-16 lg:px-16"
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: EASE }}

@@ -148,7 +148,7 @@ export function SignatureProjectsSection({
   return (
     <section
       aria-labelledby="signature-projects-heading"
-      className="page-wrap py-12"
+      className="page-wrap py-16"
     >
       <motion.h2
         ref={headingRef}
@@ -162,10 +162,10 @@ export function SignatureProjectsSection({
       </motion.h2>
 
       <div className="relative overflow-hidden">
-        <div
+        {/* <div
           className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px bg-white/30 lg:block"
           aria-hidden="true"
-        />
+        /> */}
 
         <ul
           role="list"

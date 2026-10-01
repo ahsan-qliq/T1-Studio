@@ -126,7 +126,7 @@ export function BlogSection({
   });
 
   return (
-    <section aria-labelledby="blog-heading" className="page-wrap py-12">
+    <section aria-labelledby="blog-heading" className="page-wrap py-16">
       <motion.h2
         ref={headingRef}
         id="blog-heading"

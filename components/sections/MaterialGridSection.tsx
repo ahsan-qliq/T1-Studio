@@ -81,7 +81,7 @@ export function MaterialGridSection({ heading, items }: MaterialGridSectionProps
     >
       {/* Heading */}
       <motion.div
-        className="px-4 py-10 text-center sm:py-12"
+        className="px-4 py-10 text-center sm:py-16"
         initial={{ opacity: 0, y: 16 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.6, ease: EASE }}

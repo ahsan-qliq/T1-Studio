@@ -53,7 +53,7 @@ export function LocationLinksSection({ columns }: LocationLinksSectionProps) {
   });
 
   return (
-    <section aria-label="Services by location" className="page-wrap py-12">
+    <section aria-label="Services by location" className="page-wrap py-16">
       <motion.div
         ref={ref}
         variants={stagger.container}

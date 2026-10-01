@@ -99,7 +99,7 @@ export function MilestoneTimelineSection({
     <section
       ref={ref}
       aria-labelledby="milestone-timeline-heading"
-      className="relative overflow-hidden"
+      className="page-wrap py-16"
     >
       {/* Decorative grid lines */}
       {/* <div
@@ -127,7 +127,7 @@ export function MilestoneTimelineSection({
         {/* Timeline grid */}
         <ul
           role="list"
-          className="mt-8 grid grid-cols-1 divide-y  sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4"
+          className="mt-8 grid grid-cols-1 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4"
         >
           {milestones.map((milestone, i) => (
             <MilestoneCard

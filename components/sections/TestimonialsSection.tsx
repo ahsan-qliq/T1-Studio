@@ -75,14 +75,14 @@ function TestimonialCard({
             {testimonial.name}
           </cite>
 
-          <button
+          {/* <button
             type="button"
             onClick={onPlay}
             aria-label={`Play ${testimonial.name}'s video testimonial`}
             className="flex size-11 shrink-0 items-center justify-center rounded-full bg-white text-black transition-transform duration-200 motion-safe:hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             <Play className="size-4 fill-current ms-0.5" aria-hidden="true" />
-          </button>
+          </button> */}
         </div>
       </div>
     </article>
@@ -130,7 +130,7 @@ export function TestimonialsSection({
   const EASE = [0.22, 1, 0.36, 1] as const;
 
   return (
-    <section aria-labelledby="testimonials-heading" className="page-wrap py-12">
+    <section aria-labelledby="testimonials-heading" className="page-wrap py-16">
       {/* Header */}
       <motion.div
         ref={sectionRef}

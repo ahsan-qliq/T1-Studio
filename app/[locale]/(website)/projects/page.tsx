@@ -72,7 +72,7 @@ export default async function ProjectsPage({
       .map((p) => ({
         id: p._id,
 
-        title: t(p.title),
+        title: p.title,
 
         propertyType: p.category || "",
 
@@ -82,9 +82,9 @@ export default async function ProjectsPage({
          */
         completionYear: 0,
 
-        location: t(p.location),
+        location: p.location,
 
-        description: t(p.description),
+        description:p.description,
 
         image: {
           src: p.image?.url || "",
