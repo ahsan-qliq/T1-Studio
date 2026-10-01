@@ -6,6 +6,7 @@ import { MaterialInspirationSection } from "@/components/sections/MaterialInspir
 import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
 import { SpaceIntroSection } from "@/components/sections/SpaceIntroSection";
 import { StatsBarServer } from "@/components/sections/StatsBarServer";
+import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { FadeUp } from "@/components/ui/animate";
 import { getDreamSpaceConfig } from "@/app/config/home.config";
 
@@ -133,7 +134,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
   const projectInfo = sections?.projectInfo;
   const testimonial = sections?.testimonial;
   const relatedProjects = sections?.relatedProjects;
-  const consultation = sections?.consultation;
+
 
   /*
    * ---------------------------------------------------------
@@ -463,94 +464,25 @@ export default async function ProjectDetailsPage({ params }: Props) {
       ===================================================== */}
 
       {isVisible(relatedProjects) && relatedProjects.projects?.length > 0 && (
-        <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 lg:py-24">
-          {/* Eyebrow */}
-
-          {getText(relatedProjects.eyebrow, locale) && (
-            <p className="mb-3 text-sm uppercase tracking-[0.2em]">
-              {getText(relatedProjects.eyebrow, locale)}
-            </p>
-          )}
-
-          {/* Heading */}
-
-          {getText(relatedProjects.heading, locale) && (
-            <h2 className="mb-6 text-3xl font-semibold md:text-5xl">
-              {getText(relatedProjects.heading, locale)}
-            </h2>
-          )}
-
-          {/* Description */}
-
-          {getText(relatedProjects.description, locale) && (
-            <p className="mb-10 max-w-3xl text-black/70">
-              {getText(relatedProjects.description, locale)}
-            </p>
-          )}
-
-          {/* Projects */}
-
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {relatedProjects.projects
-              .filter((item) => item.isVisible !== false)
-              .map((relatedProject, index) => {
-                const title = getText(relatedProject.title, locale);
-
-                const description = getText(relatedProject.description, locale);
-
-                return (
-                  <article
-                    key={relatedProject._id || index}
-                    className="overflow-hidden border border-black/10"
-                  >
-                    {relatedProject.image?.url && (
-                      <img
-                        src={relatedProject.image.url}
-                        alt={
-                          getText(relatedProject.image.alt, locale) ||
-                          project.pageName ||
-                          "Related project"
-                        }
-                        className="aspect-[4/3] w-full object-cover"
-                      />
-                    )}
-
-                    <div className="p-5">
-                      {title && (
-                        <h3 className="text-xl font-semibold">{title}</h3>
-                      )}
-
-                      {description && (
-                        <p className="mt-3 text-sm leading-6 text-black/60">
-                          {description}
-                        </p>
-                      )}
-                    </div>
-                  </article>
-                );
-              })}
-          </div>
-
-          {/* Button */}
-
-          {relatedProjects.button?.href &&
-            getText(relatedProjects.button.label, locale) && (
-              <a
-                href={relatedProjects.button.href}
-                target={
-                  relatedProjects.button.openInNewTab ? "_blank" : undefined
-                }
-                rel={
-                  relatedProjects.button.openInNewTab
-                    ? "noopener noreferrer"
-                    : undefined
-                }
-                className="mt-8 inline-flex border border-black px-6 py-3 text-sm transition hover:bg-black hover:text-white"
-              >
-                {getText(relatedProjects.button.label, locale)}
-              </a>
-            )}
-        </section>
+        <SignatureProjectsSection
+          heading={getText(relatedProjects.heading, locale) || (locale === "ar" ? "مشاريع ذات صلة" : "Related Projects")}
+          viewAllLabel={getText(relatedProjects.button?.label, locale) || (locale === "ar" ? "عرض الكل" : "View all projects")}
+          viewAllHref={relatedProjects.button?.href || "/projects"}
+          projects={relatedProjects.projects
+            .filter((item) => item.isVisible !== false)
+            .map((item, i) => ({
+              id: item._id || String(i),
+              title: getText(item.title, locale),
+              location: getText(item.location, locale) || getText(item.description, locale),
+              href: item.href || (item.slug ? `/projects/${item.slug}` : "/projects"),
+              image: {
+                src: item.image?.url || "",
+                alt: getText(item.image?.alt, locale) || getText(item.title, locale),
+                width: 4,
+                height: 3,
+              },
+            }))}
+        />
       )}
 
       {/* =====================================================

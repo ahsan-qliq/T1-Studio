@@ -101,7 +101,6 @@ function pad(n: number): string {
 }
 
 function buildToc(blocks: ArticleBlock[]): TocItem[] {
-  console.log(blocks, 102)
   let mainIndex = 0;
   const items: TocItem[] = [];
 
