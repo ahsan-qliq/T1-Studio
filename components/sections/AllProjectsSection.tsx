@@ -1,13 +1,41 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useRef, useState, useMemo } from "react";
 import Image from "next/image";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { Select, type SelectOption } from "@/components/ui/select";
+import { motion, useInView } from "framer-motion";
+
 import { cn } from "@/lib/utils";
 
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const cardVariants = {
+  hidden: {
+    opacity: 0,
+    y: 80,
+  },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.9,
+      ease: EASE,
+      delay: i * 0.12,
+    },
+  }),
+};
+
 const INITIAL_COUNT = 4; // 1 featured + 3 compact
+
+const CARD_WIDTHS = [
+  "lg:w-[58%] lg:justify-self-end",
+  "lg:w-[88%] lg:justify-self-start",
+  "lg:w-[58%] lg:justify-self-end",
+  "lg:w-[88%] lg:justify-self-start",
+  "lg:w-[58%] lg:justify-self-end",
+] as const;
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
@@ -74,7 +102,11 @@ function FeaturedCard({
   return (
     <>
       {/* Image — col 1, stretches to row height via CSS Grid */}
-      <div className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch">
+      <div
+        className="relative overflow-hidden border-b border-white/10 lg:border-r"
+        style={{ aspectRatio: "4 / 5" }}
+        // className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch"
+      >
         {project.image.src ? (
           <Image
             src={project.image.src}
@@ -128,84 +160,96 @@ function FeaturedCard({
 }
 
 // ─── Compact card ─────────────────────────────────────────────────────────────
-// isRight → cols 2-3 (landscape 4/3) — badge + readtime overlaid inside image
-// !isRight → cols 1-2 (portrait 3/4) — badge + readtime below image
-
 function CompactCard({
   project,
   isRight,
+  index,
 }: {
   project: ProjectItem;
   isRight: boolean;
+  index: number;
 }) {
+  const ref = useRef<HTMLElement>(null);
+
+  const inView = useInView(ref as React.RefObject<Element>, {
+    once: true,
+    margin: "-80px",
+  });
+
   const secondaryInfo =
     project.readTime ??
     (project.completionYear ? String(project.completionYear) : null);
 
   return (
-    <Link
-      href={project.href}
-      aria-label={project.title}
-      className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+    <motion.article
+      ref={ref}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
     >
-      {/* Image with overlay */}
-      <div
-        className={cn(
-          "relative w-full overflow-hidden",
-          isRight ? "aspect-4/3" : "aspect-3/4",
-        )}
+      <Link
+        href={project.href}
+        aria-label={project.title}
+        className="group block w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       >
-        {project.image.src ? (
-          <Image
-            src={project.image.src}
-            alt={project.image.alt}
-            fill
-            sizes="(max-width: 1024px) 100vw, 66vw"
-            className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-white/5" />
-        )}
-
         <div
-          aria-hidden="true"
-          className="absolute inset-0"
+          className="relative w-full overflow-hidden"
           style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 75%)",
+            aspectRatio: isRight ? "16 / 10" : "3 / 5",
           }}
-        />
-
-        <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
-          <h3 className="mb-3 text-xl font-bold leading-tight text-white sm:text-2xl">
-            {project.title}
-          </h3>
-
-          {/* Landscape (right): badge + readtime inside image at bottom */}
-          {isRight && (project.propertyType || secondaryInfo) && (
-            <div className="flex items-center justify-between">
-              {project.propertyType && <Badge label={project.propertyType} />}
-              {secondaryInfo && (
-                <span className="text-sm text-white/60">{secondaryInfo}</span>
-              )}
-            </div>
+        >
+          {project.image.src ? (
+            <Image
+              src={project.image.src}
+              alt={project.image.alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-white/5" />
           )}
-        </div>
-      </div>
 
-      {/* Portrait (left): badge + readtime below the image */}
-      {!isRight && (project.propertyType || secondaryInfo) && (
-        <div className="flex items-center justify-between px-5 py-4 sm:px-6">
-          {project.propertyType && <Badge label={project.propertyType} />}
-          {secondaryInfo && (
-            <span className="text-sm text-white/50">{secondaryInfo}</span>
-          )}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, transparent 75%)",
+            }}
+          />
+
+          <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+            <h3 className="mb-3 text-xl font-bold leading-tight text-white sm:text-2xl">
+              {project.title}
+            </h3>
+
+            {isRight && (project.propertyType || secondaryInfo) && (
+              <div className="flex items-center justify-between">
+                {project.propertyType && <Badge label={project.propertyType} />}
+
+                {secondaryInfo && (
+                  <span className="text-sm text-white/60">{secondaryInfo}</span>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      )}
-    </Link>
+
+        {!isRight && (project.propertyType || secondaryInfo) && (
+          <div className="flex items-center justify-between px-5 py-4 sm:px-6">
+            {project.propertyType && <Badge label={project.propertyType} />}
+
+            {secondaryInfo && (
+              <span className="text-sm text-white/50">{secondaryInfo}</span>
+            )}
+          </div>
+        )}
+      </Link>
+    </motion.article>
   );
 }
-
 // ─── Section ──────────────────────────────────────────────────────────────────
 
 export function AllProjectsSection({
@@ -221,7 +265,9 @@ export function AllProjectsSection({
   filterOptions,
   projects,
 }: AllProjectsSectionProps) {
-  const [activePropertyType, setActivePropertyType] = useState<string | null>(null);
+  const [activePropertyType, setActivePropertyType] = useState<string | null>(
+    null,
+  );
   const [filters, setFilters] = useState<{
     location: string | null;
     service: string | null;
@@ -237,9 +283,12 @@ export function AllProjectsSection({
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
-        if (activePropertyType && p.propertyTypeKey !== activePropertyType) return false;
-        if (filters.location && p.locationKey !== filters.location) return false;
-        if (filters.service && !p.serviceKeys.includes(filters.service)) return false;
+        if (activePropertyType && p.propertyTypeKey !== activePropertyType)
+          return false;
+        if (filters.location && p.locationKey !== filters.location)
+          return false;
+        if (filters.service && !p.serviceKeys.includes(filters.service))
+          return false;
         if (filters.style && p.styleKey !== filters.style) return false;
         return true;
       }),
@@ -267,11 +316,16 @@ export function AllProjectsSection({
     setFilters({ location: null, service: null, style: null });
     setVisibleCount(INITIAL_COUNT);
   };
-
+  const PLACEMENTS = [
+    "lg:col-start-1 lg:row-start-1",
+    "lg:col-start-2 lg:row-start-2",
+    "lg:col-start-1 lg:row-start-3",
+    "lg:col-start-2 lg:row-start-4",
+    "lg:col-start-1 lg:row-start-5",
+  ] as const;
   return (
     <section aria-labelledby="all-projects-heading">
       <div className="mx-auto max-w-7xl">
-
         {/* ── Header: heading + category pill tabs ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
           <h1
@@ -305,7 +359,10 @@ export function AllProjectsSection({
                   )}
                 >
                   {opt.label}
-                  <ChevronDown className="size-3 opacity-70" aria-hidden="true" />
+                  <ChevronDown
+                    className="size-3 opacity-70"
+                    aria-hidden="true"
+                  />
                 </button>
               ))}
             </nav>
@@ -367,46 +424,57 @@ export function AllProjectsSection({
             )}
           </div>
         ) : (
-          <div className="lg:grid lg:grid-cols-3">
-
+          <>
             {/* Featured: image (col 1) | content (col 2-3) */}
             {featured && (
-              <FeaturedCard
-                project={featured}
-                viewCaseStudyLabel={viewCaseStudyLabel}
-              />
+              <div className="lg:grid lg:grid-cols-3">
+                <FeaturedCard
+                  project={featured}
+                  viewCaseStudyLabel={viewCaseStudyLabel}
+                />
+              </div>
             )}
 
-            {/* Compact cards — staggered right / left */}
-            {visibleRest.map((project, i) => {
-              const isRight = i % 2 === 0;
-              return isRight ? (
-                <React.Fragment key={project.id}>
-                  {/* Empty placeholder — col 1 */}
-                  <div
-                    className="hidden border-b border-r border-white/10 lg:block"
-                    aria-hidden="true"
-                  />
-                  {/* Card — cols 2-3 */}
-                  <div className="border-b border-white/10 lg:col-span-2">
-                    <CompactCard project={project} isRight />
-                  </div>
-                </React.Fragment>
-              ) : (
-                <React.Fragment key={project.id}>
-                  {/* Card — cols 1-2 */}
-                  <div className="border-b border-r border-white/10 lg:col-span-2">
-                    <CompactCard project={project} isRight={false} />
-                  </div>
-                  {/* Empty placeholder — col 3 */}
-                  <div
-                    className="hidden border-b border-white/10 lg:block"
-                    aria-hidden="true"
-                  />
-                </React.Fragment>
-              );
-            })}
-          </div>
+            {/* Compact cards — spine layout */}
+            {visibleRest.length > 0 && (
+              <div className="relative overflow-hidden mt-16">
+                {/* Vertical spine line */}
+                <div
+                  className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-px bg-white/20 lg:block"
+                  aria-hidden="true"
+                />
+                <ul
+                  role="list"
+                  className="grid grid-cols-1 gap-y-6 lg:grid-cols-2 lg:gap-x-0 lg:gap-y-0"
+                >
+                  {visibleRest.map((project, i) => {
+                    const isLeft = i % 2 === 0;
+                    return (
+                      // <li
+                      //   key={project.id}
+                      //   className={
+                      //     isLeft
+                      //       ? `lg:col-start-1 lg:row-start-${i + 1}`
+                      //       : `lg:col-start-2 lg:row-start-${i + 1}`
+                      //   }
+                      //   className={PLACEMENTS[i] ?? ""}
+                      // >
+                      <li
+                        key={project.id}
+                        className={`${PLACEMENTS[i] ?? ""} ${CARD_WIDTHS[i] ?? ""}`}
+                      >
+                        <CompactCard
+                          project={project}
+                          isRight={!isLeft}
+                          index={i}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </>
         )}
 
         {/* ── Load more ── */}
@@ -421,7 +489,6 @@ export function AllProjectsSection({
             </button>
           </div>
         )}
-
       </div>
     </section>
   );
