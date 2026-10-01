@@ -64,12 +64,6 @@ function BlogCard({ post, index }: { post: BlogPost; index: number }) {
       initial="hidden"
       animate={inView ? "show" : "hidden"}
     >
-      {/* <Link
-        href={post.href}
-        aria-label={`${post.title} — ${post.readTime}`}
-        className="group relative block overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-        style={{ aspectRatio: aspect }}
-      > */}
       <Link
         href={post.href}
         aria-label={`${post.title} — ${post.readTime}`}
