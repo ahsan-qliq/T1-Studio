@@ -64,6 +64,7 @@ export function JourneyCarouselClient({
   const maxIndex = Math.max(0, steps.length - visibleCount);
   const canPrev = index > 0;
   const canNext = index < maxIndex;
+  const showControls = maxIndex > 0;
 
   const go = (dir: 1 | -1) => {
     const newIndex = Math.max(0, Math.min(maxIndex, index + dir));
@@ -90,25 +91,27 @@ export function JourneyCarouselClient({
       <div className="mb-8 flex items-center gap-2 sm:gap-3">
 
         {/* Prev */}
-        <button
-          type="button"
-          onClick={() => go(-1)}
-          disabled={!canPrev}
-          aria-label={prevLabel}
-          className={cn(
-            'flex size-11 shrink-0 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
-            canPrev
-              ? 'bg-secondary/20 text-primary hover:bg-secondary/30 motion-safe:hover:scale-105 motion-safe:active:scale-95'
-              : 'bg-secondary/10 text-primary/40 cursor-not-allowed',
-          )}
-        >
-          <ArrowLeft className="size-5" aria-hidden="true" />
-        </button>
+        {showControls && (
+          <button
+            type="button"
+            onClick={() => go(-1)}
+            disabled={!canPrev}
+            aria-label={prevLabel}
+            className={cn(
+              'flex size-11 shrink-0 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
+              canPrev
+                ? 'bg-secondary/20 text-primary hover:bg-secondary/30 motion-safe:hover:scale-105 motion-safe:active:scale-95'
+                : 'bg-secondary/10 text-primary/40 cursor-not-allowed',
+            )}
+          >
+            <ArrowLeft className="size-5" aria-hidden="true" />
+          </button>
+        )}
 
         {/* Timeline track — overflows hidden, translates with cards */}
         <div className="flex-1 overflow-hidden" aria-hidden="true">
           <div
-            className="flex transition-transform duration-500 ease-in-out"
+            className="flex py-2 transition-transform duration-500 ease-in-out"
             style={{ transform }}
           >
             {steps.map((step, i) => {
@@ -161,20 +164,22 @@ export function JourneyCarouselClient({
         </div>
 
         {/* Next */}
-        <button
-          type="button"
-          onClick={() => go(1)}
-          disabled={!canNext}
-          aria-label={nextLabel}
-          className={cn(
-            'flex size-11 shrink-0 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
-            canNext
-              ? 'bg-secondary/20 text-primary hover:bg-secondary/30 motion-safe:hover:scale-105 motion-safe:active:scale-95'
-              : 'bg-secondary/10 text-primary/40 cursor-not-allowed',
-          )}
-        >
-          <ArrowRight className="size-5" aria-hidden="true" />
-        </button>
+        {showControls && (
+          <button
+            type="button"
+            onClick={() => go(1)}
+            disabled={!canNext}
+            aria-label={nextLabel}
+            className={cn(
+              'flex size-11 shrink-0 items-center justify-center rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold',
+              canNext
+                ? 'bg-secondary/20 text-primary hover:bg-secondary/30 motion-safe:hover:scale-105 motion-safe:active:scale-95'
+                : 'bg-secondary/10 text-primary/40 cursor-not-allowed',
+            )}
+          >
+            <ArrowRight className="size-5" aria-hidden="true" />
+          </button>
+        )}
       </div>
 
       {/* Cards viewport — clips to show only N cards */}
