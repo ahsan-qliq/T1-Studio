@@ -36,7 +36,11 @@ export default async function InspirationPage({
           badge={s.hero.eyebrow as string}
           heading={s.hero.heading as string}
           description={s.hero.description as string}
-          cta={s.hero.primaryButton.label as string}
+         breadcrumbs={s.hero.breadcrumbs?.map((b) => ({
+            label: b.label as string,
+            href: b.href || undefined,
+          })) || []}
+          cta={s.hero.primaryButton?.label as string}
           imageSrc={s.hero.backgroundImage.url || undefined}
         />
       )}
