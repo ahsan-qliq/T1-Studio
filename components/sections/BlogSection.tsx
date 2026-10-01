@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
-import { Link } from '@/app/i18n/navigation';
-import { motion, useInView } from 'framer-motion';
-import { useRef } from 'react';
-import { stagger } from '@/components/ui/animate';
+import Image from "next/image";
+import { ArrowRight } from "lucide-react";
+import { Link } from "@/app/i18n/navigation";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 
 export interface BlogPost {
   slug: string;
@@ -27,20 +26,56 @@ interface BlogSectionProps {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function BlogCard({ post }: { post: BlogPost }) {
+// index 0, 2, 4… → left col; index 1, 3, 5… → right col
+function getPlacement(i: number) {
+  const col = i % 2 === 0 ? "lg:col-start-1" : "lg:col-start-2";
+  return `${col} lg:row-start-${i + 1}`;
+}
+const CARD_STYLES = [
+  "lg:w-[70%] lg:justify-self-end",
+  "lg:w-[88%] lg:justify-self-start",
+  "lg:w-[58%] lg:justify-self-end",
+] as const;
+
+const CARD_ASPECTS = ["4 / 5", "16 / 10", "3 / 4"] as const;
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 100 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { duration: 1.1, ease: EASE, delay: i * 0.18 },
+  }),
+};
+
+function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+  const ref = useRef<HTMLElement>(null);
+  const inView = useInView(ref as React.RefObject<Element>, {
+    once: true,
+    margin: "-80px",
+  });
+
+  const aspect = CARD_ASPECTS[index % CARD_ASPECTS.length];
   return (
-    <article>
+    <motion.article
+      ref={ref}
+      custom={index}
+      variants={cardVariants}
+      initial="hidden"
+      animate={inView ? "show" : "hidden"}
+    >
       <Link
         href={post.href}
         aria-label={`${post.title} — ${post.readTime}`}
-        className="group relative block aspect-[4/5] overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        className="group relative block w-full overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        style={{ aspectRatio: aspect }}
       >
-        {post.image ? (
+        {post.image?.src ? (
           <Image
             src={post.image.src}
             alt={post.image.alt}
             fill
-            sizes="(max-width: 640px) 100vw, 50vw"
+            sizes="(max-width: 1024px) 100vw, 50vw"
             className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
           />
         ) : (
@@ -51,7 +86,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           className="absolute inset-0"
           style={{
             background:
-              'linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 50%, transparent 80%)',
+              "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.4) 50%, transparent 80%)",
           }}
           aria-hidden="true"
         />
@@ -68,7 +103,7 @@ function BlogCard({ post }: { post: BlogPost }) {
           </div>
         </div>
       </Link>
-    </article>
+    </motion.article>
   );
 }
 
@@ -78,38 +113,20 @@ export function BlogSection({
   viewAllLabel,
   viewAllHref,
 }: BlogSectionProps) {
-  const left = [posts[0], posts[2]].filter(Boolean) as BlogPost[];
-  const right = [posts[1], posts[3]].filter(Boolean) as BlogPost[];
-
   const headingRef = useRef<HTMLHeadingElement>(null);
   const headingInView = useInView(headingRef as React.RefObject<Element>, {
     once: true,
-    margin: '-60px',
-  });
-
-  const leftRef = useRef<HTMLDivElement>(null);
-  const leftInView = useInView(leftRef as React.RefObject<Element>, {
-    once: true,
-    margin: '-60px',
-  });
-
-  const rightRef = useRef<HTMLDivElement>(null);
-  const rightInView = useInView(rightRef as React.RefObject<Element>, {
-    once: true,
-    margin: '-60px',
+    margin: "-60px",
   });
 
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaInView = useInView(ctaRef as React.RefObject<Element>, {
     once: true,
-    margin: '-40px',
+    margin: "-40px",
   });
 
   return (
-    <section
-      aria-labelledby="blog-heading"
-      className="page-wrap py-12"
-    >
+    <section aria-labelledby="blog-heading" className="page-wrap py-12">
       <motion.h2
         ref={headingRef}
         id="blog-heading"
@@ -121,42 +138,26 @@ export function BlogSection({
         {heading}
       </motion.h2>
 
-      <div
-        className="mx-auto max-w-4xl grid grid-cols-1 gap-6 sm:grid-cols-2 overflow-hidden"
-        role="list"
-        aria-label={heading}
-      >
-        {/* Left column — slides in from left */}
-        <motion.div
-          ref={leftRef}
-          role="presentation"
-          className="flex flex-col gap-6"
-          variants={{ ...stagger.container, show: { ...stagger.container.show, transition: { staggerChildren: 0.15, delayChildren: 0.05 } } }}
-          initial="hidden"
-          animate={leftInView ? 'show' : 'hidden'}
-        >
-          {left.map((post) => (
-            <motion.div key={post.slug} role="listitem" variants={stagger.itemFromLeft}>
-              <BlogCard post={post} />
-            </motion.div>
-          ))}
-        </motion.div>
+      <div className="relative overflow-hidden">
+        {/* Vertical spine line */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-px bg-white/30 lg:block"
+          aria-hidden="true"
+        />
 
-        {/* Right column — slides in from right, offset downward */}
-        <motion.div
-          ref={rightRef}
-          role="presentation"
-          className="flex flex-col gap-6 sm:mt-24"
-          variants={{ ...stagger.container, show: { ...stagger.container.show, transition: { staggerChildren: 0.15, delayChildren: 0.15 } } }}
-          initial="hidden"
-          animate={rightInView ? 'show' : 'hidden'}
+        <ul
+          role="list"
+          className="grid grid-cols-1 gap-y-6 lg:grid-cols-2 lg:gap-x-0 lg:gap-y-0"
         >
-          {right.map((post) => (
-            <motion.div key={post.slug} role="listitem" variants={stagger.itemFromRight}>
-              <BlogCard post={post} />
-            </motion.div>
+          {posts.map((post, i) => (
+            <li
+              key={post.slug}
+              className={`${getPlacement(i)} ${CARD_STYLES[i % CARD_STYLES.length]}`}
+            >
+              <BlogCard post={post} index={i} />
+            </li>
           ))}
-        </motion.div>
+        </ul>
       </div>
 
       <motion.div

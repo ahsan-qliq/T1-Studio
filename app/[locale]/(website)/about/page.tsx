@@ -7,10 +7,8 @@ import type { MilestoneIconName } from "@/components/sections/MilestoneTimelineS
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
 import { StatsBar } from "@/components/sections/StatsBar";
-import { TeamSection } from "@/components/sections/TeamSection";
 import { ImageCarouselSection } from "@/components/sections/ImageCarouselSection";
 import { AwardsSection } from "@/components/sections/AwardsSection";
-import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 
@@ -30,11 +28,10 @@ export default async function AboutPage({
 }) {
   const { locale } = await params;
 
-  const [cms, tStats, tCarousel, tTeam] = await Promise.all([
+  const [cms, tStats, tCarousel] = await Promise.all([
     getAboutPageCms(locale),
     getTranslations({ locale, namespace: "Stats" }),
     getTranslations({ locale, namespace: "SpacesCarousel" }),
-    getTranslations({ locale, namespace: "Team" }),
   ]);
 
   const s = cms?.sections;
@@ -45,7 +42,10 @@ export default async function AboutPage({
           badge={s.hero.eyebrow as string}
           heading={s.hero.heading as string}
           description={s.hero.description as string}
-          cta={s.hero.primaryButton.label as string}
+          breadcrumbs={s.hero.breadcrumbs?.map((b) => ({
+            label: b.label as string,
+            href: b.href || undefined,
+          })) || []}
           imageSrc={s.hero.backgroundImage.url || undefined}
         />
       )}
@@ -113,21 +113,6 @@ export default async function AboutPage({
         </FadeUp>
       )}
 
-      {/* {s?.team?.isVisible && (
-        <TeamSection
-          heading={s.team.heading}
-          members={s.team.members.map((m) => ({
-            name: m.name,
-            role: m.role,
-            experience: m.experience,
-            quote: m.quote,
-            image: { src: m.image.url, alt: m.image.alt as string },
-          }))}
-          prevLabel={tTeam("prevLabel")}
-          nextLabel={tTeam("nextLabel")}
-        />
-      )} */}
-
       {s?.showcase?.isVisible && s.showcase.items.length > 0 && (
         <ImageCarouselSection
           slides={s.showcase.items.map((img) => ({
@@ -153,24 +138,6 @@ export default async function AboutPage({
           />
         </FadeUp>
       )}
-
-      {/* {s?.partnership?.isVisible && (
-        <FadeUp>
-          <ReferralPartnerSection
-            heading={s.partnership.heading as string}
-            description={s.partnership.description as string}
-            imageSrc={s.partnership.image.url}
-            imageAlt={s.partnership.image.alt as string}
-            ctaLabel={s.partnership.button.label as string}
-            ctaHref={s.partnership.button.href || "/"}
-            steps={s.partnership.steps.map((step) => ({
-              label: step.title as string,
-              iconName: step.icon,
-            }))}
-            benefits={[]}
-          />
-        </FadeUp>
-      )} */}
 
       {s?.faq?.isVisible && (
         <FaqSection

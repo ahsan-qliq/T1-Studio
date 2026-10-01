@@ -243,7 +243,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
           badge={getText(hero.eyebrow, locale)}
           heading={getText(hero.heading, locale)}
           description={getText(hero.description, locale)}
-          cta={getText(hero.location, locale)}
+        breadcrumbs={hero.breadcrumbs?.map((b) => ({
+            label: getText(b.label, locale),
+            href: b.href || undefined,
+          })) || []}
           imageSrc={hero.backgroundImage?.url || ""}
           // mobileImage={hero.mobileImage?.url || ""}
           // overlayOpacity={hero.overlayOpacity}

@@ -30,7 +30,7 @@ export function StatsBar({ items, sectionLabel }: StatsBarProps) {
       >
         {items.map(({ value, label }, i) => (
           <motion.li
-            key={label}
+            key={`${label}-${i}`}
             className="flex flex-col items-center gap-2 text-center"
             initial={{ opacity: 0, y: 32 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}

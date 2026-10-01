@@ -31,6 +31,7 @@ export interface CmsHeroSection {
   secondaryButton: CmsButton;
   overlayOpacity: number;
   imageSrc: string;
+  breadcrumbs: Array<{ label: CmsBilingualText; href: string }>;
 }
 
 // ─── Stats ────────────────────────────────────────────────────────────────────
@@ -1144,7 +1145,7 @@ export interface CmsProjectDetailHeroSection {
 
   backgroundImage: CmsImage;
   mobileImage: CmsImage;
-
+breadcrumbs: Array<{ label: CmsBilingualText; href: string }>;
   stats: CmsProjectDetailHeroStat[];
 
   overlayOpacity: number;
