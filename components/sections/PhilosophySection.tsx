@@ -32,7 +32,7 @@ export function PhilosophySection({
     <section
       ref={ref}
       aria-labelledby="philosophy-heading"
-      className="relative overflow-hidden bg-[#0C0C0C] py-24 sm:py-32"
+      className="relative overflow-hidden bg-[#0C0C0C] page-wrap py-16"
     >
       {/* Decorative grid lines */}
       <div
@@ -46,7 +46,7 @@ export function PhilosophySection({
       />
 
       {/* Content */}
-      <div className="page-wrap relative z-10 flex flex-col items-center text-center">
+      <div className="relative z-10 flex flex-col items-center text-center">
         <motion.p
           className="mb-5 text-xs font-semibold uppercase tracking-[0.2em] text-white/50"
           initial={{ opacity: 0, y: 16 }}
@@ -67,7 +67,7 @@ export function PhilosophySection({
         </motion.h2>
 
         <motion.p
-          className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-white/60 sm:text-base"
+          className="mx-auto mt-6 max-w-5xl text-sm leading-relaxed text-white/60 sm:text-base"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: EASE, delay: 0.2 }}
