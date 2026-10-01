@@ -191,7 +191,7 @@ const  styleRange = s.styles.items.map((sp)=>({
           items={s.materials.materials.map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
-            label: item.label,
+            label: item.title,
           }))}
         />
       )}
