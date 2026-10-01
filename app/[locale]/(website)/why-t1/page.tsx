@@ -98,7 +98,7 @@ export default async function WhyT1Page({
                 })
               : undefined,
       })) ?? [];
-
+console.log(s, 101)
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -186,7 +186,7 @@ export default async function WhyT1Page({
         <FadeUp>
           <AwardsSection
             label={s.brands.heading as string}
-            logos={s.brands.awards.map((award) => ({
+            logos={s.brands.brands.map((award) => ({
               src: award.logo.url,
               alt: award.logo.alt as string,
               width: 120,
