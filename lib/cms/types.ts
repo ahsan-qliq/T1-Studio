@@ -298,6 +298,15 @@ export interface CmsAwardsRecognitionSection {
   brands?: CmsAwardItem[];
 }
 
+export interface CmsAwardsRecognitionSectionT {
+  isVisible: boolean;
+  order: number;
+  eyebrow: CmsBilingualText;
+  heading: CmsBilingualText;
+  description: CmsBilingualText;
+  brands: CmsAwardItem[];
+}
+
 // ─── Design Tips (Blog) ───────────────────────────────────────────────────────
 
 export interface CmsArticleItem {
@@ -461,7 +470,7 @@ export interface CmsWhyT1PageSections {
   stats: CmsStatsSection;
   benefits: CmsServicesSection;
   clientTestimonials: CmsClientTestimonialsSection;
-  brands: CmsAwardsRecognitionSection;
+  brands: CmsAwardsRecognitionSectionT;
   partnership: CmsPartnershipSectionT;
   designTips: CmsSignatureProjectsSectionT;
   faq: CmsFaqSection;
