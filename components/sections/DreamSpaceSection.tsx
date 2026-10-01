@@ -5,6 +5,7 @@ import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { motion, useInView } from 'framer-motion';
+import { z } from 'zod';
 
 export interface SelectOption {
   value: string;
@@ -36,9 +37,37 @@ export interface DreamSpaceSectionProps {
   imageAlt: string;
 }
 
-// Shared dark input / select styles
+// ─── Zod schema ───────────────────────────────────────────────────────────────
+
+const dreamSpaceSchema = z.object({
+  propertyType:  z.string().min(1, 'Please select a property type'),
+  spaceRequired: z.string().min(1, 'Please select the space required'),
+  typeOfService: z.string().min(1, 'Please select a type of service'),
+  timeline:      z.string().min(1, 'Please select a timeline'),
+  firstName:     z.string().min(1, 'First name is required'),
+  lastName:      z.string().min(1, 'Last name is required'),
+  email:         z.string().min(1, 'Email is required').email('Enter a valid email address'),
+  phone:         z.string().min(1, 'Phone number is required').regex(/^\+?[\d\s\-()]{7,}$/, 'Enter a valid phone number'),
+});
+
+type DreamSpaceFields = z.infer<typeof dreamSpaceSchema>;
+type FieldErrors = Partial<Record<keyof DreamSpaceFields, string>>;
+
+// ─── Shared styles ────────────────────────────────────────────────────────────
+
 const fieldBase =
-  'w-full border border-white/20 bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 transition-colors focus:border-white/60 focus:outline-none';
+  'w-full border bg-transparent px-4 py-3 text-sm text-white placeholder:text-white/50 transition-colors focus:outline-none';
+
+function fieldClass(error?: string) {
+  return cn(
+    fieldBase,
+    error
+      ? 'border-red-400/70 focus:border-red-400'
+      : 'border-white/20 focus:border-white/60',
+  );
+}
+
+// ─── DarkSelect ───────────────────────────────────────────────────────────────
 
 function DarkSelect({
   id,
@@ -46,45 +75,101 @@ function DarkSelect({
   options,
   value,
   onChange,
+  error,
 }: {
   id: string;
   label: string;
   options: SelectOption[];
   value: string;
   onChange: (v: string) => void;
+  error?: string;
 }) {
   return (
-    <div className="relative">
-      <label htmlFor={id} className="sr-only">
-        {label}
-      </label>
-      <select
-        id={id}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className={cn(fieldBase, 'appearance-none pr-10 cursor-pointer')}
-        aria-label={label}
-      >
-        <option value="" disabled>
+    <div>
+      <div className="relative">
+        <label htmlFor={id} className="sr-only">
           {label}
-        </option>
-        {options.map((opt) => (
-          <option
-            key={opt.value}
-            value={opt.value}
-            className="bg-[#111] text-white"
-          >
-            {opt.label}
+        </label>
+        <select
+          id={id}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={cn(fieldClass(error), 'appearance-none pr-10 cursor-pointer')}
+          aria-label={label}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
+        >
+          <option value="" disabled>
+            {label}
           </option>
-        ))}
-      </select>
-      <ChevronDown
-        className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-white/50"
-        aria-hidden="true"
-      />
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value} className="bg-[#111] text-white">
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-white/50"
+          aria-hidden="true"
+        />
+      </div>
+      {error && (
+        <p id={`${id}-error`} className="mt-1 text-xs text-red-400" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
+
+// ─── TextInput ────────────────────────────────────────────────────────────────
+
+function TextInput({
+  id,
+  label,
+  type = 'text',
+  name,
+  value,
+  onChange,
+  autoComplete,
+  error,
+}: {
+  id: string;
+  label: string;
+  type?: string;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
+  autoComplete?: string;
+  error?: string;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="sr-only">
+        {label}
+      </label>
+      <input
+        id={id}
+        type={type}
+        name={name}
+        placeholder={label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={fieldClass(error)}
+        autoComplete={autoComplete}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
+      />
+      {error && (
+        <p id={`${id}-error`} className="mt-1 text-xs text-red-400" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 export function DreamSpaceSection({
   heading,
@@ -106,27 +191,63 @@ export function DreamSpaceSection({
   imageAlt,
 }: DreamSpaceSectionProps) {
   const [activeAudience, setActiveAudience] = useState(audienceTabs[0]?.id ?? '');
-  const [propertyType, setPropertyType] = useState('');
-  const [spaceRequired, setSpaceRequired] = useState('');
-  const [typeOfService, setTypeOfService] = useState('');
-  const [timeline, setTimeline] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [fields, setFields] = useState<DreamSpaceFields>({
+    propertyType:  '',
+    spaceRequired: '',
+    typeOfService: '',
+    timeline:      '',
+    firstName:     '',
+    lastName:      '',
+    email:         '',
+    phone:         '',
+  });
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitted, setSubmitted] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
-  const inView = useInView(sectionRef as React.RefObject<Element>, {
-    once: true,
-    margin: '-80px',
-  });
+  const inView = useInView(sectionRef as React.RefObject<Element>, { once: true, margin: '-80px' });
 
   const EASE = [0.22, 1, 0.36, 1] as const;
 
+  const set = (key: keyof DreamSpaceFields) => (value: string) => {
+    setFields((prev) => ({ ...prev, [key]: value }));
+    // Clear field error on change
+    if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Form submission handled externally
+
+    const result = dreamSpaceSchema.safeParse(fields);
+    if (!result.success) {
+      const fieldErrors: FieldErrors = {};
+      for (const issue of result.error.issues) {
+        const key = issue.path[0] as keyof DreamSpaceFields;
+        if (!fieldErrors[key]) fieldErrors[key] = issue.message;
+      }
+      setErrors(fieldErrors);
+      return;
+    }
+
+    setErrors({});
+    setSubmitted(true);
+    // TODO: send result.data to your API
   };
+
+  if (submitted) {
+    return (
+      <section
+        ref={sectionRef}
+        aria-labelledby="dream-space-heading"
+        className="flex min-h-[600px] flex-col items-center justify-center bg-[#0C0C0C] px-8 py-20 text-center"
+      >
+        <h2 id="dream-space-heading" className="mb-4 text-3xl font-bold text-white lg:text-4xl">
+          {heading}
+        </h2>
+        <p className="text-white/60">Thank you! We'll be in touch soon.</p>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -134,7 +255,7 @@ export function DreamSpaceSection({
       aria-labelledby="dream-space-heading"
       className="flex min-h-[600px] flex-col lg:flex-row overflow-hidden"
     >
-      {/* Left — image, slides in from left */}
+      {/* Left — image */}
       <motion.div
         className="relative h-64 lg:h-auto lg:w-2/5"
         initial={{ opacity: 0, x: -56 }}
@@ -151,7 +272,7 @@ export function DreamSpaceSection({
         />
       </motion.div>
 
-      {/* Right — dark form panel, slides in from right */}
+      {/* Right — form panel */}
       <motion.div
         className="flex flex-1 flex-col justify-center bg-[#0C0C0C] px-8 py-14 lg:px-14 xl:px-20"
         initial={{ opacity: 0, x: 56 }}
@@ -165,17 +286,9 @@ export function DreamSpaceSection({
           {heading}
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          aria-label={heading}
-          noValidate
-        >
+        <form onSubmit={handleSubmit} aria-label={heading} noValidate>
           {/* Audience tabs */}
-          <div
-            role="group"
-            aria-label="Select audience type"
-            className="mb-8 flex"
-          >
+          <div role="group" aria-label="Select audience type" className="mb-8 flex">
             {audienceTabs.map((tab) => {
               const isActive = activeAudience === tab.id;
               return (
@@ -189,7 +302,6 @@ export function DreamSpaceSection({
                     isActive
                       ? 'bg-white text-black'
                       : 'bg-transparent text-white hover:bg-white/10',
-                    // remove double borders between adjacent tabs
                     'first:rounded-s-none last:rounded-e-none [&:not(:first-child)]:-ms-px',
                   )}
                 >
@@ -205,94 +317,76 @@ export function DreamSpaceSection({
               id="property-type"
               label={propertyTypeLabel}
               options={propertyTypeOptions}
-              value={propertyType}
-              onChange={setPropertyType}
+              value={fields.propertyType}
+              onChange={set('propertyType')}
+              error={errors.propertyType}
             />
             <DarkSelect
               id="space-required"
               label={spaceRequiredLabel}
               options={spaceRequiredOptions}
-              value={spaceRequired}
-              onChange={setSpaceRequired}
+              value={fields.spaceRequired}
+              onChange={set('spaceRequired')}
+              error={errors.spaceRequired}
             />
             <DarkSelect
               id="type-of-service"
               label={typeOfServiceLabel}
               options={typeOfServiceOptions}
-              value={typeOfService}
-              onChange={setTypeOfService}
+              value={fields.typeOfService}
+              onChange={set('typeOfService')}
+              error={errors.typeOfService}
             />
             <DarkSelect
               id="timeline"
               label={timelineLabel}
               options={timelineOptions}
-              value={timeline}
-              onChange={setTimeline}
+              value={fields.timeline}
+              onChange={set('timeline')}
+              error={errors.timeline}
             />
           </div>
 
           {/* Text inputs */}
-          <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
-              <label htmlFor="first-name" className="sr-only">
-                {firstNameLabel}
-              </label>
-              <input
-                id="first-name"
-                type="text"
-                name="firstName"
-                placeholder={firstNameLabel}
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-                className={fieldBase}
-                autoComplete="given-name"
-              />
-            </div>
-            <div>
-              <label htmlFor="last-name" className="sr-only">
-                {lastNameLabel}
-              </label>
-              <input
-                id="last-name"
-                type="text"
-                name="lastName"
-                placeholder={lastNameLabel}
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-                className={fieldBase}
-                autoComplete="family-name"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="sr-only">
-                {emailLabel}
-              </label>
-              <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder={emailLabel}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className={fieldBase}
-                autoComplete="email"
-              />
-            </div>
-            <div>
-              <label htmlFor="phone" className="sr-only">
-                {phoneLabel}
-              </label>
-              <input
-                id="phone"
-                type="tel"
-                name="phone"
-                placeholder={phoneLabel}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className={fieldBase}
-                autoComplete="tel"
-              />
-            </div>
+          <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <TextInput
+              id="first-name"
+              name="firstName"
+              label={firstNameLabel}
+              value={fields.firstName}
+              onChange={set('firstName')}
+              autoComplete="given-name"
+              error={errors.firstName}
+            />
+            <TextInput
+              id="last-name"
+              name="lastName"
+              label={lastNameLabel}
+              value={fields.lastName}
+              onChange={set('lastName')}
+              autoComplete="family-name"
+              error={errors.lastName}
+            />
+            <TextInput
+              id="email"
+              name="email"
+              type="email"
+              label={emailLabel}
+              value={fields.email}
+              onChange={set('email')}
+              autoComplete="email"
+              error={errors.email}
+            />
+            <TextInput
+              id="phone"
+              name="phone"
+              type="tel"
+              label={phoneLabel}
+              value={fields.phone}
+              onChange={set('phone')}
+              autoComplete="tel"
+              error={errors.phone}
+            />
           </div>
 
           {/* Submit */}
