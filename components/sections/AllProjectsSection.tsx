@@ -99,7 +99,6 @@ function FeaturedCard({
   project: ProjectItem;
   viewCaseStudyLabel: string;
 }) {
-  console.log("project", project);
   return (
     <>
       {/* Image — col 1, stretches to row height via CSS Grid */}
@@ -269,7 +268,6 @@ export function AllProjectsSection({
     filterOptions.locations.length > 0 ||
     filterOptions.services.length > 0 ||
     filterOptions.styles.length > 0;
-console.log("projects", projects);
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
@@ -284,7 +282,6 @@ console.log("projects", projects);
       }),
     [projects, activePropertyType, filters],
   );
-  console.log("filtered", filtered);
 
   const hasActiveFilter =
     activePropertyType !== null || Object.values(filters).some(Boolean);
