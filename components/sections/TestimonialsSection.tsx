@@ -38,7 +38,7 @@ function TestimonialCard({
     <article
       aria-label={`Testimonial from ${testimonial.name}`}
       className={cn(
-        "relative h-[380px] overflow-hidden transition-shadow duration-300",
+        "relative h-[300px] overflow-hidden transition-shadow duration-300 sm:h-[380px]",
         isActive && "ring-[3px] ring-[#3B82F6]",
       )}
     >
@@ -142,7 +142,7 @@ export function TestimonialsSection({
         <p className="mb-3 text-sm text-white/60">{label}</p>
         <h2
           id="testimonials-heading"
-          className="text-3xl font-bold text-white lg:text-4xl xl:text-5xl"
+          className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl xl:text-5xl"
         >
           {heading}
         </h2>
@@ -159,7 +159,7 @@ export function TestimonialsSection({
             {testimonials.map((t, i) => (
               <div
                 key={t.id}
-                className="min-w-0 flex-[0_0_100%] sm:flex-[0_0_50%] lg:flex-[0_0_25%]"
+                className="min-w-0 flex-[0_0_100%] sm:flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_25%]"
               >
                 <TestimonialCard
                   testimonial={t}
