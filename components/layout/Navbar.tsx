@@ -5,8 +5,6 @@ import { Link } from '@/app/i18n/navigation';
 import { LocaleSwitcher } from '@/components/layout/LocaleSwitcher';
 import { NavMobileMenu } from '@/components/layout/NavMobileMenu';
 import { NavbarShell } from '@/components/layout/NavbarShell';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 import logo from '@/public/assets/images/Logo.png';
 
 const NAV_LINK_KEYS = [
@@ -62,13 +60,10 @@ export async function Navbar() {
           {/* CTA — desktop only; mobile gets it inside the drawer */}
           <Link
             href="/spaces/kitchens"
-            className={cn(
-              buttonVariants({ size: 'lg' }),
-              'group hidden lg:inline-flex',
-            )}
+            className="group hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             {t('startKitchenDesign')}
-            <ArrowRight className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5" aria-hidden="true" />
+            <ArrowRight className="size-3.5 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5" aria-hidden="true" />
           </Link>
 
           {/* Mobile menu trigger — client island, hidden on desktop */}

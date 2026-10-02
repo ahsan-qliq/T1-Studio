@@ -68,7 +68,6 @@ export default async function WhyT1Page({
   ]);
 
   const s = cms?.sections;
-
   const journeySteps =
     s?.journey?.steps
       .filter((step) => step.isVisible)

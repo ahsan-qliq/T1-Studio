@@ -182,7 +182,7 @@ export default function KitchenShowcase() {
     <section
       ref={sectionRef}
       className={`${fraunces.variable} ${inter.variable} ${plexMono.variable} relative`}
-      style={{ height: `${count * 150}vh` }}
+      style={{ height: `${count * 100}vh` }}
     >
       <div className="sticky top-0 h-screen w-screen overflow-hidden">
         {/* eyebrow */}

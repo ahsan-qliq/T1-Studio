@@ -1137,12 +1137,23 @@ export interface CmsHomePageSections {
   locationLinks: CmsLocationLinksSection;
 }
 
+export interface CmsHomePageSeo {
+  metaTitle: string;
+  metaDescription: string;
+  canonicalUrl?: string;
+  ogImage?: CmsImage;
+  keywords?: string[];
+  noIndex?: boolean;
+  noFollow?: boolean;
+}
+
 export interface CmsHomePage {
   _id: string;
   slug: string;
   pageName: string;
   status: string;
   sections: CmsHomePageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
