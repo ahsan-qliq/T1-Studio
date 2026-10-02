@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { WhatsAppButton } from '@/components/ui/WhatsAppButton';
 
 export default function WebsiteLayout({
   children,
@@ -23,6 +24,7 @@ export default function WebsiteLayout({
       <Navbar />
       {children}
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
