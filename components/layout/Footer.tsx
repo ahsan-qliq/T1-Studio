@@ -148,16 +148,16 @@ export async function Footer() {
   ];
 
   const propertyLinks = [
-    { label: "Madinat Jumeirah", href: "/projects/madinat-jumeirah-living-phase-4-dubai" },
-    { label: "Blue Waters", href: "/projects/blue-waters-dubai" },
-    { label: "City Walk", href: "/projects/city-walk-center" },
+    { label: t("propertyMadinatJumeirah"), href: "/projects/madinat-jumeirah-living-phase-4-dubai" },
+    { label: t("propertyBlueWaters"), href: "/projects/blue-waters-dubai" },
+    { label: t("propertyCityWalk"), href: "/projects/city-walk-center" },
   ];
 
   const companyLinks = [
-    { label: "Trade", href: "/trade" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
-    { label: "Why T1", href: "/why-t1" },
+    { label: t("companyTrade"), href: "/trade" },
+    { label: t("companyAbout"), href: "/about" },
+    { label: t("companyContact"), href: "/contact" },
+    { label: t("companyWhyT1"), href: "/why-t1" },
   ];
 
   const socialLinks = [
