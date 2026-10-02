@@ -108,60 +108,63 @@ export function JourneyCarouselClient({
           </button>
         )}
 
-        {/* Timeline track — overflows hidden, translates with cards */}
-        <div className="flex-1 overflow-hidden" aria-hidden="true">
-          <div
-            className="flex py-2 transition-transform duration-500 ease-in-out"
-            style={{ transform }}
-          >
-            {steps.map((step, i) => {
-              const isVisible = i >= index && i < index + visibleCount;
-              return (
-                <div
-                  key={step.number}
-                  /*
-                   * CSS classes provide an approximate layout during SSR / before first
-                   * measure. Once JS runs, the inline width (exact card pixel width)
-                   * overrides so circles align precisely above their cards.
-                   */
-                  className="shrink-0 w-full sm:w-1/2 lg:w-1/3 flex items-center"
-                  style={{ width: cardWidth > 0 ? `${cardWidth}px` : undefined }}
-                >
-                  {/* Left connector line — hidden on first item */}
-                  <div
-                    className={cn(
-                      'h-0.5 flex-1 transition-colors duration-300',
-                      i === 0 ? 'opacity-0' : 'bg-secondary',
-                    )}
-                  />
-
-                  {/* Step circle */}
-                  <button
-                    type="button"
-                    onClick={() => goToStep(i)}
-                    aria-label={`${step.number} ${step.title}`}
-                    className={cn(
-                      'flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-                      isVisible
-                        ? 'bg-secondary text-primary shadow-md scale-110'
-                        : 'bg-secondary text-secondary motion-safe:hover:scale-110 motion-safe:hover:opacity-90',
-                    )}
-                  >
-                    {step.number}
-                  </button>
-
-                  {/* Right connector line — hidden on last item */}
-                  <div
-                    className={cn(
-                      'h-0.5 flex-1 transition-colors duration-300',
-                      i === steps.length - 1 ? 'opacity-0' : 'bg-secondary',
-                    )}
-                  />
-                </div>
-              );
-            })}
+        {/* Mobile (1 card visible): centered step circle only */}
+        {visibleCount === 1 ? (
+          <div className="flex flex-1 items-center justify-center" aria-hidden="true">
+            <div className="flex size-10 items-center justify-center rounded-full bg-secondary text-sm font-bold text-primary shadow-md">
+              {steps[index]?.number}
+            </div>
           </div>
-        </div>
+        ) : (
+          /* Desktop: full timeline track aligned above cards */
+          <div className="flex-1 overflow-hidden" aria-hidden="true">
+            <div
+              className="flex py-2 transition-transform duration-500 ease-in-out"
+              style={{ transform }}
+            >
+              {steps.map((step, i) => {
+                const isVisible = i >= index && i < index + visibleCount;
+                return (
+                  <div
+                    key={step.number}
+                    className="shrink-0 w-full sm:w-1/2 lg:w-1/3 flex items-center"
+                    style={{ width: cardWidth > 0 ? `${cardWidth}px` : undefined }}
+                  >
+                    {/* Left connector — hidden on first item */}
+                    <div
+                      className={cn(
+                        'h-0.5 flex-1 transition-colors duration-300',
+                        i === 0 ? 'opacity-0' : 'bg-secondary',
+                      )}
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => goToStep(i)}
+                      aria-label={`${step.number} ${step.title}`}
+                      className={cn(
+                        'flex size-10 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+                        isVisible
+                          ? 'bg-secondary text-primary shadow-md scale-110'
+                          : 'bg-secondary text-secondary motion-safe:hover:scale-110 motion-safe:hover:opacity-90',
+                      )}
+                    >
+                      {step.number}
+                    </button>
+
+                    {/* Right connector — hidden on last item */}
+                    <div
+                      className={cn(
+                        'h-0.5 flex-1 transition-colors duration-300',
+                        i === steps.length - 1 ? 'opacity-0' : 'bg-secondary',
+                      )}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {/* Next */}
         {showControls && (
