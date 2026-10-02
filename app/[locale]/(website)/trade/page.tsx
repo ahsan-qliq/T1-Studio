@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
+import { MilestoneTimelineSection, type MilestoneIconName } from "@/components/sections/MilestoneTimelineSection";
 
 const JOURNEY_ICONS: LucideIcon[] = [
   Globe,
@@ -112,13 +113,13 @@ export default async function TradePage({
         />
       )}
 
-      {s?.awardsRecognition?.isVisible && (
+      {s?.logos?.isVisible && (
         <FadeUp>
           <AwardsSection
-            label={s.awardsRecognition.heading as string}
-            logos={s.awardsRecognition.awards.map((award) => ({
-              src: award.logo.url,
-              alt: award.logo.alt as string,
+            label={s.logos.heading as string}
+            logos={s.logos.logos.map((logo) => ({
+              src: logo.logo.url,
+              alt: logo.logo.alt as string,
               width: 120,
               height: 40,
             }))}
@@ -195,6 +196,28 @@ export default async function TradePage({
               title: svc.title as string,
               subtitle: svc.description as string,
             }))}
+        />
+      )}
+
+      {s?.industryServices?.isVisible && (
+        <MilestoneTimelineSection
+          heading={s.industryServices.heading as string}
+          milestones={s.industryServices.items
+            .filter((m) => m.isVisible)
+            .map((m, i) => {
+              const MILESTONE_ICONS: MilestoneIconName[] = [
+                "Globe",
+                "Lightbulb",
+                "BarChart2",
+                "BookMarked",
+              ];
+              const year = (m.title as string).split("—")[0].trim();
+              return {
+                iconName: MILESTONE_ICONS[i % MILESTONE_ICONS.length],
+                year,
+                description: m.description as string,
+              };
+            })}
         />
       )}
 

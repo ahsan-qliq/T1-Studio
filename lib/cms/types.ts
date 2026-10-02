@@ -227,6 +227,9 @@ export interface CmsTabT {
   description: CmsBilingualText;
   value: string;
   _id: string;
+  isVisible?: boolean;
+  icon?: string;
+  href?: string;
 }
 
 export interface CmsFormField {
@@ -287,6 +290,8 @@ export interface CmsAwardItem {
   href: string;
   openInNewTab: boolean;
   _id: string;
+  alt: string;
+  url: string;
 }
 
 export interface CmsAwardsRecognitionSection {
@@ -305,6 +310,7 @@ export interface CmsAwardsRecognitionSectionT {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
+  logos: CmsAwardItem[];
   brands: CmsAwardItem[];
 }
 
@@ -493,7 +499,7 @@ export interface CmsWhyT1Page {
 
 export interface CmsTradePageSections {
   hero: CmsHeroSection;
-  awardsRecognition: CmsAwardsRecognitionSection;
+  logos: CmsAwardsRecognitionSectionT;
   whoWeWorkWith: CmsMaterialInspirationSectionT;
   journey: CmsJourneySection;
   stats: CmsStatsSection;
@@ -702,7 +708,12 @@ export interface CmsBlogArticleListingSection {
   eyebrow: string;
   heading: string;
   description: string;
-  categories: Array<{ key: string; label: string; isVisible: boolean; _id: string }>;
+  categories: Array<{
+    key: string;
+    label: string;
+    isVisible: boolean;
+    _id: string;
+  }>;
   featuredArticle: CmsBlogArticle;
   articles: CmsBlogArticle[];
   enableCategoryFilter: boolean;
@@ -808,7 +819,14 @@ export interface CmsBlogDetailHeroSection {
 }
 
 export interface CmsBlogDetailArticleBlock {
-  type: 'heading' | 'paragraph' | 'list' | 'table' | 'button' | 'image' | string;
+  type:
+    | "heading"
+    | "paragraph"
+    | "list"
+    | "table"
+    | "button"
+    | "image"
+    | string;
   level?: number;
   heading?: CmsBilingualText | string;
   content?: CmsBilingualText;
@@ -818,7 +836,11 @@ export interface CmsBlogDetailArticleBlock {
   listStyle?: string;
   headers?: string[];
   rows?: string[][];
-  faqItems?: Array<{ question: CmsBilingualText | string; answer: CmsBilingualText | string; _id?: string }>;
+  faqItems?: Array<{
+    question: CmsBilingualText | string;
+    answer: CmsBilingualText | string;
+    _id?: string;
+  }>;
   isVisible: boolean;
   _id: string;
   button?: {
@@ -944,9 +966,9 @@ export interface CmsPhilosophySection {
 
 // ─── Gallery / Carousel ───────────────────────────────────────────────────────
 export interface CmsImageGallerySection {
-  _id:string;
-  title:string;
-  href:string;
+  _id: string;
+  title: string;
+  href: string;
   image: {
     url: string;
     key: string;
@@ -1025,7 +1047,7 @@ export interface CmsSpaceGallerySection {
   heading: string;
   description: string;
   items: CmsImageGallerySection[];
-  button: CmsButton
+  button: CmsButton;
   autoplay: boolean;
   showNavigation: boolean;
 }
@@ -1036,7 +1058,7 @@ export interface CmsSpaceGallerySectionT {
   heading: string;
   description: string;
   images: CmsImageGallerySection[];
-  button: CmsButton
+  button: CmsButton;
   autoplay: boolean;
   showNavigation: boolean;
 }
@@ -1074,7 +1096,7 @@ export interface CmsSpaceDetailSections {
   hero: CmsHeroSection;
   intro: CmsSpaceIntroSection;
   features: CmsSpaceFeaturesSection;
-  styles: CmsSpaceGallerySection
+  styles: CmsSpaceGallerySection;
   gallery: CmsSpaceGallerySectionT;
   materials: CmsMaterialInspirationSection;
   brands: CmsSpaceBrandsSection;
@@ -1146,7 +1168,7 @@ export interface CmsProjectDetailHeroSection {
 
   backgroundImage: CmsImage;
   mobileImage: CmsImage;
-breadcrumbs: Array<{ label: CmsBilingualText; href: string }>;
+  breadcrumbs: Array<{ label: CmsBilingualText; href: string }>;
   stats: CmsProjectDetailHeroStat[];
 
   overlayOpacity: number;
