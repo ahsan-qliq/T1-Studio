@@ -1,10 +1,16 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { Link } from '@/app/i18n/navigation';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetClose,
+} from '@/components/ui/sheet';
 
 interface NavLink {
   label: string;
@@ -27,49 +33,22 @@ export function NavMobileMenu({
   closeLabel,
 }: NavMobileMenuProps) {
   const [open, setOpen] = useState(false);
-
-  // Lock body scroll while drawer is open
-  useEffect(() => {
-    document.body.style.overflow = open ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [open]);
-
   const close = () => setOpen(false);
 
   return (
-    <>
-      {/* Hamburger — hidden on desktop */}
-      <button
-        type="button"
+    <Sheet open={open} onOpenChange={setOpen}>
+      {/* Hamburger trigger — hidden on desktop */}
+      <SheetTrigger
         aria-label={openLabel}
-        aria-expanded={open}
-        aria-controls="mobile-nav"
-        onClick={() => setOpen(true)}
         className="flex size-10 items-center justify-center rounded-md text-white transition-all duration-200 motion-safe:hover:scale-105 motion-safe:active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50 lg:hidden"
       >
         <Menu className="size-6" aria-hidden="true" />
-      </button>
+      </SheetTrigger>
 
-      {/* Backdrop */}
-      <div
-        aria-hidden="true"
-        onClick={close}
-        className={cn(
-          'fixed inset-0 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-300 lg:hidden',
-          open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
-        )}
-      />
-
-      {/* Drawer */}
-      <div
-        id="mobile-nav"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Navigation menu"
-        className={cn(
-          'fixed inset-y-0 end-0 z-50 flex w-72 flex-col bg-zinc-950 px-6 py-8 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden',
-          open ? 'translate-x-0' : 'translate-x-full',
-        )}
+      <SheetContent
+        side="right"
+        showCloseButton={false}
+        className="w-72 bg-zinc-950 px-6 py-8 flex flex-col border-white/10"
       >
         {/* Drawer header */}
         <div className="mb-8 flex items-center justify-between">
@@ -78,17 +57,15 @@ export function NavMobileMenu({
             <span className="mx-2 font-light text-white/40" aria-hidden="true">|</span>
             <span className="font-light tracking-widest">keller</span>
           </span>
-          <button
-            type="button"
+          <SheetClose
             aria-label={closeLabel}
-            onClick={close}
             className="flex size-10 items-center justify-center rounded-md text-white/70 transition-all duration-200 hover:text-white motion-safe:hover:scale-105 motion-safe:hover:rotate-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
           >
             <X className="size-6" aria-hidden="true" />
-          </button>
+          </SheetClose>
         </div>
 
-        {/* Nav links + CTA */}
+        {/* Nav links */}
         <nav className="flex flex-1 flex-col justify-between">
           <ul role="list" className="flex flex-col gap-1">
             {links.map(({ label, href }) => (
@@ -119,7 +96,7 @@ export function NavMobileMenu({
             />
           </Link>
         </nav>
-      </div>
-    </>
+      </SheetContent>
+    </Sheet>
   );
 }

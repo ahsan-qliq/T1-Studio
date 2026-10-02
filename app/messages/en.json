@@ -81,35 +81,27 @@
     "heading": "Featured Spaces",
     "viewAllLabel": "View all spaces",
     "cardArrowLabel": "View",
-
     "kitchenTitle": "Kitchen",
     "kitchenDesc": "Bespoke kitchen designs crafted with premium European materials and precision manufacturing.",
     "kitchenAlt": "Modern luxury kitchen with marble island and wooden cabinetry",
-
     "wardrobesTitle": "Wardrobes",
     "wardrobesDesc": "Custom walk-in wardrobes and fitted closets designed around your lifestyle and space.",
     "wardrobesAlt": "Elegant walk-in wardrobe with LED lighting and full-length mirror",
-
     "livingRoomsTitle": "Living Rooms",
     "livingRoomsDesc": "Sophisticated living room interiors that balance comfort, style and everyday functionality.",
     "livingRoomsAlt": "Contemporary living room with neutral tones, woven wall art and natural textures",
-
     "bedroomsTitle": "Bedrooms",
     "bedroomsDesc": "Thoughtfully designed bedrooms that combine comfort, elegant finishes and personalized storage solutions.",
     "bedroomsAlt": "Luxury modern bedroom with warm lighting, premium finishes and custom furniture",
-
     "bathroomsTitle": "Bathrooms",
     "bathroomsDesc": "Refined bathroom spaces designed with premium materials, smart storage and a calm, spa-like atmosphere.",
     "bathroomsAlt": "Modern luxury bathroom with stone finishes, elegant lighting and premium fixtures",
-
     "homeOfficeTitle": "Home Office",
     "homeOfficeDesc": "Functional and inspiring home offices designed to improve focus, productivity and everyday comfort.",
     "homeOfficeAlt": "Modern home office with custom desk, built-in storage and warm natural lighting",
-
     "outdoorLivingTitle": "Outdoor Living",
     "outdoorLivingDesc": "Elegant outdoor spaces designed for relaxing, entertaining and seamless indoor-outdoor living.",
     "outdoorLivingAlt": "Luxury outdoor living area with modern seating, landscaping and ambient lighting",
-
     "bespokeJoineryTitle": "Bespoke Joinery",
     "bespokeJoineryDesc": "Custom-crafted joinery solutions designed to maximize space, functionality and architectural character.",
     "bespokeJoineryAlt": "Custom bespoke joinery with premium wood finishes, shelving and integrated storage"
@@ -118,15 +110,12 @@
     "heading": "Signature Projects",
     "viewAllLabel": "View all Projects",
     "cardArrowLabel": "View",
-
     "jumeirahGateTitle": "Jumeirah Gate Dubai",
     "jumeirahGateLocation": "Dubai, UAE",
     "jumeirahGateAlt": "Jumeirah Gate Dubai luxury residential tower against a city skyline",
-
     "blueWatersTitle": "Blue Waters Dubai",
     "blueWatersLocation": "Dubai, UAE",
     "blueWatersAlt": "Blue Waters Dubai aerial view of waterfront residential towers",
-
     "alYasmeenTitle": "Al Yasmeen Sharjah",
     "alYasmeenLocation": "Sharjah, UAE",
     "alYasmeenAlt": "Al Yasmeen Sharjah modern villa exterior with warm stone facade",
@@ -197,7 +186,6 @@
     "deliverDesc": "We bring every detail together through precise execution, coordination, and quality control to deliver spaces exactly as envisioned.",
     "deliverAdvantage": "Seamless execution from concept to completion.",
     "deliverHighlight": "Quality assured at every stage",
-
     "evolveNumber": "05",
     "evolveTitle": "Evolve",
     "evolveSubtitle": "Designed for what comes next",
@@ -205,7 +193,6 @@
     "evolveAdvantage": "Spaces that continue to perform and adapt.",
     "evolveHighlight": "Built for continuous improvement"
   },
-
   "PlanYourProject": {
     "heading": "Plan Your Project",
     "prevLabel": "Previous slide",
@@ -246,8 +233,8 @@
     "openingHours1": "Mon – Fri 8am – 6pm",
     "openingHours2": "Sat 8am – 4pm",
     "showroomHeading": "Showroom",
-    "contactAddress": "Marina Plaza, Suite 2404, Dubai Marina, Dubai, UAE",
-    "contactPhone": "+971 4 555 1234",
+    "contactAddress": "Showroom 1, MSM 2 Building, Exit 44, Sheikh Zayed Road, Dubai",
+    "contactPhone": "+971 50 873 1256",
     "contactEmail": "info@tonestudios.com",
     "showroomDirectionsLabel": "Get direction to showroom",
     "showroomDirectionsHref": "https://maps.google.com",
@@ -264,7 +251,14 @@
     "termsOfService": "Terms",
     "cookies": "Cookies",
     "sitemap": "Sitemap",
-    "support": "Support"
+    "support": "Support",
+    "propertyMadinatJumeirah": "Madinat Jumeirah",
+    "propertyBlueWaters": "Blue Waters",
+    "propertyCityWalk": "City Walk",
+    "companyTrade": "Trade",
+    "companyAbout": "About",
+    "companyContact": "Contact",
+    "companyWhyT1": "Why T1"
   },
   "Blog": {
     "label": "Our Blogs",
@@ -458,11 +452,26 @@
   "AboutMetrics": {
     "sectionLabel": "About T1 Studio at a glance",
     "items": [
-      { "value": "Villa",    "label": "Property Type" },
-      { "value": "400+",     "label": "Kitchens Delivered" },
-      { "value": "4 Weeks",  "label": "Timeline" },
-      { "value": "₿ 100K",  "label": "Total Budget" },
-      { "value": "4.5/5",   "label": "Client Rating" }
+      {
+        "value": "Villa",
+        "label": "Property Type"
+      },
+      {
+        "value": "400+",
+        "label": "Kitchens Delivered"
+      },
+      {
+        "value": "4 Weeks",
+        "label": "Timeline"
+      },
+      {
+        "value": "₿ 100K",
+        "label": "Total Budget"
+      },
+      {
+        "value": "4.5/5",
+        "label": "Client Rating"
+      }
     ]
   },
   "ReferralPartner": {
@@ -597,115 +606,98 @@
     "galleryAriaLabel": "Space gallery",
     "otherSpacesHeading": "Explore Other Spaces",
     "otherSpacesViewAll": "View All Spaces",
-
     "kitchen_heroHeading": "Luxury Kitchen Design & Build",
     "kitchen_heroDescription": "From bespoke island kitchens to open-plan entertaining spaces, we craft precision-made kitchens built around the way you live and cook.",
     "kitchen_overviewLabel": "Kitchen Design",
     "kitchen_overviewHeading": "Where Culinary Vision Meets Craftsmanship",
     "kitchen_overviewDescription": "Every kitchen we design begins with a conversation about how you live. We then translate that vision into a precision-crafted space using the finest European cabinetry, stone surfaces and integrated appliances — delivered on time, on budget, and built to last.",
     "kitchen_heroImageAlt": "Luxury bespoke kitchen with marble island and pendant lighting",
-
     "wardrobes_heroHeading": "Bespoke Walk-In Wardrobes",
     "wardrobes_heroDescription": "Custom-designed wardrobes and fitted closets engineered around your wardrobe, your workflow and your space.",
     "wardrobes_overviewLabel": "Wardrobe Design",
     "wardrobes_overviewHeading": "A Wardrobe Designed Around Your Life",
     "wardrobes_overviewDescription": "We design every wardrobe from scratch — mapping your clothing collection, daily routine and available space into a precisely built storage solution with premium finishes, integrated lighting and hardware that lasts.",
     "wardrobes_heroImageAlt": "Elegant walk-in wardrobe with LED lighting and full-length mirror",
-
     "livingRooms_heroHeading": "Bespoke Living Room Interiors",
     "livingRooms_heroDescription": "Sophisticated living spaces designed to balance effortless comfort with your personal aesthetic.",
     "livingRooms_overviewLabel": "Living Room Design",
     "livingRooms_overviewHeading": "Spaces That Invite You to Stay",
     "livingRooms_overviewDescription": "Our living room designs bring together bespoke furniture, curated materials and considered spatial planning to create interiors that feel both refined and genuinely lived-in — crafted for the way your household moves through the day.",
     "livingRooms_heroImageAlt": "Contemporary living room with neutral tones, woven wall art and natural textures",
-
     "bedrooms_heroHeading": "Luxury Bedroom Design",
     "bedrooms_heroDescription": "Thoughtfully designed bedrooms that blend premium finishes, calming atmosphere and personalized storage.",
     "bedrooms_overviewLabel": "Bedroom Design",
     "bedrooms_overviewHeading": "Rest, Reimagined",
     "bedrooms_overviewDescription": "We treat the bedroom as the most personal room in the home. Every detail — from integrated headboard joinery to concealed storage and ambient lighting — is considered as part of a unified design that promotes calm and reflects your individual taste.",
     "bedrooms_heroImageAlt": "Luxury modern bedroom with warm lighting, premium finishes and custom furniture",
-
     "bathrooms_heroHeading": "Luxury Bathroom Design",
     "bathrooms_heroDescription": "Refined bathroom spaces crafted with premium stone, smart storage and a calm, spa-like atmosphere.",
     "bathrooms_overviewLabel": "Bathroom Design",
     "bathrooms_overviewHeading": "The Spa You Come Home To",
     "bathrooms_overviewDescription": "We design bathrooms that feel like a private retreat. Premium stone surfaces, freestanding and bespoke vanities, heated towel rails and precisely positioned lighting are brought together into a space that balances function with daily indulgence.",
     "bathrooms_heroImageAlt": "Modern luxury bathroom with stone finishes and elegant fixtures",
-
     "homeOffice_heroHeading": "Bespoke Home Office Design",
     "homeOffice_heroDescription": "Functional, inspiring home offices designed to sharpen focus and elevate your work from home experience.",
     "homeOffice_overviewLabel": "Home Office Design",
     "homeOffice_overviewHeading": "Work Beautifully at Home",
     "homeOffice_overviewDescription": "A well-designed home office is more than a desk in a spare room. We create fully fitted, purpose-built workspaces with custom joinery, integrated cable management, acoustic consideration and lighting designed to support deep focus across a full working day.",
     "homeOffice_heroImageAlt": "Modern home office with custom desk and built-in storage",
-
     "outdoorLiving_heroHeading": "Luxury Outdoor Living Spaces",
     "outdoorLiving_heroDescription": "Elegant outdoor areas designed for seamless indoor-outdoor living, relaxing and entertaining.",
     "outdoorLiving_overviewLabel": "Outdoor Living",
     "outdoorLiving_overviewHeading": "Extend Your Home Outdoors",
     "outdoorLiving_overviewDescription": "From covered terraces and alfresco dining areas to bespoke outdoor kitchens and pool decks, we design outdoor living spaces that feel as considered and comfortable as the rooms inside — built to UAE climate standards and finished to a luxury specification.",
     "outdoorLiving_heroImageAlt": "Luxury outdoor living area with modern seating and ambient lighting",
-
     "bespokeJoinery_heroHeading": "Bespoke Joinery & Custom Millwork",
     "bespokeJoinery_heroDescription": "Precision-crafted joinery solutions that maximize space, functionality and architectural character.",
     "bespokeJoinery_overviewLabel": "Bespoke Joinery",
     "bespokeJoinery_overviewHeading": "Crafted With Purpose, Built to Last",
     "bespokeJoinery_overviewDescription": "Our joinery workshop produces custom-built pieces — from wall panelling and media units to library shelving and built-in storage — entirely tailored to your space. Every piece is designed in our studio and crafted using premium materials with exacting standards of fit and finish.",
     "bespokeJoinery_heroImageAlt": "Custom bespoke joinery with premium wood finishes and integrated storage",
-
     "approachLabel": "Our Approach",
     "materialInspirationHeading": "Material Inspiration",
-
     "kitchen_approachHeading": "We Have a Kitchen For Everyone.",
     "kitchen_item1": "Fully bespoke layouts designed around your cooking habits and lifestyle.",
     "kitchen_item2": "European cabinetry with soft-close hardware and integrated appliances.",
     "kitchen_item3": "Premium stone, porcelain and solid-surface worktop selection.",
     "kitchen_item4": "In-house installation by skilled craftsmen with full project management.",
     "kitchen_item5": "After-sales support and a comprehensive warranty on all joinery.",
-
     "wardrobes_approachHeading": "A Wardrobe Designed Around Your Life.",
     "wardrobes_item1": "Custom layout mapped to your exact clothing collection and storage needs.",
     "wardrobes_item2": "Integrated LED lighting for clear visibility at any time of day.",
     "wardrobes_item3": "Premium handles, hinges and soft-close drawer systems throughout.",
     "wardrobes_item4": "Choice of finishes from matt lacquer to natural oak and high gloss.",
     "wardrobes_item5": "Full installation by our in-house team with minimal disruption.",
-
     "livingRooms_approachHeading": "Spaces Designed to Be Lived In.",
     "livingRooms_item1": "Space planning that balances comfort, circulation and scale.",
     "livingRooms_item2": "Custom joinery — media units, shelving and storage built to the room.",
     "livingRooms_item3": "Curated material palettes in stone, timber and luxury textiles.",
     "livingRooms_item4": "Lighting design integrated into the architecture of the room.",
     "livingRooms_item5": "Full turnkey delivery from design concept to final styling.",
-
     "bedrooms_approachHeading": "Every Bedroom Begins With You.",
     "bedrooms_item1": "Bespoke headboard joinery with integrated bedside storage.",
     "bedrooms_item2": "Concealed storage and fitted wardrobe solutions as part of the design.",
     "bedrooms_item3": "Premium mattress and upholstery specification available.",
     "bedrooms_item4": "Ambient, task and accent lighting designed for every mood.",
     "bedrooms_item5": "Full installation and styling coordination by our team.",
-
     "bathrooms_approachHeading": "Your Private Spa, Designed From Scratch.",
     "bathrooms_item1": "Bespoke vanity units crafted to your exact dimensions and storage needs.",
     "bathrooms_item2": "Premium stone and porcelain tile selection with full layout planning.",
     "bathrooms_item3": "Freestanding or built-in bath specification and placement.",
     "bathrooms_item4": "Smart storage and concealed plumbing for a clean, spa-like finish.",
     "bathrooms_item5": "Coordinated accessories, lighting and heated towel rail specification.",
-
     "homeOffice_approachHeading": "Purpose-Built for Deep Focus.",
     "homeOffice_item1": "Custom desk and shelving layouts designed around your workflow.",
     "homeOffice_item2": "Integrated cable management for a clean, professional environment.",
     "homeOffice_item3": "Acoustic treatment options to reduce noise and improve focus.",
     "homeOffice_item4": "Lighting specification for video calls and long working sessions.",
     "homeOffice_item5": "Premium finishes that make your workspace a room you want to be in.",
-
     "outdoorLiving_approachHeading": "Every Outdoor Space, Considered.",
     "outdoorLiving_item1": "Covered terrace and pergola design built for UAE climate conditions.",
     "outdoorLiving_item2": "Bespoke outdoor kitchen and built-in barbecue specification.",
     "outdoorLiving_item3": "Weather-resistant furniture and material selection.",
     "outdoorLiving_item4": "Landscape and pool deck integration as part of the design.",
     "outdoorLiving_item5": "Ambient and feature lighting for evening entertaining.",
-
     "bespokeJoinery_approachHeading": "Precision Craft, Room by Room.",
     "bespokeJoinery_item1": "Custom-designed pieces built entirely to your spatial brief.",
     "bespokeJoinery_item2": "Wide range of wood species, veneers, lacquers and hardware finishes.",

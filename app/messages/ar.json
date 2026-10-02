@@ -221,8 +221,8 @@
     "openingHours1": "الإثنين – الجمعة 8ص – 6م",
     "openingHours2": "السبت 8ص – 4م",
     "showroomHeading": "المعرض",
-    "contactAddress": "مارينا بلازا، جناح 2404، دبي مارينا، دبي، الإمارات",
-    "contactPhone": "+٩٧١ ٤ ٥٥٥ ١٢٣٤",
+    "contactAddress": "صالة العرض 1، مبنى MSM 2، المخرج 44، شارع الشيخ زايد، دبي",
+    "contactPhone": "+٩٧١ ٥٠ ٨٧٣ ١٢٥٦",
     "contactEmail": "info@tonestudios.com",
     "showroomDirectionsLabel": "احصل على الاتجاهات إلى المعرض",
     "showroomDirectionsHref": "https://maps.google.com",
@@ -239,7 +239,14 @@
     "termsOfService": "الشروط",
     "cookies": "ملفات تعريف الارتباط",
     "sitemap": "خريطة الموقع",
-    "support": "الدعم"
+    "support": "الدعم",
+    "propertyMadinatJumeirah": "مدينة جميرا",
+    "propertyBlueWaters": "بلو ووترز",
+    "propertyCityWalk": "سيتي ووك",
+    "companyTrade": "التجارة",
+    "companyAbout": "عنّا",
+    "companyContact": "اتصل بنا",
+    "companyWhyT1": "لماذا T1"
   },
   "Blog": {
     "label": "مدونتنا",
@@ -433,11 +440,26 @@
   "AboutMetrics": {
     "sectionLabel": "لمحة عن استوديو T1",
     "items": [
-      { "value": "فيلا",      "label": "نوع العقار" },
-      { "value": "+400",      "label": "مطبخ تم تسليمه" },
-      { "value": "4 أسابيع", "label": "المدة الزمنية" },
-      { "value": "100K ₿",   "label": "إجمالي الميزانية" },
-      { "value": "4.5/5",    "label": "تقييم العملاء" }
+      {
+        "value": "فيلا",
+        "label": "نوع العقار"
+      },
+      {
+        "value": "+400",
+        "label": "مطبخ تم تسليمه"
+      },
+      {
+        "value": "4 أسابيع",
+        "label": "المدة الزمنية"
+      },
+      {
+        "value": "100K ₿",
+        "label": "إجمالي الميزانية"
+      },
+      {
+        "value": "4.5/5",
+        "label": "تقييم العملاء"
+      }
     ]
   },
   "ReferralPartner": {
