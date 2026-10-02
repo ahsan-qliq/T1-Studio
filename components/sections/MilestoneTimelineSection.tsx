@@ -47,7 +47,7 @@ function MilestoneCard({
   return (
     <motion.li
       role="listitem"
-      className="relative flex flex-col items-center gap-5 px-8 py-10 text-center"
+      className="relative flex flex-col items-center gap-5 px-4 py-6 sm:px-8 sm:py-10 text-center"
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, ease: EASE, delay: index * 0.1 }}
