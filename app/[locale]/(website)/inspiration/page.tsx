@@ -30,7 +30,6 @@ export default async function InspirationPage({
   ]);
 
   const s = cms?.sections;
-  console.log("inspiration page cms",  s?.inspirationCTA);
   return (
     <main>
       {s?.hero?.isVisible && (
