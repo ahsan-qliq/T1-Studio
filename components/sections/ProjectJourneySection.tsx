@@ -154,7 +154,7 @@ export function ProjectJourneySection({
       {/* Label + heading */}
       <div className="mb-10 text-center">
         <p className="mb-3 text-sm font-medium text-primary-foreground">{label}</p>
-        <h2 id="journey-heading" className="text-3xl font-bold text-primary-foreground lg:text-4xl">
+        <h2 id="journey-heading" className="text-2xl font-bold text-primary-foreground sm:text-3xl lg:text-4xl">
           {heading}
         </h2>
       </div>
