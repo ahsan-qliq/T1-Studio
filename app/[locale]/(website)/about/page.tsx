@@ -94,7 +94,7 @@ export default async function AboutPage({
           items={(s.values.values || []).map((item) => ({
             src: item.image.url,
             alt: item.image.alt as string,
-            label: item.label,
+            label: item.title as string,
           }))}
         />
       )}
