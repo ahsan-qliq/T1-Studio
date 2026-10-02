@@ -98,7 +98,6 @@ export default async function TradePage({
                 })
               : undefined,
       })) ?? [];
-
   return (
     <main>
       {s?.hero?.isVisible && (
