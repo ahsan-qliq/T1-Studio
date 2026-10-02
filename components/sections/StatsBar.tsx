@@ -37,7 +37,7 @@ export function StatsBar({ items, sectionLabel }: StatsBarProps) {
             transition={{ duration: 0.7, ease: EASE, delay: i * 0.1 }}
           >
             <span
-              className="text-4xl font-bold text-white sm:text-5xl lg:text-[56px]"
+              className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
               aria-label={`${value} ${label}`}
             >
               {value}
