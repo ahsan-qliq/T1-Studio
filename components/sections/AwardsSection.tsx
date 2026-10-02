@@ -31,7 +31,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
       <div className="mx-auto flex flex-col items-center justify-between gap-8 sm:flex-row sm:gap-12">
         {/* Label */}
         <motion.p
-          className={`shrink-0 text-3xl font-bold text-secondary ${className ?? ""}`}
+          className={`shrink-0 text-2xl font-bold text-secondary sm:text-3xl ${className ?? ""}`}
           initial={{ opacity: 0, x: -24 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.7, ease: EASE }}
