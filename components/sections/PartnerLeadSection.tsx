@@ -530,7 +530,7 @@ export function PartnerLeadSection({
 
       {/* Right — form panel */}
       <motion.div
-        className="flex flex-1 flex-col justify-center bg-[#0C0C0C] px-8 py-14 lg:px-14 xl:px-20"
+        className="flex flex-1 flex-col justify-center bg-[#0C0C0C] px-4 py-10 sm:px-8 sm:py-14 lg:px-14 xl:px-20"
         initial={{ opacity: 0, x: 56 }}
         animate={inView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.85, ease: EASE, delay: 0.1 }}
