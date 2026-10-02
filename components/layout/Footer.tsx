@@ -222,7 +222,7 @@ export async function Footer() {
 
       {/* Main content */}
       <div className="mx-auto px-4 py-14 sm:px-8 lg:px-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1.4fr]">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-10 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1.4fr]">
           {/* Brand column */}
           <div className="flex flex-col gap-6">
             <FooterLogo label={t("logoLabel")} />

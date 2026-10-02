@@ -514,7 +514,7 @@ export function PartnerLeadSection({
     >
       {/* Left — image */}
       <motion.div
-        className="relative h-64 lg:h-auto lg:w-2/5"
+        className="relative h-56 sm:h-72 lg:h-auto lg:w-2/5"
         initial={{ opacity: 0, x: -56 }}
         animate={inView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 0.85, ease: EASE }}
