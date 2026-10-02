@@ -1,8 +1,8 @@
 'use client';
 
-const WHATSAPP_NUMBER = '97145551234'; // +971 4 555 1234 — digits only for wa.me
+const WHATSAPP_NUMBER = '+971 50 873 1256';
 const PREFILL_MESSAGE = "Hi, I'd like to know more about T1 Studio.";
-const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(PREFILL_MESSAGE)}`;
+const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(PREFILL_MESSAGE)}`;
 
 export function WhatsAppButton() {
   return (
