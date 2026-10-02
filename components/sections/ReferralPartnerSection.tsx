@@ -127,7 +127,7 @@ export function ReferralPartnerSection({
         {/* Process flow */}
         <motion.div
           ref={stepsRef}
-          className="mb-10 px-6 py-5 shadow-sm backdrop-blur-sm"
+          className="mb-10 px-4 py-4 sm:px-6 sm:py-5 shadow-sm backdrop-blur-sm"
           initial={{ opacity: 0, y: 32 }}
           animate={stepsInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: EASE }}
