@@ -57,7 +57,7 @@ export function ServicesSection({
         <p className="mb-3 text-sm text-white/70">{label}</p>
         <h2
           id="services-heading"
-          className="text-4xl font-bold text-white sm:text-5xl"
+          className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
         >
           {heading}
         </h2>
@@ -78,7 +78,7 @@ export function ServicesSection({
             className={`px-8 py-10 ${CELL_BORDERS[i] ?? ''}`}
             variants={stagger.item}
           >
-            <h3 className="mb-3 text-xl font-bold text-white">
+            <h3 className="mb-3 text-lg font-bold text-white sm:text-xl">
               {service.title}
             </h3>
             <p className="text-sm text-white/65 sm:text-base">
