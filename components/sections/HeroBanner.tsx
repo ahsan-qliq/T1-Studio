@@ -128,10 +128,7 @@ export async function HeroBanner({
               <div style={{ animation: ANIM, animationDelay: "0.6s" }}>
                 <Link
                   href="/contact"
-                  className={cn(
-                    buttonVariants({ size: "lg" }),
-                    "group py-3",
-                  )}
+                  className="group inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-black transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
                 >
                   {cta}
                   <ArrowRight
