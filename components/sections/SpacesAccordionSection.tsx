@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { motion, useInView } from "framer-motion";
 
@@ -19,6 +19,8 @@ interface SpacesAccordionSectionProps {
   viewAllHref?: string;
   spaces: AccordionSpace[];
 }
+
+// ─── Desktop: horizontal accordion panel ─────────────────────────────────────
 
 function SpacePanel({
   space,
@@ -53,13 +55,12 @@ function SpacePanel({
           src={space.image.src}
           alt={space.image.alt}
           fill
-          sizes="(max-width: 768px) 50vw, 20vw"
+          sizes="20vw"
           className="object-cover transition-transform duration-700 ease-in-out"
           style={{ transform: isActive ? "scale(1.05)" : "scale(1)" }}
           draggable={false}
         />
 
-        {/* Gradient overlay — stronger at bottom */}
         <div
           className="absolute inset-0"
           style={{
@@ -69,7 +70,6 @@ function SpacePanel({
           aria-hidden="true"
         />
 
-        {/* Vertical label — insetInlineStart flips automatically in RTL */}
         <p
           className="absolute bottom-5 select-none font-semibold leading-tight text-white"
           style={{
@@ -88,6 +88,92 @@ function SpacePanel({
     </div>
   );
 }
+
+// ─── Mobile: stacked card row ─────────────────────────────────────────────────
+
+function MobileSpaceCard({
+  space,
+  index,
+  inView,
+}: {
+  space: AccordionSpace;
+  index: number;
+  inView: boolean;
+}) {
+  const num = String(index + 1).padStart(2, "0");
+  const EASE = [0.22, 1, 0.36, 1] as const;
+
+  return (
+    <motion.li
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, ease: EASE, delay: index * 0.07 }}
+    >
+      <Link
+        href={space.href}
+        aria-label={space.title}
+        className="group relative flex h-40 w-full overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset"
+      >
+        {/* Background image */}
+        <Image
+          src={space.image.src}
+          alt={space.image.alt}
+          fill
+          sizes="100vw"
+          className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-105"
+          draggable={false}
+        />
+
+        {/* Gradient overlay */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.35) 55%, transparent 100%)",
+          }}
+          aria-hidden="true"
+        />
+
+        {/* Bottom row: number | separator | title + arrow */}
+        <div className="absolute inset-x-0 bottom-0 flex items-end gap-0 px-4 pb-4">
+          {/* Rotated number */}
+          <span
+            className="shrink-0 select-none text-xs font-semibold text-white/80"
+            style={{
+              writingMode: "vertical-rl",
+              transform: "rotate(180deg)",
+              letterSpacing: "0.08em",
+            }}
+            aria-hidden="true"
+          >
+            {num}
+          </span>
+
+          {/* Vertical separator */}
+          <span
+            className="mx-3 shrink-0 self-stretch w-px bg-white/40"
+            aria-hidden="true"
+          />
+
+          {/* Title */}
+          <span className="flex-1 text-lg font-semibold text-white">
+            {space.title}
+          </span>
+
+          {/* Circle arrow */}
+          <span
+            className="ms-3 flex size-9 shrink-0 items-center justify-center rounded-full border border-white/40 bg-black/30 backdrop-blur-sm"
+            aria-hidden="true"
+          >
+            <ChevronRight className="size-4 text-white" />
+          </span>
+        </div>
+      </Link>
+    </motion.li>
+  );
+}
+
+// ─── Section ──────────────────────────────────────────────────────────────────
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
@@ -111,6 +197,12 @@ export function SpacesAccordionSection({
     margin: "-40px",
   });
 
+  const mobileListRef = useRef<HTMLUListElement>(null);
+  const mobileListInView = useInView(mobileListRef as React.RefObject<Element>, {
+    once: true,
+    margin: "-40px",
+  });
+
   const ctaRef = useRef<HTMLDivElement>(null);
   const ctaInView = useInView(ctaRef as React.RefObject<Element>, {
     once: true,
@@ -130,9 +222,27 @@ export function SpacesAccordionSection({
         {heading}
       </motion.h2>
 
+      {/* ── Mobile stacked list (< sm) ── */}
+      <ul
+        ref={mobileListRef}
+        role="list"
+        aria-label={heading}
+        className="flex flex-col sm:hidden"
+      >
+        {spaces.map((space, i) => (
+          <MobileSpaceCard
+            key={space.id}
+            space={space}
+            index={i}
+            inView={mobileListInView}
+          />
+        ))}
+      </ul>
+
+      {/* ── Desktop horizontal accordion (≥ sm) ── */}
       <motion.div
         ref={accordionRef}
-        className="flex h-90 w-full sm:h-100 lg:h-110"
+        className="hidden h-100 w-full sm:flex lg:h-110"
         onMouseLeave={() => setActiveId(null)}
         role="list"
         aria-label={heading}
@@ -150,6 +260,8 @@ export function SpacesAccordionSection({
           />
         ))}
       </motion.div>
+
+      {/* ── View all CTA ── */}
       {viewAllLabel && viewAllHref && (
         <motion.div
           ref={ctaRef}
