@@ -73,6 +73,7 @@ function SpacePanel({
         <p
           className="absolute bottom-5 select-none font-semibold leading-tight text-white"
           style={{
+            left: "1rem",
             insetInlineStart: "1rem",
             writingMode: "vertical-rl",
             transform: "rotate(180deg)",
