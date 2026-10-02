@@ -153,7 +153,7 @@ export function SignatureProjectsSection({
       <motion.h2
         ref={headingRef}
         id="signature-projects-heading"
-        className="mb-12 text-center text-4xl font-bold text-white sm:text-5xl lg:mb-16"
+        className="mb-12 text-center text-3xl font-bold text-white sm:text-4xl md:text-5xl lg:mb-16"
         initial={{ opacity: 0, y: 32 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: EASE }}
