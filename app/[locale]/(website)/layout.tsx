@@ -9,7 +9,7 @@ export default function WebsiteLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative">
+    <div className="relative overflow-x-hidden">
       {/* Global page background — fixed wrapper keeps the image from scrolling */}
       <div className="fixed inset-0 -z-10" aria-hidden="true">
         <Image

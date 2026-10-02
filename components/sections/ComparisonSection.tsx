@@ -104,7 +104,7 @@ export function ComparisonSection({ heading, columns }: ComparisonSectionProps) 
       <motion.h2
         ref={headingRef}
         id="comparison-heading"
-        className="mb-10 text-center text-3xl font-bold text-secondary lg:text-4xl"
+        className="mb-10 text-center text-2xl font-bold text-secondary sm:text-3xl lg:text-4xl"
         initial={{ opacity: 0, y: 28 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.75, ease: EASE }}

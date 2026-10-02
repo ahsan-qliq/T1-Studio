@@ -26,7 +26,7 @@ export function StatsBar({ items, sectionLabel }: StatsBarProps) {
     <section ref={ref} aria-label={sectionLabel} className="page-wrap py-16">
       <ul
         role="list"
-        className="flex flex-wrap justify-between gap-8 sm:gap-12 lg:gap-16"
+        className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-12 lg:grid-cols-4 lg:gap-16 place-items-center"
       >
         {items.map(({ value, label }, i) => (
           <motion.li

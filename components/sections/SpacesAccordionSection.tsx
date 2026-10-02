@@ -122,7 +122,7 @@ export function SpacesAccordionSection({
       <motion.h2
         ref={headingRef}
         id="spaces-accordion-heading"
-        className="mb-10 text-center text-4xl font-bold text-white lg:text-5xl"
+        className="mb-10 text-center text-3xl font-bold text-white sm:text-4xl lg:text-5xl"
         initial={{ opacity: 0, y: 24 }}
         animate={headingInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.7, ease: EASE }}

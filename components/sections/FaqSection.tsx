@@ -49,7 +49,7 @@ export function FaqSection({ label, heading, items }: FaqSectionProps) {
         </motion.p>
         <motion.h2
           id="faq-heading"
-          className="text-3xl font-bold leading-tight text-secondary sm:text-4xl"
+          className="text-2xl font-bold leading-tight text-secondary sm:text-3xl lg:text-4xl"
           initial={{ opacity: 0, y: 20 }}
           animate={headingInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7, ease: EASE, delay: 0.08 }}
