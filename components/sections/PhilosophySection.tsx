@@ -32,10 +32,10 @@ export function PhilosophySection({
     <section
       ref={ref}
       aria-labelledby="philosophy-heading"
-      className="relative overflow-hidden bg-[#0C0C0C] page-wrap py-16"
+      className="relative overflow-hidden page-wrap py-16"
     >
       {/* Decorative grid lines */}
-      <div
+      {/* <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
         style={{
@@ -43,7 +43,7 @@ export function PhilosophySection({
             'linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)',
           backgroundSize: '80px 80px',
         }}
-      />
+      /> */}
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center">
