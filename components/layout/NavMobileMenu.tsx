@@ -67,8 +67,8 @@ export function NavMobileMenu({
         aria-modal="true"
         aria-label="Navigation menu"
         className={cn(
-          'fixed inset-y-0 end-0 z-50 flex w-72 flex-col bg-zinc-950 px-6 py-8 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden',
-          open ? 'translate-x-0' : 'translate-x-full',
+          'fixed inset-y-0 end-0 z-50 flex w-72 flex-col bg-zinc-950 px-6 py-8 shadow-2xl transition-transform duration-300 ease-in-out lg:hidden overflow-hidden',
+          open ? 'translate-x-0' : 'ltr:translate-x-full rtl:-translate-x-full',
         )}
       >
         {/* Drawer header */}
