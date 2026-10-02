@@ -47,7 +47,7 @@ function ProcessStep({ iconName, label, isLast }: PartnerStep & { isLast: boolea
         <div className="flex size-11 items-center justify-center" aria-hidden="true">
           <Icon className="size-10 text-white" strokeWidth={2} />
         </div>
-        <span className="text-xs leading-snug text-secondary w-10 text-center">{label}</span>
+        <span className="text-xs leading-snug text-secondary w-14 text-center sm:w-auto">{label}</span>
       </li>
       {!isLast && (
         <li aria-hidden="true" className="mb-4 shrink-0 self-start pt-3">
@@ -106,7 +106,7 @@ export function ReferralPartnerSection({
           <div className="mb-10 max-w-lg">
             <motion.h2
               id="referral-partner-heading"
-              className="mb-4 text-3xl font-bold leading-tight text-secondary lg:text-4xl"
+              className="mb-4 text-2xl font-bold leading-tight text-secondary sm:text-3xl lg:text-4xl"
               initial={{ opacity: 0, x: -40 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8, ease: EASE }}
