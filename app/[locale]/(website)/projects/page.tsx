@@ -16,7 +16,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const cms = await getProjectsPageCms(locale);
-  console.log(cms?.seo)
   const seo = cms?.seo;
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
@@ -41,6 +40,7 @@ export default async function ProjectsPage({
   const locale: Locale = rawLocale === "ar" ? "ar" : "en";
 
   const cms = await getProjectsPageCms(locale);
+  console.log(cms, 77)
   const s = cms?.sections;
 
   const t = (value: unknown): string => {
@@ -69,59 +69,37 @@ export default async function ProjectsPage({
   ========================================================= */
 
   const projectsSection = s?.projects;
+  const apiFilters = cms?.filters;
 
-  /**
-   * AllProjectsSection expects:
-   *
-   * locationKey
-   * serviceKeys
-   * styleKey
-   * propertyTypeKey
-   *
-   * But the current CMS project response doesn't provide these.
-   *
-   * So we derive propertyTypeKey from category and locationKey
-   * from the location for now.
-   *
-   * If your CMS later adds service/style/filter keys, map them here.
-   */
-  console.log(projectsSection?.projects)
+  const toOptions = (values: string[] = []) =>
+    values.map((v) => ({ value: v, label: v }));
+
+  const filterOptions = {
+    locations: toOptions(apiFilters?.locations),
+    services: [] as { value: string; label: string }[],
+    styles: [] as { value: string; label: string }[],
+    propertyTypes: toOptions(apiFilters?.categories),
+    completionYears: toOptions(apiFilters?.completionYears),
+  };
+
   const projectItems =
     projectsSection?.projects
       ?.filter((p) => p.isVisible)
       .map((p) => ({
         id: p._id,
-
         title: p.title,
-
         propertyType: p.category || "",
-
-        /**
-         * CMS currently doesn't provide completionYear.
-         * Keep 0 rather than passing undefined to a number prop.
-         */
-        completionYear: 0,
-
+        completionYear: Number(p.completionYear) || 0,
         location: p.location,
-
-        description:p.shortDescription,
-
+        description: p.shortDescription,
         image: {
           src: p.image?.url || "",
           alt: t(p.image?.alt),
         },
-
         href: p.href || `/projects/${p.slug}`,
-
-        /**
-         * Used by AllProjectsSection filtering.
-         */
-        locationKey: t(p.location),
-
+        locationKey: p.location || "",
         serviceKeys: [],
-
         styleKey: "",
-
         propertyTypeKey: p.category || "",
       })) ?? [];
 
@@ -148,7 +126,6 @@ export default async function ProjectsPage({
   ========================================================= */
 
   const faq = s?.faq;
-
   return (
     <main>
       {/* =====================================================
@@ -195,19 +172,12 @@ export default async function ProjectsPage({
           clearFiltersLabel={locale === "ar" ? "مسح الفلاتر" : "Clear Filters"}
           filterLabels={{
             locations: locale === "ar" ? "الموقع" : "Locations",
-
             services: locale === "ar" ? "الخدمات" : "Services",
-
             style: locale === "ar" ? "الأسلوب" : "Style",
-
-            propertyType: locale === "ar" ? "نوع العقار" : "Property Type",
+            propertyType: locale === "ar" ? "الفئة" : "Category",
+            completionYear: locale === "ar" ? "سنة الإنجاز" : "Year",
           }}
-          filterOptions={{
-            locations: [],
-            services: [],
-            styles: [],
-            propertyTypes: [],
-          }}
+          filterOptions={filterOptions}
           projects={projectItems}
         />
       )}
