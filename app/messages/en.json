@@ -916,7 +916,9 @@
     "faq4Q": "Does T1 Studio sell my data?",
     "faq4A": "No. We never sell personal data collected through cookies.",
     "faq5Q": "How long do cookies stay on my device?",
-    "faq5A": "Session cookies are deleted when you close your browser. Persistent cookies last from a few days up to 24 months, depending on their purpose, unless you delete them sooner."
+    "faq5A": "Session cookies are deleted when you close your browser. Persistent cookies last from a few days up to 24 months, depending on their purpose, unless you delete them sooner.",
+    "metaTitle": "Cookie Policy | T1 Studio",
+    "metaDescription": "Cookie Policy for T1 Studio (t1-studio.com)."
   },
   "TermsConditions": {
     "heading": "Terms & Conditions",
