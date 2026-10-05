@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getContactPageCms } from "@/lib/cms/contact";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ServicesSection } from "@/components/sections/ServicesSection";
@@ -8,6 +9,25 @@ import { getTranslations } from "next-intl/server";
 import { getDreamSpaceConfig } from "@/app/config/home.config";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getContactPageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 export default async function ContactPage({
   params,
