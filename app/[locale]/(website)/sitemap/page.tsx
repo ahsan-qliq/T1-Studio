@@ -44,7 +44,7 @@ export default async function SitemapPage({
       heading: t("helpfulLinksHeading"),
       links: [
         { label: t("linkPrivacyPolicy"), href: "/privacy-policy" },
-        { label: t("linkTerms"), href: "/terms-conditions" },
+        { label: t("linkTerms"), href: "/terms-and-conditions" },
         { label: t("linkCookiePolicy"), href: "/cookie-policy" },
         { label: t("linkAccessibility"), href: "/accessibility" },
         { label: t("linkSitemap"), href: "/sitemap" },
