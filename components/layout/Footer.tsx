@@ -193,13 +193,12 @@ export async function Footer() {
     },
   ];
 
-  // const legalLinks = [
-  //   { label: t("privacyPolicy"), href: "/privacy-policy" },
-  //   { label: t("termsOfService"), href: "/terms-of-service" },
-  //   { label: t("cookies"), href: "/cookies" },
-  //   { label: t("sitemap"), href: "/sitemap" },
-  //   { label: t("support"), href: "/support" },
-  // ];
+  const legalLinks = [
+    { label: t("privacyPolicy"), href: "/privacy-policy" },
+    { label: t("termsOfService"), href: "/terms-conditions" },
+    { label: t("cookies"), href: "/cookie-policy" },
+    { label: t("sitemap"), href: "/sitemap" },
+  ];
 
   return (
     <footer className="bg-foreground" aria-label={t("footerLabel")}>
@@ -345,7 +344,7 @@ export async function Footer() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 sm:flex-row sm:px-8 lg:px-16">
           <p className="text-xs text-white/40">{t("copyright")}</p>
 
-          {/* <nav aria-label={t("legalNavLabel")}>
+          <nav aria-label={t("legalNavLabel")}>
             <ul
               role="list"
               className="flex flex-wrap items-center gap-x-6 gap-y-2"
@@ -361,7 +360,7 @@ export async function Footer() {
                 </li>
               ))}
             </ul>
-          </nav> */}
+          </nav>
         </div>
       </div>
     </footer>
