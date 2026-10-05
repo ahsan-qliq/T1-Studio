@@ -2,7 +2,7 @@
 
 import { useRef, useState, useMemo } from "react";
 import Image from "next/image";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { Select, type SelectOption } from "@/components/ui/select";
 import { motion, useInView } from "framer-motion";
@@ -69,12 +69,14 @@ export interface AllProjectsSectionProps {
     services: string;
     style: string;
     propertyType: string;
+    completionYear: string;
   };
   filterOptions: {
     locations: SelectOption[];
     services: SelectOption[];
     styles: SelectOption[];
     propertyTypes: SelectOption[];
+    completionYears: SelectOption[];
   };
   projects: ProjectItem[];
 }
@@ -123,21 +125,24 @@ function FeaturedCard({
 
       {/* Content — col 2-3 */}
       <div className="flex flex-col justify-center gap-6 border-b border-white/10 px-8 py-16 lg:col-span-2 lg:px-14 lg:py-20">
-        {(project.propertyType || project.readTime) && (
+        {/* {(project.propertyType || project.readTime) && (
           <div className="flex items-center gap-3">
             {project.location && <Badge label={project.location} />}
             {project.readTime && (
               <span className="text-sm text-white/50">{project.readTime}</span>
             )}
           </div>
-        )}
+        )} */}
 
-        <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+        <h2 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {project.title}
         </h2>
+        <p className="text-base text-secondary font-medium">Property Type: {project.propertyType}</p>
+        <p className="text-base text-secondary font-medium">Completion Year: {project.completionYear}</p>
+        <p className="text-base text-secondary font-medium">Location: {project.location}</p>
 
         {project.description && (
-          <p className="max-w-lg text-sm leading-relaxed text-white/60 sm:text-[0.9375rem]">
+          <p className="max-w-lg text-sm leading-relaxed text-secondary sm:text-[0.9375rem]">
             {project.description}
           </p>
         )}
@@ -145,7 +150,7 @@ function FeaturedCard({
         <div>
           <Link
             href={project.href}
-            className="group inline-flex items-center gap-2 rounded-full border border-white/30 px-6 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:border-white/60 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            className="group inline-flex items-center gap-2 rounded-full bg-secondary border border-white/30 px-6 py-2.5 text-sm font-medium text-black transition-colors duration-200 hover:border-black/60 hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             {viewCaseStudyLabel}
             <ArrowRight
@@ -254,45 +259,44 @@ export function AllProjectsSection({
   filterOptions,
   projects,
 }: AllProjectsSectionProps) {
-  const [activePropertyType, setActivePropertyType] = useState<string | null>(
-    null,
-  );
   const [filters, setFilters] = useState<{
+    category: string | null;
     location: string | null;
-    service: string | null;
-    style: string | null;
-  }>({ location: null, service: null, style: null });
+    completionYear: string | null;
+  }>({ category: null, location: null, completionYear: null });
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
-  const hasSecondaryFilters =
+  const hasDropdownFilters =
+    filterOptions.propertyTypes.length > 0 ||
     filterOptions.locations.length > 0 ||
-    filterOptions.services.length > 0 ||
-    filterOptions.styles.length > 0;
+    filterOptions.completionYears.length > 0;
+
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
-        if (activePropertyType && p.propertyTypeKey !== activePropertyType)
+        if (filters.category && p.propertyTypeKey !== filters.category)
           return false;
         if (filters.location && p.locationKey !== filters.location)
           return false;
-        if (filters.service && !p.serviceKeys.includes(filters.service))
+        if (
+          filters.completionYear &&
+          String(p.completionYear) !== filters.completionYear
+        )
           return false;
-        if (filters.style && p.styleKey !== filters.style) return false;
         return true;
       }),
-    [projects, activePropertyType, filters],
+    [projects, filters],
   );
 
-  const hasActiveFilter =
-    activePropertyType !== null || Object.values(filters).some(Boolean);
+  const hasActiveFilter = Object.values(filters).some(Boolean);
 
   const featured = filtered[0];
   const restAll = filtered.slice(1);
   const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
   const hasMore = restAll.length > visibleRest.length;
 
-  const handleSecondaryFilter = (
-    key: "location" | "service" | "style",
+  const handleFilter = (
+    key: "category" | "location" | "completionYear",
     value: string | null,
   ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -300,8 +304,7 @@ export function AllProjectsSection({
   };
 
   const handleClearFilters = () => {
-    setActivePropertyType(null);
-    setFilters({ location: null, service: null, style: null });
+    setFilters({ category: null, location: null, completionYear: null });
     setVisibleCount(INITIAL_COUNT);
   };
   const PLACEMENTS = [
@@ -314,7 +317,7 @@ export function AllProjectsSection({
   return (
     <section aria-labelledby="all-projects-heading">
       <div className="mx-auto">
-        {/* ── Header: heading + category pill tabs ── */}
+        {/* ── Header: heading + filters ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
           <h1
             id="all-projects-heading"
@@ -323,93 +326,59 @@ export function AllProjectsSection({
             {heading}
           </h1>
 
-          {filterOptions.propertyTypes.length > 0 && (
-            <nav
-              aria-label={filterLabels.propertyType || "Filter by category"}
-              className="flex flex-wrap items-center gap-2"
+          {hasDropdownFilters && (
+            <div
+              role="search"
+              aria-label="Project filters"
+              className="flex flex-wrap items-center gap-3"
             >
-              {filterOptions.propertyTypes.map((opt) => (
+              {filterOptions.propertyTypes.length > 0 && (
+                <Select
+                  placeholder={filterLabels.propertyType}
+                  options={filterOptions.propertyTypes}
+                  value={filters.category ?? undefined}
+                  onValueChange={(v) => handleFilter("category", v)}
+                  aria-label={filterLabels.propertyType}
+                  className="w-44"
+                />
+              )}
+              {filterOptions.locations.length > 0 && (
+                <Select
+                  placeholder={filterLabels.locations}
+                  options={filterOptions.locations}
+                  value={filters.location ?? undefined}
+                  onValueChange={(v) => handleFilter("location", v)}
+                  aria-label={filterLabels.locations}
+                  className="w-52"
+                />
+              )}
+              {filterOptions.completionYears.length > 0 && (
+                <Select
+                  placeholder={filterLabels.completionYear}
+                  options={filterOptions.completionYears}
+                  value={filters.completionYear ?? undefined}
+                  onValueChange={(v) => handleFilter("completionYear", v)}
+                  aria-label={filterLabels.completionYear}
+                  className="w-36"
+                />
+              )}
+              {hasActiveFilter && (
                 <button
-                  key={opt.value}
                   type="button"
-                  onClick={() => {
-                    setActivePropertyType((prev) =>
-                      prev === opt.value ? null : opt.value,
-                    );
-                    setVisibleCount(INITIAL_COUNT);
-                  }}
-                  aria-pressed={activePropertyType === opt.value}
-                  className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-4 py-1.5 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black",
-                    activePropertyType === opt.value
-                      ? "border-white/70 text-white"
-                      : "border-white/25 text-white/60 hover:border-white/40 hover:text-white/90",
-                  )}
+                  onClick={handleClearFilters}
+                  className="text-sm font-medium text-white/50 underline underline-offset-4 hover:text-white/80"
                 >
-                  {opt.label}
-                  <ChevronDown
-                    className="size-3 opacity-70"
-                    aria-hidden="true"
-                  />
+                  {clearFiltersLabel}
                 </button>
-              ))}
-            </nav>
+              )}
+            </div>
           )}
         </div>
-
-        {/* ── Secondary filters: locations / services / styles ── */}
-        {hasSecondaryFilters && (
-          <div
-            role="search"
-            aria-label="Additional filters"
-            className="flex flex-wrap items-center gap-3 border-b border-white/10 px-4 py-4 sm:px-8 lg:px-12"
-          >
-            {filterOptions.locations.length > 0 && (
-              <Select
-                placeholder={filterLabels.locations}
-                options={filterOptions.locations}
-                value={filters.location ?? undefined}
-                onValueChange={(v) => handleSecondaryFilter("location", v)}
-                aria-label={filterLabels.locations}
-                className="w-40"
-              />
-            )}
-            {filterOptions.services.length > 0 && (
-              <Select
-                placeholder={filterLabels.services}
-                options={filterOptions.services}
-                value={filters.service ?? undefined}
-                onValueChange={(v) => handleSecondaryFilter("service", v)}
-                aria-label={filterLabels.services}
-                className="w-40"
-              />
-            )}
-            {filterOptions.styles.length > 0 && (
-              <Select
-                placeholder={filterLabels.style}
-                options={filterOptions.styles}
-                value={filters.style ?? undefined}
-                onValueChange={(v) => handleSecondaryFilter("style", v)}
-                aria-label={filterLabels.style}
-                className="w-36"
-              />
-            )}
-          </div>
-        )}
 
         {/* ── Results ── */}
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-20 text-center">
             <p className="text-white/50">{noResultsLabel}</p>
-            {hasActiveFilter && (
-              <button
-                type="button"
-                onClick={handleClearFilters}
-                className="text-sm font-medium text-gold underline underline-offset-4 hover:text-gold/80"
-              >
-                {clearFiltersLabel}
-              </button>
-            )}
           </div>
         ) : (
           <>
