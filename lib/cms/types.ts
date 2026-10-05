@@ -442,6 +442,7 @@ export interface CmsInspirationPage {
   pageName: string;
   status: string;
   sections: CmsInspirationPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -490,6 +491,7 @@ export interface CmsWhyT1Page {
   pageName: string;
   status: string;
   sections: CmsWhyT1PageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -516,6 +518,7 @@ export interface CmsTradePage {
   pageName: string;
   status: string;
   sections: CmsTradePageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -547,6 +550,7 @@ export interface CmsContactPage {
   pageName: string;
   status: string;
   sections: CmsContactPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -628,6 +632,7 @@ export interface CmsAboutPage {
   pageName: string;
   status: string;
   sections: CmsAboutPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -749,6 +754,7 @@ export interface CmsBlogsPage {
   pageName: string;
   status: string;
   sections: CmsBlogsPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -794,6 +800,7 @@ export interface CmsProjectsPage {
   pageName: string;
   status: string;
   sections: CmsProjectsPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -924,9 +931,9 @@ export interface CmsBlogDetailSections {
 }
 
 export interface CmsBlogDetailSeo {
-  keywords: { en: string[]; ar: string[] };
-  metaTitle: CmsBilingualText;
-  metaDescription: CmsBilingualText;
+  keywords?: string[] | { en: string[]; ar: string[] };
+  metaTitle: string;
+  metaDescription: string;
   canonicalUrl: string;
   ogImage: CmsImage;
   noIndex: boolean;
@@ -1007,6 +1014,7 @@ export interface CmsSpacesPage {
   pageName: string;
   status: string;
   sections: CmsSpacesPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1113,6 +1121,7 @@ export interface CmsSpaceDetail {
   pageName: string;
   status: string;
   sections: CmsSpaceDetailSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1402,18 +1411,12 @@ export interface CmsProjectDetailSections {
 // ─── Project Detail SEO ──────────────────────────────────────────────────────
 
 export interface CmsProjectDetailSeo {
-  keywords: CmsBilingualText;
-
-  metaTitle: CmsBilingualText;
-
-  metaDescription: CmsBilingualText;
-
+  keywords?: string[];
+  metaTitle: string;
+  metaDescription: string;
   canonicalUrl: string;
-
   ogImage: CmsImage;
-
   noIndex: boolean;
-
   noFollow: boolean;
 }
 
