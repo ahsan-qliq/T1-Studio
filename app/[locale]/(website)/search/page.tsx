@@ -1,0 +1,42 @@
+import { Suspense } from "react";
+import { getTranslations } from "next-intl/server";
+import { SearchShell } from "./_components/SearchShell";
+
+export const revalidate = 3600;
+
+export default async function SearchPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Search" });
+
+  const popularTerms = [
+    t("popularKitchens"),
+    t("popularLivingRooms"),
+    t("popularBedrooms"),
+    t("popularProjects"),
+    t("popularTrade"),
+    t("popularMaterials"),
+  ];
+
+  return (
+    <main>
+      <Suspense>
+        <SearchShell
+          imageSrc="/assets/images/spaces.png"
+          imageAlt={t("bgImageAlt")}
+          heading={t("heading")}
+          description={t("description")}
+          placeholder={t("placeholder")}
+          searchLabel={t("searchLabel")}
+          popularHeading={t("popularHeading")}
+          popularTerms={popularTerms}
+          recentHeading={t("recentHeading")}
+          clearLabel={t("clearRecent")}
+        />
+      </Suspense>
+    </main>
+  );
+}
