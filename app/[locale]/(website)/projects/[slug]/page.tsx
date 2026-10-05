@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -25,6 +26,24 @@ interface Props {
 }
 
 export const revalidate = 3600;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const cms = await getProjectDetailCms(slug, locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+    ...(seo?.noIndex || seo?.noFollow
+      ? { robots: { index: !seo.noIndex, follow: !seo.noFollow } }
+      : {}),
+  };
+}
 
 /**
  * CMS can currently return plain strings:
