@@ -17,51 +17,68 @@ export default async function TermsConditionsPage({
 
   const sections: PrivacySection[] = [
     {
-      id: "acceptance-of-terms",
+      id: "terms-and-conditions",
       title: t("section1Title"),
-      body: t("section1Body"),
+      body: t("section1Intro"),
+      subsections: [
+        { title: t("sub1_1Title"), body: t("sub1_1Body") },
+        { title: t("sub1_2Title"), body: t("sub1_2Body") },
+        { title: t("sub1_3Title"), body: t("sub1_3Body") },
+        { title: t("sub1_4Title"), body: t("sub1_4Body") },
+        { title: t("sub1_5Title"), body: t("sub1_5Body") },
+        { title: t("sub1_6Title"), body: t("sub1_6Body") },
+        { title: t("sub1_7Title"), body: t("sub1_7Body") },
+        { title: t("sub1_8Title"), body: t("sub1_8Body") },
+      ],
     },
     {
-      id: "use-of-our-website",
+      id: "campaign-promotions",
       title: t("section2Title"),
-      body: t("section2Body"),
+      subsections: [
+        {
+          title: t("sub2_0Title"),
+          body: t("sub2_0Body"),
+        },
+        { title: t("sub2_1Title"), body: t("sub2_1Body") },
+        { title: t("sub2_2Title"), body: t("sub2_2Body") },
+        { title: t("sub2_3Title"), body: t("sub2_3Body") },
+        { title: t("sub2_4Title"), body: t("sub2_4Body") },
+      ],
     },
     {
-      id: "intellectual-property",
+      id: "warranty-terms",
       title: t("section3Title"),
-      body: t("section3Body"),
+      subsections: [
+        { title: t("sub3_1Title"), body: t("sub3_1Body") },
+        { title: t("sub3_2Title"), body: t("sub3_2Body") },
+        { title: t("sub3_3Title"), body: t("sub3_3Body") },
+        {
+          title: t("sub3_4Title"),
+          items: [t("sub3_4A"), t("sub3_4B"), t("sub3_4C")],
+        },
+        {
+          title: t("sub3_5Title"),
+          items: [t("sub3_5A"), t("sub3_5B")],
+        },
+      ],
     },
     {
-      id: "user-responsibilities",
+      id: "general",
       title: t("section4Title"),
-      body: t("section4Body"),
-    },
-    {
-      id: "limitation-of-liability",
-      title: t("section5Title"),
-      body: t("section5Body"),
-    },
-    {
-      id: "governing-law",
-      title: t("section6Title"),
-      body: t("section6Body"),
-    },
-    {
-      id: "contact-us",
-      title: t("section7Title"),
-      body: t("section7Body"),
-      linkText: t("contactEmail"),
-      linkHref: `mailto:${t("contactEmail")}`,
+      items: [t("gen_A"), t("gen_B"), t("gen_C"), t("gen_D")],
     },
   ];
 
   return (
     <main>
       <HeroBanner
-        badge={t("badge")}
         heading={t("heading")}
         description={t("description")}
         imageSrc="/assets/images/spaces.png"
+        breadcrumbs={[
+          { label: t("breadcrumbHome"), href: "/" },
+          { label: t("breadcrumbCurrent") },
+        ]}
       />
       <PrivacyPolicySection
         tocLabel={t("tocLabel")}
