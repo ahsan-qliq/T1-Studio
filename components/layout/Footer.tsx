@@ -195,7 +195,7 @@ export async function Footer() {
 
   const legalLinks = [
     { label: t("privacyPolicy"), href: "/privacy-policy" },
-    { label: t("termsOfService"), href: "/terms-conditions" },
+    { label: t("termsOfService"), href: "/terms-and-conditions" },
     { label: t("cookies"), href: "/cookie-policy" },
     { label: t("sitemap"), href: "/sitemap" },
   ];
