@@ -31,8 +31,14 @@ export function BeforeAfterSection({
   className,
 }: BeforeAfterSectionProps) {
   const [pos, setPos] = useState(initialPosition);
+  const [animated, setAnimated] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
+
+  const animateTo = (target: number) => {
+    setAnimated(true);
+    setPos(target);
+  };
 
   const clamp = (v: number) => Math.min(100, Math.max(0, v));
 
@@ -47,6 +53,7 @@ export function BeforeAfterSection({
     (e: React.MouseEvent) => {
       e.preventDefault();
       isDragging.current = true;
+      setAnimated(false);
       updateFromClientX(e.clientX);
     },
     [updateFromClientX],
@@ -72,6 +79,7 @@ export function BeforeAfterSection({
   const onTouchStart = useCallback(
     (e: React.TouchEvent) => {
       isDragging.current = true;
+      setAnimated(false);
       updateFromClientX(e.touches[0].clientX);
     },
     [updateFromClientX],
@@ -132,7 +140,10 @@ export function BeforeAfterSection({
         <div
           aria-hidden="true"
           className="absolute inset-0"
-          style={{ clipPath: `inset(0 0 0 ${pos}%)` }}
+          style={{
+            clipPath: `inset(0 0 0 ${pos}%)`,
+            transition: animated ? "clip-path 0.55s cubic-bezier(0.22,1,0.36,1)" : "none",
+          }}
         >
           <Image
             src={afterImage.src}
@@ -148,30 +159,46 @@ export function BeforeAfterSection({
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-y-0 w-px bg-white/80"
-          style={{ left: `${pos}%` }}
+          style={{
+            left: `${pos}%`,
+            transition: animated ? "left 0.55s cubic-bezier(0.22,1,0.36,1)" : "none",
+          }}
         />
 
         {/* Handle */}
-        <button
-          type="button"
+        <div
           role="slider"
           aria-label={handleLabel}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-valuenow={Math.round(pos)}
+          tabIndex={0}
           onKeyDown={onKeyDown}
-          className="absolute top-1/2 z-20 flex size-10 -translate-x-1/2 -translate-y-1/2 cursor-col-resize items-center justify-center rounded-full border border-border bg-white shadow-md outline-none focus-visible:ring-2 focus-visible:ring-gold motion-safe:transition-shadow motion-safe:hover:shadow-lg"
-          style={{ left: `${pos}%` }}
+          className="absolute top-1/2 z-20 flex size-10 -translate-x-1/2 -translate-y-1/2 cursor-col-resize overflow-hidden rounded-full border border-border bg-white shadow-md outline-none focus-visible:ring-2 focus-visible:ring-gold motion-safe:transition-shadow motion-safe:hover:shadow-lg"
+          style={{
+            left: `${pos}%`,
+            transition: animated ? "left 0.55s cubic-bezier(0.22,1,0.36,1)" : "none",
+          }}
         >
-          <ChevronLeft
-            className="size-3.5 text-foreground"
-            aria-hidden="true"
-          />
-          <ChevronRight
-            className="size-3.5 text-foreground"
-            aria-hidden="true"
-          />
-        </button>
+          <button
+            type="button"
+            aria-label={`Show ${afterLabel}`}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => animateTo(0)}
+            className="flex h-full w-1/2 items-center justify-center hover:bg-black/10 focus-visible:outline-none"
+          >
+            <ChevronLeft className="size-3.5 text-foreground" aria-hidden="true" />
+          </button>
+          <button
+            type="button"
+            aria-label={`Show ${beforeLabel}`}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={() => animateTo(100)}
+            className="flex h-full w-1/2 items-center justify-center hover:bg-black/10 focus-visible:outline-none"
+          >
+            <ChevronRight className="size-3.5 text-foreground" aria-hidden="true" />
+          </button>
+        </div>
 
         {/* Before / After labels */}
         <span
