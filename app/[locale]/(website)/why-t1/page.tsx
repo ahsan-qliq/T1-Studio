@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getWhyT1PageCms } from "@/lib/cms/why-t1";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -53,6 +54,25 @@ const PROJECT_SIZES = [
 ];
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getWhyT1PageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 export default async function WhyT1Page({
   params,
