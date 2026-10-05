@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getProjectsPageCms } from "@/lib/cms/projects";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
@@ -7,6 +8,26 @@ import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSec
 import { FaqSection } from "@/components/sections/FaqSection";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getProjectsPageCms(locale);
+  console.log(cms?.seo)
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 type Locale = "en" | "ar";
 
@@ -22,21 +43,19 @@ export default async function ProjectsPage({
   const cms = await getProjectsPageCms(locale);
   const s = cms?.sections;
 
-  /**
-   * CMS localized fields are:
-   * {
-   *   en: "...",
-   *   ar: "..."
-   * }
-   */
-  const t = (value: any): string => {
+  const t = (value: unknown): string => {
     if (!value) return "";
 
     if (typeof value === "string") {
       return value;
     }
 
-    return value?.[locale] ?? value?.en ?? "";
+    if (typeof value !== "object") return "";
+
+    const localizedValue = value as Partial<Record<Locale, unknown>>;
+    const translation = localizedValue[locale] ?? localizedValue.en;
+
+    return typeof translation === "string" ? translation : "";
   };
 
   /* =========================================================
