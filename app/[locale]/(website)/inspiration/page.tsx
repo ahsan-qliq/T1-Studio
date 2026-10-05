@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getInspirationPageCms } from "@/lib/cms/inspiration";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -15,6 +16,25 @@ const PROJECT_SIZES = [
 ];
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getInspirationPageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 export default async function InspirationPage({
   params,
