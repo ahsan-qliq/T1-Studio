@@ -773,7 +773,9 @@
     "popularMaterials": "Materials",
     "recentHeading": "Recent Searches",
     "clearRecent": "Clear all",
-    "searchItem": "Search for"
+    "searchItem": "Search for",
+    "metaTitle": "Search | T1 Studio",
+    "metaDescription": "Search for T1 Studio (t1-studio.com)."
   },
   "Sitemap": {
     "heading": "Sitemap",
@@ -993,6 +995,8 @@
     "section5Title": "5. Changes to this Privacy Policy",
     "section5Body": "We reserve the right to modify this privacy policy at any time. Any changes will be posted on our website and will be effective immediately upon posting.",
     "section6Title": "6. Contact Us",
-    "section6Body": "If you have any questions or concerns about our privacy policy or the way we handle your personal information, please contact us at"
+    "section6Body": "If you have any questions or concerns about our privacy policy or the way we handle your personal information, please contact us at",
+    "metaTitle": "Privacy Policy | T1 Studio",
+    "metaDescription": "Privacy Policy for T1 Studio (t1-studio.com)."
   }
 }
