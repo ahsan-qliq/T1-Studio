@@ -15,41 +15,37 @@ export default async function PrivacyPolicyPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "PrivacyPolicy" });
 
+  
   const sections: PrivacySection[] = [
     {
-      id: "information-we-collect",
+      id: "information-collection",
       title: t("section1Title"),
       body: t("section1Body"),
     },
     {
-      id: "how-we-use-your-information",
+      id: "sharing-of-information",
       title: t("section2Title"),
       body: t("section2Body"),
     },
     {
-      id: "cookies-tracking-technologies",
+      id: "security",
       title: t("section3Title"),
       body: t("section3Body"),
     },
     {
-      id: "data-sharing",
+      id: "cookies",
       title: t("section4Title"),
       body: t("section4Body"),
     },
     {
-      id: "data-security",
+      id: "changes-to-policy",
       title: t("section5Title"),
       body: t("section5Body"),
     },
     {
-      id: "your-rights",
+      id: "contact-us",
       title: t("section6Title"),
       body: t("section6Body"),
-    },
-    {
-      id: "contact-us",
-      title: t("section7Title"),
-      body: t("section7Body"),
       linkText: t("contactEmail"),
       linkHref: `mailto:${t("contactEmail")}`,
     },
@@ -58,10 +54,13 @@ export default async function PrivacyPolicyPage({
   return (
     <main>
       <HeroBanner
-        badge={t("badge")}
         heading={t("heading")}
         description={t("description")}
         imageSrc="/assets/images/spaces.png"
+        breadcrumbs={[
+          { label: t("breadcrumbHome"), href: "/" },
+          { label: t("breadcrumbCurrent") },
+        ]}
       />
       <PrivacyPolicySection
         tocLabel={t("tocLabel")}
