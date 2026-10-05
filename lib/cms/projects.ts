@@ -5,6 +5,6 @@ export async function getProjectsPageCms(locale: string): Promise<CmsProjectsPag
   return cmsGet<CmsProjectsPage>(
     "/project-page",
     { slug: "projects", lang: locale },
-    { tags: [`projects-page-${locale}`] },
+    // { tags: [`projects-page-${locale}`] },
   );
 }
