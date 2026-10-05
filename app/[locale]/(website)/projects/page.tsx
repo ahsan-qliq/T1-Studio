@@ -85,6 +85,7 @@ export default async function ProjectsPage({
    *
    * If your CMS later adds service/style/filter keys, map them here.
    */
+  console.log(projectsSection?.projects)
   const projectItems =
     projectsSection?.projects
       ?.filter((p) => p.isVisible)
@@ -103,7 +104,7 @@ export default async function ProjectsPage({
 
         location: p.location,
 
-        description:p.description,
+        description:p.shortDescription,
 
         image: {
           src: p.image?.url || "",
