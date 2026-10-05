@@ -103,7 +103,7 @@ function FeaturedCard({
     <>
       {/* Image — col 1, stretches to row height via CSS Grid */}
       <div
-        className="relative overflow-hidden border-b border-white/10 lg:border-r"
+        className="relative grid grid-cols-2 overflow-hidden border-b border-white/10 lg:border-r"
         style={{ aspectRatio: "4 / 5" }}
         // className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch"
       >
@@ -313,7 +313,7 @@ export function AllProjectsSection({
   ] as const;
   return (
     <section aria-labelledby="all-projects-heading">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto">
         {/* ── Header: heading + category pill tabs ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
           <h1
