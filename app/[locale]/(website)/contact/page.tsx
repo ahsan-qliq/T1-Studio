@@ -65,6 +65,7 @@ export default async function ContactPage({
             .map((svc) => ({
               title: svc.title as string,
               subtitle: svc.value as string,
+              href: svc.href || undefined,
             }))}
         />
       )}
