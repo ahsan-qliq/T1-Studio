@@ -12,6 +12,8 @@ export interface SpaceIntroSectionProps {
   label: string;
   heading: string;
   description: string;
+  challengeTitle?: string;
+  challengeDescription?: string;
   image: string;
   imageAlt: string;
   className?: string;
@@ -23,6 +25,8 @@ export function SpaceIntroSection({
   label,
   heading,
   description,
+  challengeTitle,
+  challengeDescription,
   image,
   imageAlt,
   className
@@ -96,6 +100,25 @@ export function SpaceIntroSection({
           >
             {description}
           </motion.p>
+
+          {challengeDescription && (
+            <motion.div
+              className="mt-2 border-l-2 border-white/20 pl-5"
+              initial={{ opacity: 0, y: 16 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
+            >
+              <p 
+               className="text-2xl font-bold leading-tight text-white/60 sm:text-4xl lg:text-[2.6rem] lg:leading-[1.15]"
+              // className="mb-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-white/40"
+              >
+                {challengeTitle ?? "Challenge"}
+              </p>
+              <p className="text-sm leading-relaxed text-white/65 mt-4 sm:text-base">
+                {challengeDescription}
+              </p>
+            </motion.div>
+          )}
         </div>
       </div>
     </section>
