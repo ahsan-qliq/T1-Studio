@@ -150,7 +150,7 @@ export async function Footer() {
   const propertyLinks = [
     { label: t("propertyMadinatJumeirah"), href: "/projects/madinat-jumeirah-living-phase-4-dubai" },
     { label: t("propertyBlueWaters"), href: "/projects/blue-waters-dubai" },
-    { label: t("propertyCityWalk"), href: "/projects/city-walk-center" },
+    { label: t("propertyCityWalk"), href: "/projects/city-walk-medical-centre" },
   ];
 
   const companyLinks = [
