@@ -50,10 +50,10 @@ export function SpaceIntroSection({
         }}
       />
 
-      <div className="page-wrap relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-[3fr_5fr] lg:gap-16">
+      <div className="page-wrap relative z-10 grid grid-cols-1 items-center gap-12 lg:grid-cols-[4fr_3fr] lg:gap-16">
         {/* Image */}
         <motion.div
-          className={`relative aspect-3/4 w-full max-w-sm overflow-hidden lg:max-w-none ,${className}`}
+          className={`relative w-full aspect-3/4 max-w-sm overflow-hidden lg:max-w-none ,${className}`}
           initial={{ opacity: 0, x: -40 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.8, ease: EASE }}
