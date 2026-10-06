@@ -57,6 +57,13 @@ const PROJECT_SIZES = [
   { width: 560, height: 480 },
 ];
 
+function toSpaceHref(raw: string) {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/spaces" || clean.startsWith("/spaces/")) return clean;
+  const slug = clean.replace(/^\//, "");
+  return `/spaces/${slug}`;
+}
+
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
 }
@@ -161,7 +168,7 @@ const  styleRange = s.styles.items.map((sp)=>({
           imageSrc={s.hero.backgroundImage.url || undefined}
           breadcrumbs={s.hero.breadcrumbs.map((b) => ({
             label: b.label as string,
-            href: b.href || undefined,
+            href: b.href ? toSpaceHref(b.href) : undefined,
           }))}
         />
       )}
