@@ -24,11 +24,21 @@ function getText(
   return value.en || value.ar || "";
 }
 
+function toBlogHref(raw: string | undefined | null) {
+  if (!raw) return raw;
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/blogs" || clean.startsWith("/blogs/")) return clean;
+  // /blog → /blogs, /blog/slug → /blogs/slug
+  if (clean === "/blog") return "/blogs";
+  if (clean.startsWith("/blog/")) return clean.replace(/^\/blog\//, "/blogs/");
+  return clean;
+}
+
 function mapBreadcrumbs(
   crumbs: CmsBlogDetail["sections"]["hero"]["breadcrumbs"],
   locale: string,
 ) {
-  return crumbs.map((c) => ({ label: getText(c.label, locale), href: c.href }));
+  return crumbs.map((c) => ({ label: getText(c.label, locale), href: toBlogHref(c.href) }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -146,6 +156,8 @@ export default async function BlogsDetailsPage({ params }: Props) {
       src: authorInfo.author.image?.url || "",
       alt: getText(authorInfo.author.image?.alt, locale),
     },
+    linkedinUrl: authorInfo.author.linkedinUrl || undefined,
+    websiteUrl: authorInfo.author.websiteUrl || undefined,
   };
 
   const relatedPosts: BlogPost[] = relatedArticles.articles.map((a) => ({
