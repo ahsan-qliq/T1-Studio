@@ -59,8 +59,9 @@ export async function GET(request: Request) {
       const lastmod = a.publishedDate
         ? a.publishedDate.slice(0, 10)
         : pageLastmod;
-      return toEntry(`/blog/${a.blogSlug}`, "ar", lastmod, new URL(request.url).origin);
+      return toEntry(`/blogs/${a.blogSlug}`, "ar", lastmod, new URL(request.url).origin);
     });
 
-  return urlset(entries);
+  const origin = new URL(request.url).origin;
+  return urlset([toEntry("/blogs", "ar", pageLastmod, origin), ...entries]);
 }
