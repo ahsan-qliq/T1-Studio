@@ -652,7 +652,7 @@ export interface CmsBlogProjectItem {
   propertyType: string;
   completionYear: number;
   location: string;
-  description: string;
+  shortDescription: string;
   image: CmsImage;
   href: string;
   locationKey: string;
@@ -794,12 +794,19 @@ export interface CmsProjectsPageSections {
   faq: CmsFaqSection;
 }
 
+export interface CmsProjectsFilters {
+  categories: string[];
+  locations: string[];
+  completionYears: string[];
+}
+
 export interface CmsProjectsPage {
   _id: string;
   slug: string;
   pageName: string;
   status: string;
   sections: CmsProjectsPageSections;
+  filters?: CmsProjectsFilters;
   seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
@@ -1028,6 +1035,7 @@ export interface CmsSpaceIntroSection {
   eyebrow: string;
   heading: string;
   description: string;
+  challenge?: string;
   image: CmsImage;
   button: CmsButton;
   imagePosition: string;
@@ -1203,7 +1211,7 @@ export interface CmsProjectDetailOverviewSection {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
-
+challenge?: CmsBilingualText;
   image: CmsImage;
 
   imagePosition: "left" | "right" | string;
