@@ -59,7 +59,7 @@ export async function Navbar() {
 
           {/* CTA — desktop only; mobile gets it inside the drawer */}
           <Link
-            href="/spaces/kitchens"
+            href="/contact#enquiry"
             className="group hidden lg:inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-semibold text-black transition-colors duration-200 hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
           >
             {t('startKitchenDesign')}
