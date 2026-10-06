@@ -75,7 +75,7 @@ export function ServicesSection({
         {services.map((service, i) => (
           <motion.li
             key={service.title}
-            className={`px-8 py-10 ${CELL_BORDERS[i] ?? ''}`}
+            className={`px-4 py-6 sm:px-8 sm:py-10 ${CELL_BORDERS[i] ?? ''}`}
             variants={stagger.item}
           >
             <h3 className="mb-3 text-lg font-bold text-white sm:text-xl">

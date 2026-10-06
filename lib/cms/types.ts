@@ -442,6 +442,7 @@ export interface CmsInspirationPage {
   pageName: string;
   status: string;
   sections: CmsInspirationPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -490,6 +491,7 @@ export interface CmsWhyT1Page {
   pageName: string;
   status: string;
   sections: CmsWhyT1PageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -516,6 +518,7 @@ export interface CmsTradePage {
   pageName: string;
   status: string;
   sections: CmsTradePageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -547,6 +550,7 @@ export interface CmsContactPage {
   pageName: string;
   status: string;
   sections: CmsContactPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -628,6 +632,7 @@ export interface CmsAboutPage {
   pageName: string;
   status: string;
   sections: CmsAboutPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -647,7 +652,7 @@ export interface CmsBlogProjectItem {
   propertyType: string;
   completionYear: number;
   location: string;
-  description: string;
+  shortDescription: string;
   image: CmsImage;
   href: string;
   locationKey: string;
@@ -749,6 +754,7 @@ export interface CmsBlogsPage {
   pageName: string;
   status: string;
   sections: CmsBlogsPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -788,12 +794,20 @@ export interface CmsProjectsPageSections {
   faq: CmsFaqSection;
 }
 
+export interface CmsProjectsFilters {
+  categories: string[];
+  locations: string[];
+  completionYears: string[];
+}
+
 export interface CmsProjectsPage {
   _id: string;
   slug: string;
   pageName: string;
   status: string;
   sections: CmsProjectsPageSections;
+  filters?: CmsProjectsFilters;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -924,9 +938,9 @@ export interface CmsBlogDetailSections {
 }
 
 export interface CmsBlogDetailSeo {
-  keywords: { en: string[]; ar: string[] };
-  metaTitle: CmsBilingualText;
-  metaDescription: CmsBilingualText;
+  keywords?: string[] | { en: string[]; ar: string[] };
+  metaTitle: string;
+  metaDescription: string;
   canonicalUrl: string;
   ogImage: CmsImage;
   noIndex: boolean;
@@ -1007,6 +1021,7 @@ export interface CmsSpacesPage {
   pageName: string;
   status: string;
   sections: CmsSpacesPageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1020,6 +1035,7 @@ export interface CmsSpaceIntroSection {
   eyebrow: string;
   heading: string;
   description: string;
+  challenge?: string;
   image: CmsImage;
   button: CmsButton;
   imagePosition: string;
@@ -1113,6 +1129,7 @@ export interface CmsSpaceDetail {
   pageName: string;
   status: string;
   sections: CmsSpaceDetailSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1137,12 +1154,23 @@ export interface CmsHomePageSections {
   locationLinks: CmsLocationLinksSection;
 }
 
+export interface CmsHomePageSeo {
+  metaTitle: string;
+  metaDescription: string;
+  canonicalUrl?: string;
+  ogImage?: CmsImage;
+  keywords?: string[];
+  noIndex?: boolean;
+  noFollow?: boolean;
+}
+
 export interface CmsHomePage {
   _id: string;
   slug: string;
   pageName: string;
   status: string;
   sections: CmsHomePageSections;
+  seo?: CmsHomePageSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1183,7 +1211,7 @@ export interface CmsProjectDetailOverviewSection {
   eyebrow: CmsBilingualText;
   heading: CmsBilingualText;
   description: CmsBilingualText;
-
+challenge?: CmsBilingualText;
   image: CmsImage;
 
   imagePosition: "left" | "right" | string;
@@ -1391,18 +1419,12 @@ export interface CmsProjectDetailSections {
 // ─── Project Detail SEO ──────────────────────────────────────────────────────
 
 export interface CmsProjectDetailSeo {
-  keywords: CmsBilingualText;
-
-  metaTitle: CmsBilingualText;
-
-  metaDescription: CmsBilingualText;
-
+  keywords?: string[];
+  metaTitle: string;
+  metaDescription: string;
   canonicalUrl: string;
-
   ogImage: CmsImage;
-
   noIndex: boolean;
-
   noFollow: boolean;
 }
 

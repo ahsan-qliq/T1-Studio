@@ -2,6 +2,8 @@ const CMS_BASE_URL =
   process.env.CMS_API_BASE_URL ??
   "https://2gns9fe744.execute-api.ap-south-1.amazonaws.com/api";
 
+const VALID_LOCALES = ["en", "ar"];
+
 interface CmsResponse<T> {
   success: boolean;
   message?: string;
@@ -18,6 +20,10 @@ export async function cmsGet<T>(
   params?: Record<string, string>,
   options: CmsGetOptions = {},
 ): Promise<T | null> {
+  if (params?.lang && !VALID_LOCALES.includes(params.lang)) {
+    return null;
+  }
+
   const url = new URL(`${CMS_BASE_URL}${path}`);
 
   if (params) {

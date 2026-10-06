@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
   getAccordionSpaces,
   getServiceItems,
@@ -62,6 +63,28 @@ const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [User, Maximize2, Shield, CheckCir
 
 export const revalidate = 3600;
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getHomePageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+    ...(seo?.noIndex || seo?.noFollow
+      ? { robots: { index: !seo.noIndex, follow: !seo.noFollow } }
+      : {}),
+  };
+}
+
 export default async function HomePage({
   params,
 }: {
@@ -104,6 +127,7 @@ export default async function HomePage({
   ]);
 
   const p = (field: CmsBilingualText | string | undefined) => pick(field, locale);
+  console.log("CMS Sections 107:", cms?.seo);
   const s = cms?.sections;
   // ── Hero ──────────────────────────────────────────────────────────────────
   const heroProps = {
@@ -334,7 +358,7 @@ export default async function HomePage({
         links: col.links.map((link) => ({ label: p(link.label), href: link.href })),
       }))
     : getLocationColumns(tLocationLinks);
-
+console.log("CMS Sections:", s); 
   return (
     <main>
       {/* Hero — entrance animation handled internally */}

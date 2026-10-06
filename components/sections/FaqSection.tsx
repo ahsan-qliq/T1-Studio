@@ -72,7 +72,7 @@ export function FaqSection({ label, heading, items }: FaqSectionProps) {
               transition={{ duration: 0.65, ease: EASE, delay: i * 0.08 }}
             >
               <AccordionItem value={`faq-${i}`}>
-                <AccordionTrigger className="text-base text-secondary font-semibold py-5 hover:no-underline text-left">
+                <AccordionTrigger className="text-base text-secondary font-semibold py-3 sm:py-5 hover:no-underline text-left">
                   {item.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-secondary leading-relaxed pb-5">

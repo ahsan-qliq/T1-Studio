@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getProjectsPageCms } from "@/lib/cms/projects";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
@@ -7,6 +8,25 @@ import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSec
 import { FaqSection } from "@/components/sections/FaqSection";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getProjectsPageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 type Locale = "en" | "ar";
 
@@ -20,23 +40,22 @@ export default async function ProjectsPage({
   const locale: Locale = rawLocale === "ar" ? "ar" : "en";
 
   const cms = await getProjectsPageCms(locale);
+  console.log(cms, 77)
   const s = cms?.sections;
 
-  /**
-   * CMS localized fields are:
-   * {
-   *   en: "...",
-   *   ar: "..."
-   * }
-   */
-  const t = (value: any): string => {
+  const t = (value: unknown): string => {
     if (!value) return "";
 
     if (typeof value === "string") {
       return value;
     }
 
-    return value?.[locale] ?? value?.en ?? "";
+    if (typeof value !== "object") return "";
+
+    const localizedValue = value as Partial<Record<Locale, unknown>>;
+    const translation = localizedValue[locale] ?? localizedValue.en;
+
+    return typeof translation === "string" ? translation : "";
   };
 
   /* =========================================================
@@ -50,58 +69,37 @@ export default async function ProjectsPage({
   ========================================================= */
 
   const projectsSection = s?.projects;
+  const apiFilters = cms?.filters;
 
-  /**
-   * AllProjectsSection expects:
-   *
-   * locationKey
-   * serviceKeys
-   * styleKey
-   * propertyTypeKey
-   *
-   * But the current CMS project response doesn't provide these.
-   *
-   * So we derive propertyTypeKey from category and locationKey
-   * from the location for now.
-   *
-   * If your CMS later adds service/style/filter keys, map them here.
-   */
+  const toOptions = (values: string[] = []) =>
+    values.map((v) => ({ value: v, label: v }));
+
+  const filterOptions = {
+    locations: toOptions(apiFilters?.locations),
+    services: [] as { value: string; label: string }[],
+    styles: [] as { value: string; label: string }[],
+    propertyTypes: toOptions(apiFilters?.categories),
+    completionYears: toOptions(apiFilters?.completionYears),
+  };
+
   const projectItems =
     projectsSection?.projects
       ?.filter((p) => p.isVisible)
       .map((p) => ({
         id: p._id,
-
         title: p.title,
-
         propertyType: p.category || "",
-
-        /**
-         * CMS currently doesn't provide completionYear.
-         * Keep 0 rather than passing undefined to a number prop.
-         */
-        completionYear: 0,
-
+        completionYear: Number(p.completionYear) || 0,
         location: p.location,
-
-        description:p.description,
-
+        description: p.shortDescription,
         image: {
           src: p.image?.url || "",
           alt: t(p.image?.alt),
         },
-
         href: p.href || `/projects/${p.slug}`,
-
-        /**
-         * Used by AllProjectsSection filtering.
-         */
-        locationKey: t(p.location),
-
+        locationKey: p.location || "",
         serviceKeys: [],
-
         styleKey: "",
-
         propertyTypeKey: p.category || "",
       })) ?? [];
 
@@ -128,7 +126,6 @@ export default async function ProjectsPage({
   ========================================================= */
 
   const faq = s?.faq;
-
   return (
     <main>
       {/* =====================================================
@@ -175,19 +172,12 @@ export default async function ProjectsPage({
           clearFiltersLabel={locale === "ar" ? "مسح الفلاتر" : "Clear Filters"}
           filterLabels={{
             locations: locale === "ar" ? "الموقع" : "Locations",
-
             services: locale === "ar" ? "الخدمات" : "Services",
-
             style: locale === "ar" ? "الأسلوب" : "Style",
-
-            propertyType: locale === "ar" ? "نوع العقار" : "Property Type",
+            propertyType: locale === "ar" ? "الفئة" : "Category",
+            completionYear: locale === "ar" ? "سنة الإنجاز" : "Year",
           }}
-          filterOptions={{
-            locations: [],
-            services: [],
-            styles: [],
-            propertyTypes: [],
-          }}
+          filterOptions={filterOptions}
           projects={projectItems}
         />
       )}

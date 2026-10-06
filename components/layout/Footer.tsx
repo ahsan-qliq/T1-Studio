@@ -193,13 +193,12 @@ export async function Footer() {
     },
   ];
 
-  // const legalLinks = [
-  //   { label: t("privacyPolicy"), href: "/privacy-policy" },
-  //   { label: t("termsOfService"), href: "/terms-of-service" },
-  //   { label: t("cookies"), href: "/cookies" },
-  //   { label: t("sitemap"), href: "/sitemap" },
-  //   { label: t("support"), href: "/support" },
-  // ];
+  const legalLinks = [
+    { label: t("privacyPolicy"), href: "/privacy-policy" },
+    { label: t("termsOfService"), href: "/terms-and-conditions" },
+    { label: t("cookies"), href: "/cookie-policy" },
+    { label: t("sitemap"), href: "/sitemap" },
+  ];
 
   return (
     <footer className="bg-foreground" aria-label={t("footerLabel")}>
@@ -221,8 +220,8 @@ export async function Footer() {
       </div> */}
 
       {/* Main content */}
-      <div className="mx-auto px-4 py-14 sm:px-8 lg:px-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1.4fr]">
+      <div className="mx-auto px-4 py-10 sm:px-8 sm:py-14 lg:px-16">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-10 md:grid-cols-3 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_1.4fr]">
           {/* Brand column */}
           <div className="flex flex-col gap-6">
             <FooterLogo label={t("logoLabel")} />
@@ -345,7 +344,7 @@ export async function Footer() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 sm:flex-row sm:px-8 lg:px-16">
           <p className="text-xs text-white/40">{t("copyright")}</p>
 
-          {/* <nav aria-label={t("legalNavLabel")}>
+          <nav aria-label={t("legalNavLabel")}>
             <ul
               role="list"
               className="flex flex-wrap items-center gap-x-6 gap-y-2"
@@ -361,7 +360,7 @@ export async function Footer() {
                 </li>
               ))}
             </ul>
-          </nav> */}
+          </nav>
         </div>
       </div>
     </footer>

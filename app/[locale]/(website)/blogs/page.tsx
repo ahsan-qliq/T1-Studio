@@ -1,9 +1,29 @@
+import type { Metadata } from "next";
 import { getBlogsPageCms } from "@/lib/cms/blogs";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { BlogsListingSection } from "@/components/sections/BlogsListingSection";
 import { getTranslations } from "next-intl/server";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const cms = await getBlogsPageCms(locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+  };
+}
 
 export default async function BlogsPage({
   params,

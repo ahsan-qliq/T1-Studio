@@ -158,6 +158,37 @@
   }
 }
 
+/* ── Cross-browser fixes ──────────────────────────────────────────────────── */
+
+/*
+ * Safari requires -webkit-backdrop-filter alongside backdrop-filter.
+ * Tailwind's backdrop-blur-* utilities don't add this prefix automatically.
+ */
+[class*="backdrop-blur"] {
+  -webkit-backdrop-filter: var(--tw-backdrop-blur, ) var(--tw-backdrop-brightness, )
+    var(--tw-backdrop-contrast, ) var(--tw-backdrop-grayscale, )
+    var(--tw-backdrop-hue-rotate, ) var(--tw-backdrop-invert, )
+    var(--tw-backdrop-opacity, ) var(--tw-backdrop-saturate, )
+    var(--tw-backdrop-sepia, );
+}
+
+/*
+ * Inline -webkit-backdrop-filter for elements using it via inline styles.
+ * Targets the navbar shell, mobile menu backdrop, and card overlays.
+ */
+.backdrop-blur-md  { -webkit-backdrop-filter: blur(12px); }
+.backdrop-blur-sm  { -webkit-backdrop-filter: blur(4px); }
+.backdrop-blur-xs  { -webkit-backdrop-filter: blur(2px); }
+.backdrop-blur-lg  { -webkit-backdrop-filter: blur(16px); }
+.backdrop-blur-xl  { -webkit-backdrop-filter: blur(24px); }
+.backdrop-blur     { -webkit-backdrop-filter: blur(8px); }
+.backdrop-blur-none { -webkit-backdrop-filter: blur(0); }
+
+/*
+ * scrollbar-gutter is not supported in Safari — no action needed as it's
+ * cosmetic only. overflow-x: hidden on body already prevents shift.
+ */
+
 @layer components {
   /* Consistent page-level horizontal padding + centred max-width. */
   .page-wrap {

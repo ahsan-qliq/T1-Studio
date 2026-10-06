@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -25,6 +26,24 @@ interface Props {
 }
 
 export const revalidate = 3600;
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug, locale } = await params;
+  const cms = await getProjectDetailCms(slug, locale);
+  const seo = cms?.seo;
+  return {
+    ...(seo?.metaTitle && { title: seo.metaTitle }),
+    ...(seo?.metaDescription && { description: seo.metaDescription }),
+    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    ...(seo?.ogImage?.url && {
+      openGraph: { images: [{ url: seo.ogImage.url }] },
+      twitter: { images: [seo.ogImage.url] },
+    }),
+    ...(seo?.noIndex || seo?.noFollow
+      ? { robots: { index: !seo.noIndex, follow: !seo.noFollow } }
+      : {}),
+  };
+}
 
 /**
  * CMS can currently return plain strings:
@@ -96,27 +115,28 @@ export default async function ProjectDetailsPage({ params }: Props) {
    * ---------------------------------------------------------
    */
 
-  const [tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] = await Promise.all([
-    getTranslations({
-      locale,
-      namespace: "BeforeAfter",
-    }),
+  const [tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] =
+    await Promise.all([
+      getTranslations({
+        locale,
+        namespace: "BeforeAfter",
+      }),
 
-    getTranslations({
-      locale,
-      namespace: "SpacesCarousel",
-    }),
+      getTranslations({
+        locale,
+        namespace: "SpacesCarousel",
+      }),
 
-    getTranslations({
-      locale,
-      namespace: "Testimonials",
-    }),
+      getTranslations({
+        locale,
+        namespace: "Testimonials",
+      }),
 
-    getTranslations({
-      locale,
-      namespace: "DreamSpace",
-    }),
-  ]);
+      getTranslations({
+        locale,
+        namespace: "DreamSpace",
+      }),
+    ]);
 
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
@@ -134,7 +154,6 @@ export default async function ProjectDetailsPage({ params }: Props) {
   const projectInfo = sections?.projectInfo;
   const testimonial = sections?.testimonial;
   const relatedProjects = sections?.relatedProjects;
-
 
   /*
    * ---------------------------------------------------------
@@ -244,10 +263,12 @@ export default async function ProjectDetailsPage({ params }: Props) {
           badge={getText(hero.eyebrow, locale)}
           heading={getText(hero.heading, locale)}
           description={getText(hero.description, locale)}
-        breadcrumbs={hero.breadcrumbs?.map((b) => ({
-            label: getText(b.label, locale),
-            href: b.href || undefined,
-          })) || []}
+          breadcrumbs={
+            hero.breadcrumbs?.map((b) => ({
+              label: getText(b.label, locale),
+              href: b.href || undefined,
+            })) || []
+          }
           imageSrc={hero.backgroundImage?.url || ""}
           // mobileImage={hero.mobileImage?.url || ""}
           // overlayOpacity={hero.overlayOpacity}
@@ -284,6 +305,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           label={getText(overview.eyebrow, locale)}
           heading={getText(overview.heading, locale)}
           description={getText(overview.description, locale)}
+          challengeDescription={getText(overview.challenge, locale)}
           image={overview.image?.url || ""}
           imageAlt={
             getText(overview.image?.alt, locale) ||
@@ -465,19 +487,31 @@ export default async function ProjectDetailsPage({ params }: Props) {
 
       {isVisible(relatedProjects) && relatedProjects.projects?.length > 0 && (
         <SignatureProjectsSection
-          heading={getText(relatedProjects.heading, locale) || (locale === "ar" ? "مشاريع ذات صلة" : "Related Projects")}
-          viewAllLabel={getText(relatedProjects.button?.label, locale) || (locale === "ar" ? "عرض الكل" : "View all projects")}
+          heading={
+            getText(relatedProjects.heading, locale) ||
+            (locale === "ar" ? "مشاريع ذات صلة" : "Related Projects")
+          }
+          viewAllLabel={
+            getText(relatedProjects.button?.label, locale) ||
+            (locale === "ar" ? "عرض الكل" : "View all projects")
+          }
           viewAllHref={relatedProjects.button?.href || "/projects"}
           projects={relatedProjects.projects
             .filter((item) => item.isVisible !== false)
             .map((item, i) => ({
               id: item._id || String(i),
               title: getText(item.title, locale),
-              location: getText(item.location, locale) || getText(item.description, locale),
-              href: item.href || (item.slug ? `/projects/${item.slug}` : "/projects"),
+              location:
+                getText(item.location, locale) ||
+                getText(item.description, locale),
+              href:
+                item.href ||
+                (item.slug ? `/projects/${item.slug}` : "/projects"),
               image: {
                 src: item.image?.url || "",
-                alt: getText(item.image?.alt, locale) || getText(item.title, locale),
+                alt:
+                  getText(item.image?.alt, locale) ||
+                  getText(item.title, locale),
                 width: 4,
                 height: 3,
               },
