@@ -237,6 +237,7 @@ export function DreamSpaceSection({
   if (submitted) {
     return (
       <section
+        id="enquiry"
         ref={sectionRef}
         aria-labelledby="dream-space-heading"
         className="flex min-h-[600px] flex-col items-center justify-center bg-[#0C0C0C] px-4 py-16 text-center sm:px-8 sm:py-20"
@@ -251,6 +252,7 @@ export function DreamSpaceSection({
 
   return (
     <section
+      id="enquiry"
       ref={sectionRef}
       aria-labelledby="dream-space-heading"
       className="flex min-h-[600px] flex-col lg:flex-row overflow-hidden"
