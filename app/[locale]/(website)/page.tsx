@@ -153,13 +153,20 @@ export default async function HomePage({
   const servicesHeading = s?.services ? p(s.services.heading) : tServices("heading");
 
   // ── Featured Spaces ───────────────────────────────────────────────────────
+  const toSpaceHref = (raw: string) => {
+    const clean = raw.trim().replace(/\s+/g, "-");
+    if (clean.startsWith("/spaces/")) return clean;
+    const slug = clean.replace(/^\//, "");
+    return `/spaces/${slug}`;
+  };
+
   const accordionSpaces = s?.featuredSpaces
     ? s.featuredSpaces.spaces
         .filter((sp) => sp.isVisible)
         .map((sp) => ({
           id: sp._id,
           title: p(sp.title),
-          href: sp.href,
+          href: toSpaceHref(sp.href),
           image: { src: sp.image.url, alt: p(sp.image.alt) },
         }))
     : getAccordionSpaces(tSpaces);
@@ -325,7 +332,7 @@ export default async function HomePage({
         label: p(s.designTips.eyebrow),
         heading: p(s.designTips.heading),
         viewAllLabel: p(s.designTips.button.label),
-        viewAllHref: s.designTips.button.href || "/blogs",
+        viewAllHref: "/blogs",
         learnMoreLabel: tBlog("learnMoreLabel"),
         posts: s.designTips.articles
           .filter((a) => a.isVisible)
@@ -358,7 +365,6 @@ export default async function HomePage({
         links: col.links.map((link) => ({ label: p(link.label), href: link.href })),
       }))
     : getLocationColumns(tLocationLinks);
-console.log("CMS Sections:", s); 
   return (
     <main>
       {/* Hero — entrance animation handled internally */}
