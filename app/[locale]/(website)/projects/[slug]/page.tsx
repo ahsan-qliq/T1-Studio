@@ -381,13 +381,12 @@ export default async function ProjectDetailsPage({ params }: Props) {
           PROJECT INFO
       ===================================================== */}
 
-      {isVisible(projectInfo) &&
+      {/* {isVisible(projectInfo) &&
         (getText(projectInfo.eyebrow, locale) ||
           getText(projectInfo.heading, locale) ||
           getText(projectInfo.description, locale) ||
           projectInfo.details?.length > 0) && (
           <section className="mx-auto max-w-7xl px-5 py-16 md:px-8 lg:py-24">
-            {/* Eyebrow */}
 
             {getText(projectInfo.eyebrow, locale) && (
               <p className="mb-3 text-sm uppercase tracking-[0.2em]">
@@ -395,15 +394,11 @@ export default async function ProjectDetailsPage({ params }: Props) {
               </p>
             )}
 
-            {/* Heading */}
-
             {getText(projectInfo.heading, locale) && (
               <h2 className="mb-6 text-3xl font-semibold md:text-5xl">
                 {getText(projectInfo.heading, locale)}
               </h2>
             )}
-
-            {/* Description */}
 
             {getText(projectInfo.description, locale) && (
               <p className="mb-10 max-w-3xl text-base leading-7 text-black/70">
@@ -411,7 +406,6 @@ export default async function ProjectDetailsPage({ params }: Props) {
               </p>
             )}
 
-            {/* Details */}
 
             {projectInfo.details?.length > 0 && (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -444,8 +438,6 @@ export default async function ProjectDetailsPage({ params }: Props) {
               </div>
             )}
 
-            {/* Button */}
-
             {projectInfo.button?.href &&
               getText(projectInfo.button.label, locale) && (
                 <a
@@ -464,7 +456,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                 </a>
               )}
           </section>
-        )}
+        )} */}
 
       {/* =====================================================
           TESTIMONIALS
