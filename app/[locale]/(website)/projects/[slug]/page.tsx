@@ -18,6 +18,13 @@ import { notFound } from "next/navigation";
 
 import type { CmsBilingualText, CmsProjectDetail } from "@/lib/cms/types";
 
+function toProjectHref(raw: string) {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/projects" || clean.startsWith("/projects/")) return clean;
+  const slug = clean.replace(/^\//, "");
+  return `/projects/${slug}`;
+}
+
 interface Props {
   params: Promise<{
     slug: string;
@@ -266,7 +273,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           breadcrumbs={
             hero.breadcrumbs?.map((b) => ({
               label: getText(b.label, locale),
-              href: b.href || undefined,
+              href: b.href ? toProjectHref(b.href) : undefined,
             })) || []
           }
           imageSrc={hero.backgroundImage?.url || ""}
