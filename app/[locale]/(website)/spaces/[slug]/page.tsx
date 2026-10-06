@@ -85,10 +85,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SpaceDetailPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const [cms, tJourney, tDreamSpace] = await Promise.all([
+  const [cms, tJourney, tDreamSpace, tSpaceDetail] = await Promise.all([
     getSpaceDetailCms(slug, locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "DreamSpace" }),
+    getTranslations({ locale, namespace: "SpaceDetail" }),
   ]);
 
   if (!cms) notFound();
@@ -170,6 +171,8 @@ const  styleRange = s.styles.items.map((sp)=>({
           label={s.intro.eyebrow}
           heading={s.intro.heading}
           description={s.intro.description}
+          challengeTitle={tSpaceDetail("challengeTitle")}
+          challengeDescription={s.intro.challenge}
           image={s.intro.image.url}
           imageAlt={s.intro.image.alt as string}
         />
