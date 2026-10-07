@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { SearchShell } from "./_components/SearchShell";
 
 export const revalidate = 3600;
@@ -24,6 +26,7 @@ export default async function SearchPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const globalSeo = await getGlobalSeo(locale);
   const t = await getTranslations({ locale, namespace: "Search" });
 
   const popularTerms = [
@@ -51,6 +54,7 @@ export default async function SearchPage({
           clearLabel={t("clearRecent")}
         />
       </Suspense>
+      <JsonLdSchema globalSeo={globalSeo} />
     </main>
   );
 }
