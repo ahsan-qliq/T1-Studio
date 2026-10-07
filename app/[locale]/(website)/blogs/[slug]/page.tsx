@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
@@ -64,10 +63,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogsDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const [blog, globalSeo] = await Promise.all([
-    getBlogDetailCms(slug, locale),
-    getGlobalSeo(locale),
-  ]);
+  const blog = await getBlogDetailCms(slug, locale);
 
   if (!blog) notFound();
 
@@ -210,7 +206,7 @@ export default async function BlogsDetailsPage({ params }: Props) {
           learnMoreLabel="Read more"
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={blog?.seo} />
+      <JsonLdSchema globalSeo={blog?.globalSeo} pageSeo={blog?.seo} />
     </main>
   );
 }
