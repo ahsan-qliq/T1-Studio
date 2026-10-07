@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getInspirationPageCms } from "@/lib/cms/inspiration";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { SpacesAccordionSection } from "@/components/sections/SpacesAccordionSection";
@@ -45,9 +44,8 @@ export default async function InspirationPage({
 }) {
   const { locale } = await params;
 
-  const [cms, globalSeo, tCarousel, tInspirationCTA] = await Promise.all([
+  const [cms, tCarousel, tInspirationCTA] = await Promise.all([
     getInspirationPageCms(locale),
-    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "SpacesCarousel" }),
     getTranslations({ locale, namespace: "InspirationCTA" }),
   ]);
@@ -159,7 +157,7 @@ export default async function InspirationPage({
           }))}
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
