@@ -1,5 +1,5 @@
 interface SeoWithSchema {
-  schema?: Record<string, unknown>;
+  structuredData?: Record<string, unknown>;
 }
 
 interface JsonLdSchemaProps {
@@ -9,8 +9,8 @@ interface JsonLdSchemaProps {
 
 export function JsonLdSchema({ globalSeo, pageSeo }: JsonLdSchemaProps) {
   const graph = [
-    ...((globalSeo?.schema?.["@graph"] as unknown[]) ?? []),
-    ...((pageSeo?.schema?.["@graph"] as unknown[]) ?? []),
+    ...((globalSeo?.structuredData?.["@graph"] as unknown[]) ?? []),
+    ...((pageSeo?.structuredData?.["@graph"] as unknown[]) ?? []),
   ];
   if (!graph.length) return null;
   const schema = { "@context": "https://schema.org", "@graph": graph };
