@@ -443,6 +443,7 @@ export interface CmsInspirationPage {
   status: string;
   sections: CmsInspirationPageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -492,6 +493,7 @@ export interface CmsWhyT1Page {
   status: string;
   sections: CmsWhyT1PageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -519,6 +521,7 @@ export interface CmsTradePage {
   status: string;
   sections: CmsTradePageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -551,6 +554,7 @@ export interface CmsContactPage {
   status: string;
   sections: CmsContactPageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -633,6 +637,7 @@ export interface CmsAboutPage {
   status: string;
   sections: CmsAboutPageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -755,6 +760,7 @@ export interface CmsBlogsPage {
   status: string;
   sections: CmsBlogsPageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -808,6 +814,7 @@ export interface CmsProjectsPage {
   sections: CmsProjectsPageSections;
   filters?: CmsProjectsFilters;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -963,6 +970,7 @@ export interface CmsBlogDetail {
   tags: { en: string[]; ar: string[] };
   sections: CmsBlogDetailSections;
   seo: CmsBlogDetailSeo;
+  globalSeo?: CmsGlobalSeo;
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string;
@@ -1023,6 +1031,7 @@ export interface CmsSpacesPage {
   status: string;
   sections: CmsSpacesPageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1131,6 +1140,7 @@ export interface CmsSpaceDetail {
   status: string;
   sections: CmsSpaceDetailSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1179,6 +1189,7 @@ export interface CmsHomePage {
   status: string;
   sections: CmsHomePageSections;
   seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
   createdAt: string;
   updatedAt: string;
   publishedAt: string | null;
@@ -1455,6 +1466,8 @@ export interface CmsProjectDetail {
   sections: CmsProjectDetailSections;
 
   seo: CmsProjectDetailSeo;
+
+  globalSeo?: CmsGlobalSeo;
 
   publishedAt: string | null;
 
