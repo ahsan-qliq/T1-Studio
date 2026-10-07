@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getContactPageCms } from "@/lib/cms/contact";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
@@ -35,8 +37,9 @@ export default async function ContactPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [cms, tDreamSpace] = await Promise.all([
+  const [cms, globalSeo, tDreamSpace] = await Promise.all([
     getContactPageCms(locale),
+    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "DreamSpace" }),
   ]);
   const s = cms?.sections;
@@ -114,6 +117,7 @@ export default async function ContactPage({
             }))}
         />
       )}
+      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
