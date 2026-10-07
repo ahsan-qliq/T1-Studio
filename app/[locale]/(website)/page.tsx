@@ -377,6 +377,8 @@ export default async function HomePage({
         links: col.links.map((link) => ({ label: p(link.label), href: link.href })),
       }))
     : getLocationColumns(tLocationLinks);
+
+    console.log("CMS Sections 107:", cms?.seo);
   return (
     <main>
       {/* Hero — entrance animation handled internally */}
