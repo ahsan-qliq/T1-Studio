@@ -36,7 +36,6 @@ import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
 import { getFaqConfig } from "@/app/config/space.config";
 import { getHomePageCms } from "@/lib/cms/home";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import type { CmsBilingualText } from "@/lib/cms/types";
 import {
   Globe,
@@ -96,7 +95,6 @@ export default async function HomePage({
 
   const [
     cms,
-    globalSeo,
     tHero,
     tSpaces,
     tprojects,
@@ -113,7 +111,6 @@ export default async function HomePage({
     tStats,
   ] = await Promise.all([
     getHomePageCms(locale),
-    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "Hero" }),
     getTranslations({ locale, namespace: "FeaturedSpaces" }),
     getTranslations({ locale, namespace: "SignatureProject" }),
@@ -454,7 +451,7 @@ export default async function HomePage({
       {/* Location links — SEO-focused service × city grid */}
       {/* <LocationLinksSection columns={_locationColumns} /> */}
 
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
