@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getTradePageCms } from "@/lib/cms/trade";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AwardsSection } from "@/components/sections/AwardsSection";
@@ -86,9 +85,8 @@ export default async function TradePage({
 }) {
   const { locale } = await params;
 
-  const [cms, globalSeo, tJourney, tStats] = await Promise.all([
+  const [cms, tJourney, tStats] = await Promise.all([
     getTradePageCms(locale),
-    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "Stats" }),
   ]);
@@ -337,7 +335,7 @@ export default async function TradePage({
             }))}
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
