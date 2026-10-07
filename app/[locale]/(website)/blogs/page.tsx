@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getBlogsPageCms } from "@/lib/cms/blogs";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { BlogsListingSection } from "@/components/sections/BlogsListingSection";
 import { getTranslations } from "next-intl/server";
@@ -31,8 +33,9 @@ export default async function BlogsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const [cms, tBlog] = await Promise.all([
+  const [cms, globalSeo, tBlog] = await Promise.all([
     getBlogsPageCms(locale),
+    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "Blog" }),
   ]);
 
@@ -99,6 +102,7 @@ export default async function BlogsPage({
           posts={posts}
         />
       )}
+      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
