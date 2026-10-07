@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { getProjectsPageCms } from "@/lib/cms/projects";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
@@ -41,10 +40,7 @@ export default async function ProjectsPage({
 
   const locale: Locale = rawLocale === "ar" ? "ar" : "en";
 
-  const [cms, globalSeo] = await Promise.all([
-    getProjectsPageCms(locale),
-    getGlobalSeo(locale),
-  ]);
+  const cms = await getProjectsPageCms(locale);
   console.log(cms, 77)
   const s = cms?.sections;
 
@@ -269,7 +265,7 @@ export default async function ProjectsPage({
             }))}
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
