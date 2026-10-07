@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getWhyT1PageCms } from "@/lib/cms/why-t1";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ComparisonSection } from "@/components/sections/ComparisonSection";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
@@ -81,8 +83,9 @@ export default async function WhyT1Page({
 }) {
   const { locale } = await params;
 
-  const [cms, tJourney, tStats] = await Promise.all([
+  const [cms, globalSeo, tJourney, tStats] = await Promise.all([
     getWhyT1PageCms(locale),
+    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "Stats" }),
   ]);
@@ -266,6 +269,7 @@ export default async function WhyT1Page({
             }))}
         />
       )}
+      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
