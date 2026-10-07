@@ -83,6 +83,15 @@ export default async function ContactPage({
         emailLabel={tDreamSpace("emailLabel")}
         phoneLabel={tDreamSpace("phoneLabel")}
         submitLabel={tDreamSpace("submitLabel")}
+        developerDropdown1Label={tDreamSpace("developerProjectScaleLabel")}
+        developerDropdown2Label={tDreamSpace("developerProjectTypeLabel")}
+        developerDropdown3Label={tDreamSpace("developerServiceLabel")}
+        companyNameLabel={tDreamSpace("companyNameLabel")}
+        messageLabel={tDreamSpace("messageLabel")}
+        consentText={tDreamSpace("consentText")}
+        privacyPolicyLabel={tDreamSpace("privacyPolicyLabel")}
+        privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
+        consentRequired={tDreamSpace("consentRequired")}
       />
 
       {s?.location?.isVisible && s.location.embedUrl && (
