@@ -5,6 +5,7 @@ import {
   PrivacyPolicySection,
   type PrivacySection,
 } from "@/components/sections/PrivacyPolicySection";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 
 export const revalidate = 3600;
 
@@ -30,6 +31,47 @@ export default async function PrivacyPolicyPage({
   const t = await getTranslations({ locale, namespace: "PrivacyPolicy" });
 
   
+  const pageSchema = {
+    structuredData: {
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://t1-studio.com/#organization",
+          name: "T1 Studio",
+          url: "https://t1-studio.com/",
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://t1-studio.com/privacy-policy/#breadcrumb",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: t("breadcrumbHome"),
+              item: "https://t1-studio.com/",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: t("breadcrumbCurrent"),
+              item: "https://t1-studio.com/privacy-policy/",
+            },
+          ],
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://t1-studio.com/privacy-policy/#webpage",
+          url: "https://t1-studio.com/privacy-policy/",
+          name: t("metaTitle"),
+          description: t("metaDescription"),
+          inLanguage: locale === "ar" ? "ar" : "en",
+          isPartOf: { "@id": "https://t1-studio.com/#website" },
+          breadcrumb: { "@id": "https://t1-studio.com/privacy-policy/#breadcrumb" },
+        },
+      ],
+    },
+  };
+
   const sections: PrivacySection[] = [
     {
       id: "information-collection",
@@ -81,6 +123,7 @@ export default async function PrivacyPolicyPage({
         lastUpdated={t("lastUpdated")}
         sections={sections}
       />
+      <JsonLdSchema pageSeo={pageSchema} />
     </main>
   );
 }
