@@ -450,7 +450,8 @@ export default async function HomePage({
 
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(locale === "ar" ? FAQ_SCHEMA_AR : FAQ_SCHEMA_EN) }}
+        async
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(locale === "ar" ? FAQ_SCHEMA_AR : FAQ_SCHEMA_EN).replace(/</g, "\\u003c") }}
       />
     </main>
   );
