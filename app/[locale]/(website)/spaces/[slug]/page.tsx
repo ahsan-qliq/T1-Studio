@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { createElement } from "react";
 import {
@@ -94,9 +93,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SpaceDetailPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const [cms, globalSeo, tJourney, tDreamSpace, tSpaceDetail] = await Promise.all([
+  const [cms, tJourney, tDreamSpace, tSpaceDetail] = await Promise.all([
     getSpaceDetailCms(slug, locale),
-    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "ProjectJourney" }),
     getTranslations({ locale, namespace: "DreamSpace" }),
     getTranslations({ locale, namespace: "SpaceDetail" }),
@@ -316,7 +314,7 @@ const  styleRange = s.styles.items.map((sp)=>({
           spaces={relatedSpaces}
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
