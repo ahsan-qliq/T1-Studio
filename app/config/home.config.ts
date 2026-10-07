@@ -479,6 +479,27 @@ export const getDreamSpaceConfig = (t: Translator) => ({
       label: t("timeline6plus"),
     },
   ],
+
+  developerDropdown1Options: [
+    { value: "10-50",   label: t("developerProjectScale10to50") },
+    { value: "50-100",  label: t("developerProjectScale50to100") },
+    { value: "100-200", label: t("developerProjectScale100to200") },
+    { value: "200plus", label: t("developerProjectScale200plus") },
+  ],
+
+  developerDropdown2Options: [
+    { value: "residential", label: t("developerProjectTypeResidential") },
+    { value: "hospitality",  label: t("developerProjectTypeHospitality") },
+    { value: "commercial",   label: t("developerProjectTypeCommercial") },
+    { value: "mixed-use",    label: t("developerProjectTypeMixedUse") },
+  ],
+
+  developerDropdown3Options: [
+    { value: "full-fitout",      label: t("developerServiceFullFitOut") },
+    { value: "kitchen-joinery",  label: t("developerServiceKitchenJoinery") },
+    { value: "furniture",        label: t("developerServiceFurniture") },
+    { value: "interior-design",  label: t("developerServiceInteriorDesign") },
+  ],
 });
 
 export const getReferralPartnerConfig = (t: Translator) => ({
