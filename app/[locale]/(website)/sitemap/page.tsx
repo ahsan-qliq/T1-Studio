@@ -1,6 +1,4 @@
 import { getTranslations } from "next-intl/server";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
-import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
   SitemapSection,
@@ -15,7 +13,6 @@ export default async function SitemapPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const globalSeo = await getGlobalSeo(locale);
   const t = await getTranslations({ locale, namespace: "Sitemap" });
 
   const groups: SitemapGroup[] = [
@@ -75,7 +72,6 @@ export default async function SitemapPage({
         ]}
       />
       <SitemapSection groups={groups} />
-      <JsonLdSchema globalSeo={globalSeo} />
     </main>
   );
 }
