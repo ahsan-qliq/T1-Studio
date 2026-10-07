@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { getAboutPageCms } from "@/lib/cms/about";
-import { getGlobalSeo } from "@/lib/cms/global-seo";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AboutStorySection } from "@/components/sections/AboutStorySection";
@@ -50,9 +49,8 @@ export default async function AboutPage({
 }) {
   const { locale } = await params;
 
-  const [cms, globalSeo, tStats, tCarousel] = await Promise.all([
+  const [cms, tStats, tCarousel] = await Promise.all([
     getAboutPageCms(locale),
-    getGlobalSeo(locale),
     getTranslations({ locale, namespace: "Stats" }),
     getTranslations({ locale, namespace: "SpacesCarousel" }),
   ]);
@@ -174,7 +172,7 @@ export default async function AboutPage({
             }))}
         />
       )}
-      <JsonLdSchema globalSeo={globalSeo} pageSeo={cms?.seo} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
