@@ -438,6 +438,105 @@ export default async function HomePage({
 
       {/* Location links — SEO-focused service × city grid */}
       {/* <LocationLinksSection columns={locationColumns} /> */}
+
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(locale === "ar" ? FAQ_SCHEMA_AR : FAQ_SCHEMA_EN) }}
+      />
     </main>
   );
 }
+
+const FAQ_SCHEMA_EN = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "What makes T.ONE Studio one of the best kitchen and wardrobe companies in Dubai?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "For homeowners seeking one of the best kitchen and wardrobe companies in Dubai, T.ONE Studio combines Dutch design heritage, bespoke solutions, European engineering and customer-centric design. With 1,950+ colour and finish options, every project balances precision craftsmanship, functionality and aesthetics.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "What does a kitchen and fit-out company in Dubai actually do?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "A kitchen and fit-out company in Dubai brings design, planning, manufacturing and installation together. T.ONE Studio supports kitchen renovations in Dubai and other emirates, alongside luxury interior fit-out for Dubai homeowners, delivering bespoke kitchen and wardrobe projects from concept through final execution seamlessly.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How much does a bespoke kitchen cost in Dubai?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "The cost of a bespoke kitchen in Dubai depends on size, materials, finishes, storage requirements and level of customisation. T.ONE Studio can recommend options based on your space, budget and goals, whether you need custom kitchen cabinets or tailored solutions for any other space.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How long does a typical kitchen design and fit-out project take in Dubai?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Typical timelines for kitchen design in Dubai depend on scope, specifications and installation requirements. T.ONE Studio's homepage highlights a 4–6 week delivery window, while its process coordinates design, planning, manufacturing and installation, creating a streamlined journey from concept to completion overall.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How do I book a kitchen design consultation with T.ONE Studio?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "To book a kitchen and fit-out consultation in Dubai, contact T.ONE Studio or visit its Sheikh Zayed Road showroom. Discuss your kitchen, wardrobe or renovation needs with a designer, then explore the complimentary 15-minute design experience and next steps.",
+      },
+    },
+  ],
+};
+
+const FAQ_SCHEMA_AR = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "ما الذي يجعل T.ONE Studio من أفضل شركات المطابخ وخزائن الملابس في دبي؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "لأصحاب المنازل الذين يبحثون عن إحدى أفضل شركات المطابخ وخزائن الملابس في دبي، تجمع T.ONE Studio بين الخبرة الهولندية في التصميم، والحلول المصممة حسب الطلب، والهندسة الأوروبية، والتصميم الذي يضع احتياجات العميل في المقدمة. ومع أكثر من 1,950 خيارًا من الألوان والتشطيبات، يوازن كل مشروع بين دقة التنفيذ والعملية والجماليات.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "ماذا تقدم شركة التشطيبات والمطابخ والتجهيزات الداخلية في دبي؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "تجمع شركة التشطيبات والمطابخ في دبي بين التصميم والتخطيط والتصنيع والتركيب في مسار واحد متكامل. تدعم T.ONE Studio تجديد المطابخ في دبي وباقي دول الإمارات، إلى جانب التشطيب الداخلي الفاخر لأصحاب المنازل، وتنفذ مشاريع تفصيل المطابخ والخزائن حسب الطلب من الفكرة الأولى حتى التسليم النهائي.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "كم تكلفة تفصيل مطبخ فاخر في دبي؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "تعتمد تكلفة تفصيل مطبخ فاخر في دبي على المساحة والمواد والتشطيبات، واحتياجات التخزين، ودرجة التخصيص المطلوبة. تقترح T.ONE Studio الحلول الأنسب بناءً على مساحتك وميزانيتك وأهدافك، سواء كنت تبحث عن تفصيل خزائن مطبخ حسب الطلب أو حلول لأي مساحة أخرى في منزلك.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "كم يستغرق مشروع تصميم وتنفيذ مطبخ في دبي عادةً؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "تختلف مدة تصميم مطبخ في دبي باختلاف نطاق المشروع ومواصفاته ومتطلبات التركيب. توضح T.ONE Studio أن مدة التسليم تتراوح بين 4 و6 أسابيع، مع تنسيق كامل بين التصميم والتخطيط والتصنيع والتركيب لضمان سير المشروع بسلاسة من الفكرة وحتى الاكتمال.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "كيف أحجز استشارة تصميم المطبخ مع T.ONE Studio؟",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "لحجز استشارة مطابخ وتشطيبات في دبي، يمكنك التواصل مباشرة مع T.ONE Studio أو زيارة صالة عرضها على شارع الشيخ زايد. ناقش احتياجاتك في المطبخ أو خزائن الملابس أو التجديد مع أحد المصممين، ثم تعرّف على تجربة التصميم المجانية لمدة 15 دقيقة والخطوات التالية لمشروعك.",
+      },
+    },
+  ],
+};
