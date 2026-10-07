@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -105,10 +107,10 @@ export default async function ProjectDetailsPage({ params }: Props) {
    *
    * /project-detail-page?slug=...&lang=...
    */
-  const project: CmsProjectDetail | null = await getProjectDetailCms(
-    slug,
-    locale,
-  );
+  const [project, globalSeo] = await Promise.all([
+    getProjectDetailCms(slug, locale),
+    getGlobalSeo(locale),
+  ]);
 
   if (!project) {
     notFound();
@@ -545,6 +547,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
         privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
         consentRequired={tDreamSpace("consentRequired")}
       />
+      <JsonLdSchema globalSeo={globalSeo} pageSeo={project?.seo} />
     </main>
   );
 }
