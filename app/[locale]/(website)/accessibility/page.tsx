@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import { getGlobalSeo } from "@/lib/cms/global-seo";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
   PrivacyPolicySection,
@@ -27,6 +29,7 @@ export default async function AccessibilityPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  const globalSeo = await getGlobalSeo(locale);
   const t = await getTranslations({ locale, namespace: "Accessibility" });
 
   const sections: PrivacySection[] = [
@@ -114,6 +117,7 @@ export default async function AccessibilityPage({
         lastUpdated={t("lastUpdated")}
         sections={sections}
       />
+      <JsonLdSchema globalSeo={globalSeo} />
     </main>
   );
 }
