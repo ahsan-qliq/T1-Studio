@@ -26,7 +26,7 @@ function getText(
 }
 
 function toBlogHref(raw: string | undefined | null) {
-  if (!raw) return raw;
+  if (!raw) return undefined;
   const clean = raw.trim().replace(/\s+/g, "-");
   if (clean === "/" || clean === "/blogs" || clean.startsWith("/blogs/")) return clean;
   // /blog → /blogs, /blog/slug → /blogs/slug
