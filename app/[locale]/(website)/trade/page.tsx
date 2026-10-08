@@ -14,6 +14,7 @@ import { StatsBar } from "@/components/sections/StatsBar";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { PartnerLeadSection } from "@/components/sections/PartnerLeadSection";
+import { ResourceCenterSection } from "@/components/sections/ResourceCenterSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 import {
@@ -245,6 +246,43 @@ export default async function TradePage({
         />
       )}
 
+            <ResourceCenterSection
+        heading={locale === "ar" ? "مركز الموارد" : "Resource Center"}
+        prevLabel={locale === "ar" ? "السابق" : "Previous resources"}
+        nextLabel={locale === "ar" ? "التالي" : "Next resources"}
+        downloadLabel={locale === "ar" ? "تحميل" : "Download"}
+        items={[
+          {
+            id: "1",
+            title: locale === "ar" ? "الملف التعريفي للشركة" : "T One Company Profile",
+            fileType: "PDF",
+            fileSize: "13MB",
+            downloadUrl: "/assets/downloads/T One - Company Profile.pdf",
+          },
+          {
+            id: "2",
+            title: locale === "ar" ? "التأهيل المسبق 2026" : "Prequalification 2026",
+            fileType: "PDF",
+            fileSize: "19MB",
+            downloadUrl: "/assets/downloads/Tone Universal Prequalification 2026 1.pdf",
+          },
+          {
+            id: "3",
+            title: locale === "ar" ? "كتالوج إلهام كيلر 2026" : "Keller Inspiration Brochure 2026",
+            fileType: "PDF",
+            fileSize: "8.1MB",
+            downloadUrl: "/assets/downloads/Keller inspiration brochure 2026-EN-SPREAD-LR.pdf",
+          },
+          {
+            id: "4",
+            title: locale === "ar" ? "شهادات الأيزو" : "ISO Certificates",
+            fileType: "PDF",
+            fileSize: "5.6MB",
+            downloadUrl: "/assets/downloads/ISO Certificates.pdf",
+          },
+        ]}
+      />
+
       {/* {s?.partnershipServices?.isVisible && (
         <FadeUp>
           <ReferralPartnerSection
@@ -322,6 +360,8 @@ export default async function TradePage({
           ],
         }}
       />
+
+
 
       {s?.faq?.isVisible && (
         <FaqSection
