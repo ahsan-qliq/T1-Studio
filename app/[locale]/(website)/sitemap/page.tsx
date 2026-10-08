@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
@@ -6,6 +7,21 @@ import {
 } from "@/components/sections/SitemapSection";
 
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Sitemap" });
+  const base = locale === "ar" ? "/ar" : "";
+  return {
+    title: t("metaTitle"),
+    description: t("metaDescription"),
+    alternates: { canonical: `${base}/sitemap` },
+  };
+}
 
 export default async function SitemapPage({
   params,
