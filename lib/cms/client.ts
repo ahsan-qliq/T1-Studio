@@ -33,7 +33,7 @@ export async function cmsGet<T>(
   }
 
   const {
-    revalidate = 86400, // fallback: 24 hours
+    revalidate = 3600, // fallback: 1 hour (webhook busts instantly; this is the safety net)
     tags = [],
   } = options;
 

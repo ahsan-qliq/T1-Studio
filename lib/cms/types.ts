@@ -529,12 +529,31 @@ export interface CmsTradePage {
 
 // ─── Map ──────────────────────────────────────────────────────────────────────
 
+export interface CmsMapLocation {
+  _id: string;
+  name: string;
+  address: string;
+  latitude: number | null;
+  longitude: number | null;
+  googleMapsUrl: string;
+  phone: string;
+  isVisible: boolean;
+}
+
 export interface CmsMapSection {
   isVisible: boolean;
   order: number;
-  embedUrl: string;
-  title: string;
-  height: number;
+  eyebrow: string;
+  heading: string;
+  description: string;
+  locations: CmsMapLocation[];
+  mapEmbedUrl: string;
+  mapZoom: number;
+  button: {
+    label: string;
+    href: string;
+    openInNewTab: boolean;
+  };
 }
 
 // ─── Full contact page ────────────────────────────────────────────────────────
