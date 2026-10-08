@@ -42,6 +42,7 @@ export default async function ContactPage({
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
+
   console.log("Contact page CMS data:", s?.location);
   return (
     <main>
@@ -96,11 +97,11 @@ export default async function ContactPage({
         consentRequired={tDreamSpace("consentRequired")}
       />
 
-      {s?.location?.isVisible && s.location.embedUrl && (
+      {s?.location?.isVisible && s.location.mapEmbedUrl && (
         <MapSection
-          embedUrl={s.location.embedUrl}
-          title={s.location.title}
-          height={s.location.height || 480}
+          embedUrl={s.location.mapEmbedUrl}
+          title={s.location.heading}
+          height={480}
         />
       )}
 
