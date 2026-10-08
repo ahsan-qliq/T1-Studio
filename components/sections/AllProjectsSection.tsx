@@ -116,7 +116,6 @@ function FeaturedCard({
             fill
             sizes="(max-width: 1024px) 100vw, 33vw"
             className="object-cover"
-            priority
           />
         ) : (
           <div className="absolute inset-0 bg-white/5" />
@@ -134,9 +133,9 @@ function FeaturedCard({
           </div>
         )} */}
 
-        <h2 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+        <h3 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {project.title}
-        </h2>
+        </h3>
         <p className="text-base text-secondary font-medium">Property Type: {project.propertyType}</p>
         <p className="text-base text-secondary font-medium">Completion Year: {project.completionYear}</p>
         <p className="text-base text-secondary font-medium">Location: {project.location}</p>
@@ -319,12 +318,12 @@ export function AllProjectsSection({
       <div className="mx-auto">
         {/* ── Header: heading + filters ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
-          <h1
+          <h2
             id="all-projects-heading"
             className="text-3xl font-bold text-white sm:text-4xl"
           >
             {heading}
-          </h1>
+          </h2>
 
           {hasDropdownFilters && (
             <div
