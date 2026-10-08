@@ -235,7 +235,7 @@
     "showroomHeading": "Showroom",
     "contactAddress": "Showroom 1, MSM 2 Building, Exit 44, Sheikh Zayed Road, Dubai",
     "contactPhone": "+971 50 873 1256",
-    "contactEmail": "info@tonestudios.com",
+    "contactEmail": "reception@t1-studio.com",
     "showroomDirectionsLabel": "Get direction to showroom",
     "showroomDirectionsHref": "https://www.google.com/maps/place/T.One+Universal+Kitchen+Studio/@25.1668967,55.2362433,17z/data=!3m1!4b1!4m6!3m5!1s0x3e5f6b3dc0901e9d:0xd71ed49ceae0fbab!8m2!3d25.1668967!4d55.2362433!16s%2Fg%2F11rfpfkwj1?entry=tts",
     "socialFacebook": "Follow us on Facebook",
@@ -797,9 +797,11 @@
     "clearRecent": "Clear all",
     "searchItem": "Search for",
     "metaTitle": "Search | T1 Studio",
-    "metaDescription": "Search for T1 Studio (t1-studio.com)."
+    "metaDescription": "Search T1 Studio for bespoke kitchens, wardrobes, fit-out services, projects and inspiration in Dubai."
   },
   "Sitemap": {
+    "metaTitle": "Sitemap | T1 Studio",
+    "metaDescription": "Browse the complete sitemap for T1 Studio — find all pages including spaces, projects, blog and more.",
     "heading": "Sitemap",
     "description": "Find everything you need.",
     "bgImageAlt": "Luxury interior space with warm ambient lighting",
@@ -886,7 +888,7 @@
     "faq5Q": "How do I report an accessibility problem on the website?",
     "faq5A": "Email, call or WhatsApp us using the details above. Tell us the page, the problem and the device or assistive technology you used, and we will get back to you.",
     "metaTitle": "Accessibility | T1 Studio",
-    "metaDescription": "Accessibility for T1 Studio (t1-studio.com)."
+    "metaDescription": "T1 Studio is committed to making its website accessible to everyone. Read our accessibility statement and find out how to report issues."
   },
   "CookiePolicy": {
     "heading": "Cookie Policy",
@@ -940,7 +942,7 @@
     "faq5Q": "How long do cookies stay on my device?",
     "faq5A": "Session cookies are deleted when you close your browser. Persistent cookies last from a few days up to 24 months, depending on their purpose, unless you delete them sooner.",
     "metaTitle": "Cookie Policy | T1 Studio",
-    "metaDescription": "Cookie Policy for T1 Studio (t1-studio.com)."
+    "metaDescription": "Learn how T1 Studio uses cookies to improve your browsing experience, and how you can manage your cookie preferences."
   },
   "TermsConditions": {
     "heading": "Terms & Conditions",
@@ -999,7 +1001,7 @@
     "gen_C": "C. Keller makes every attempt at all times to keep its products current and to continue improving them. Changes may be made to materials, finishes, and dimensions in order to ensure technical progress.",
     "gen_D": "D. Where appropriate, Keller Keukens may decide to return the original part in question for quality improvement. Keller arranges any deliveries and returns with the Keller dealer.",
     "metaTitle": "Terms & Conditions | T1 Studio",
-    "metaDescription": "Terms & Conditions for T1 Studio (t1-studio.com)."
+    "metaDescription": "Read T1 Studio's terms and conditions governing the use of our website and interior design services in Dubai."
   },
   "PrivacyPolicy": {
     "heading": "Privacy Policy",
@@ -1023,6 +1025,6 @@
     "section6Title": "6. Contact Us",
     "section6Body": "If you have any questions or concerns about our privacy policy or the way we handle your personal information, please contact us at",
     "metaTitle": "Privacy Policy | T1 Studio",
-    "metaDescription": "Privacy Policy for T1 Studio (t1-studio.com)."
+    "metaDescription": "Find out how T1 Studio collects, uses and protects your personal data in accordance with UAE and international privacy laws."
   }
 }
