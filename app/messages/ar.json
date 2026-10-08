@@ -223,7 +223,7 @@
     "showroomHeading": "المعرض",
     "contactAddress": "صالة العرض 1، مبنى MSM 2، المخرج 44، شارع الشيخ زايد، دبي",
     "contactPhone": "+٩٧١ ٥٠ ٨٧٣ ١٢٥٦",
-    "contactEmail": "info@tonestudios.com",
+    "contactEmail": "reception@t1-studio.com",
     "showroomDirectionsLabel": "احصل على الاتجاهات إلى المعرض",
     "showroomDirectionsHref": "https://www.google.com/maps/place/T.One+Universal+Kitchen+Studio/@25.1668967,55.2362433,17z/data=!3m1!4b1!4m6!3m5!1s0x3e5f6b3dc0901e9d:0xd71ed49ceae0fbab!8m2!3d25.1668967!4d55.2362433!16s%2Fg%2F11rfpfkwj1?entry=tts",
     "socialFacebook": "تابعنا على فيسبوك",
@@ -787,6 +787,8 @@
     "metaDescription": "ابحث في موقع T1 Studio عن خدمات وتصاميم المطابخ والخزائن وغيرها."
   },
   "Sitemap": {
+    "metaTitle": "خريطة الموقع | T1 Studio",
+    "metaDescription": "تصفّح خريطة الموقع الكاملة لـ T1 Studio — اعثر على جميع الصفحات بما فيها المساحات والمشاريع والمدونة والمزيد.",
     "heading": "خريطة الموقع",
     "description": "اعثر على كل ما تحتاجه.",
     "bgImageAlt": "مساحة داخلية فاخرة مع إضاءة دافئة",
