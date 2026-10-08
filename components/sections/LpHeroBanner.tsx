@@ -211,7 +211,9 @@ export function LpHeroBanner({
         fill
         sizes="100vw"
         className="object-cover object-center"
-        priority
+        preload
+        loading="eager"
+        fetchPriority="high"
       />
 
       {/* Dark overlay */}
