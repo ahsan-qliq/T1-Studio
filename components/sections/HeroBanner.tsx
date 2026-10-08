@@ -74,13 +74,13 @@ export async function HeroBanner({
           loading="eager"
           fetchPriority="high"
           sizes="100vw"
-          className="object-cover"
+          // className="object-cove"
         />
       )}
 
       {/* Gradient overlay */}
       <div
-        className="absolute inset-0 bg-linear-to-t from-black/85 via-black/60 to-black/20"
+        className="absolute inset-0 bg-linear-to-t from-black/45 via-black/20 to-black/20"
         aria-hidden="true"
       />
 
