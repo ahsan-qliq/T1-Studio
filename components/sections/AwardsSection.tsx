@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Image from "next/image";
 import { motion, useInView } from "framer-motion";
@@ -34,11 +34,15 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
   );
 
   return (
-    <section ref={ref} aria-label={label} className="page-wrap py-16">
+    <section
+      ref={ref}
+      aria-label={label}
+      className="page-wrap bg-secondary py-16"
+    >
       <div className="mx-auto flex flex-col items-center justify-between gap-8 sm:flex-row sm:gap-12">
         {/* Label */}
         <motion.p
-          className={`shrink-0 text-2xl font-bold text-secondary sm:text-3xl ${className ?? ""}`}
+          className={`shrink-0 text-2xl font-bold text-primary sm:text-3xl ${className ?? ""}`}
           initial={{ opacity: 0, x: -24 }}
           animate={inView ? { opacity: 1, x: 0 } : {}}
           transition={{ duration: 0.7, ease: EASE }}
@@ -63,7 +67,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
                   alt={logo.alt}
                   fill
                   sizes="80px"
-                  className="object-contain grayscale transition-all duration-300 hover:grayscale-0"
+                  className="object-contain grayscale transition-all duration-300 "
                 />
               </div>
             ))}
@@ -89,7 +93,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
                 alt={logo.alt}
                 fill
                 sizes="96px"
-                className="object-contain grayscale transition-all duration-300 hover:grayscale-0"
+                className="object-contain grayscale transition-all duration-300"
               />
             </motion.li>
           ))}

@@ -14,6 +14,7 @@ import { StatsBar } from "@/components/sections/StatsBar";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { PartnerLeadSection } from "@/components/sections/PartnerLeadSection";
+import { ResourceCenterSection } from "@/components/sections/ResourceCenterSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
 import {
@@ -31,7 +32,10 @@ import {
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
-import { MilestoneTimelineSection, type MilestoneIconName } from "@/components/sections/MilestoneTimelineSection";
+import {
+  MilestoneTimelineSection,
+  type MilestoneIconName,
+} from "@/components/sections/MilestoneTimelineSection";
 
 const JOURNEY_ICONS: LucideIcon[] = [
   Globe,
@@ -67,7 +71,9 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/trade` },
+    alternates: {
+      canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/trade`,
+    },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -129,10 +135,12 @@ export default async function TradePage({
           badge={s.hero.eyebrow as string}
           heading={s.hero.heading as string}
           description={s.hero.description as string}
-          breadcrumbs={s.hero.breadcrumbs?.map((b) => ({
-            label: b.label as string,
-            href: b.href || undefined,
-          })) || []}
+          breadcrumbs={
+            s.hero.breadcrumbs?.map((b) => ({
+              label: b.label as string,
+              href: b.href || undefined,
+            })) || []
+          }
           imageSrc={s.hero.backgroundImage.url || undefined}
         />
       )}
@@ -244,6 +252,52 @@ export default async function TradePage({
             })}
         />
       )}
+
+      <ResourceCenterSection
+        heading={locale === "ar" ? "مركز الموارد" : "Resource Center"}
+        prevLabel={locale === "ar" ? "السابق" : "Previous resources"}
+        nextLabel={locale === "ar" ? "التالي" : "Next resources"}
+        downloadLabel={locale === "ar" ? "تحميل" : "Download"}
+        items={[
+          {
+            id: "1",
+            title:
+              locale === "ar"
+                ? "الملف التعريفي للشركة"
+                : "T One Company Profile",
+            fileType: "PDF",
+            fileSize: "13MB",
+            downloadUrl: "/assets/downloads/T One - Company Profile.pdf",
+          },
+          {
+            id: "2",
+            title:
+              locale === "ar" ? "التأهيل المسبق 2026" : "Prequalification 2026",
+            fileType: "PDF",
+            fileSize: "19MB",
+            downloadUrl:
+              "/assets/downloads/Tone Universal Prequalification 2026 1.pdf",
+          },
+          {
+            id: "3",
+            title:
+              locale === "ar"
+                ? "كتالوج إلهام كيلر 2026"
+                : "Keller Inspiration Brochure 2026",
+            fileType: "PDF",
+            fileSize: "8.1MB",
+            downloadUrl:
+              "/assets/downloads/Keller inspiration brochure 2026-EN-SPREAD-LR.pdf",
+          },
+          {
+            id: "4",
+            title: locale === "ar" ? "شهادات الأيزو" : "ISO Certificates",
+            fileType: "PDF",
+            fileSize: "5.6MB",
+            downloadUrl: "/assets/downloads/ISO Certificates.pdf",
+          },
+        ]}
+      />
 
       {/* {s?.partnershipServices?.isVisible && (
         <FadeUp>
