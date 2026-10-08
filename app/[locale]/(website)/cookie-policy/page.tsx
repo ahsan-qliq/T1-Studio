@@ -16,9 +16,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "CookiePolicy" });
+  const base = locale === "ar" ? "/ar" : "";
   return {
     title: t("metaTitle"),
     description: t("metaDescription"),
+    alternates: { canonical: `${base}/cookie-policy` },
   };
 }
 
