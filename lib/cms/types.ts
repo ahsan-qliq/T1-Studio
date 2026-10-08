@@ -952,7 +952,7 @@ export interface CmsBlogDetailSeo {
   ogImage: CmsImage;
   noIndex: boolean;
   noFollow: boolean;
-  schema?: Record<string, unknown>;
+  structuredData?: Record<string, unknown>;
 }
 
 export interface CmsBlogDetail {
@@ -1173,13 +1173,13 @@ export interface CmsHomePageSeo {
   keywords?: string[];
   noIndex?: boolean;
   noFollow?: boolean;
-  schema?: Record<string, unknown>;
+  structuredData?: Record<string, unknown>;
 }
 
 // ─── Global SEO ───────────────────────────────────────────────────────────────
 
 export interface CmsGlobalSeo {
-  schema?: Record<string, unknown>;
+  structuredData?: Record<string, unknown>;
 }
 
 export interface CmsHomePage {
@@ -1445,7 +1445,7 @@ export interface CmsProjectDetailSeo {
   ogImage: CmsImage;
   noIndex: boolean;
   noFollow: boolean;
-  schema?: Record<string, unknown>;
+  structuredData?: Record<string, unknown>;
 }
 
 // ─── Full Project Detail Page ────────────────────────────────────────────────
