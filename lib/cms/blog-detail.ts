@@ -1,7 +1,8 @@
+import { cache } from "react";
 import { cmsGet } from "./client";
 import type { CmsBlogDetail } from "./types";
 
-export async function getBlogDetailCms(slug: string, locale: string): Promise<CmsBlogDetail | null> {
+export const getBlogDetailCms = cache(async (slug: string, locale: string): Promise<CmsBlogDetail | null> => {
   const data = await cmsGet<CmsBlogDetail | CmsBlogDetail[]>(
     "/blog-detail-page",
     { slug, lang: locale },
@@ -10,4 +11,4 @@ export async function getBlogDetailCms(slug: string, locale: string): Promise<Cm
 
   if (!data) return null;
   return Array.isArray(data) ? data[0] ?? null : data;
-}
+});
