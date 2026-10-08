@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/projects/${slug}` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -101,47 +101,20 @@ function isVisible(
 export default async function ProjectDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  /**
-   * Fetch project from CMS:
-   *
-   * /project-detail-page?slug=...&lang=...
-   */
-  const project = await getProjectDetailCms(slug, locale);
+  const [project, tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] =
+    await Promise.all([
+      getProjectDetailCms(slug, locale),
+      getTranslations({ locale, namespace: "BeforeAfter" }),
+      getTranslations({ locale, namespace: "SpacesCarousel" }),
+      getTranslations({ locale, namespace: "Testimonials" }),
+      getTranslations({ locale, namespace: "DreamSpace" }),
+    ]);
 
   if (!project) {
     notFound();
   }
 
   const sections = project.sections;
-
-  /*
-   * ---------------------------------------------------------
-   * TRANSLATIONS
-   * ---------------------------------------------------------
-   */
-
-  const [tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] =
-    await Promise.all([
-      getTranslations({
-        locale,
-        namespace: "BeforeAfter",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "SpacesCarousel",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "Testimonials",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "DreamSpace",
-      }),
-    ]);
 
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
