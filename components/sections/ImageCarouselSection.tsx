@@ -170,7 +170,7 @@ export function ImageCarouselSection({
                     fill
                     sizes="100vw"
                     className="object-cover"
-                    priority={i === 0}
+                    fetchPriority={i === 0 ? "high" : "auto"}
                   />
                 </div>
               </CarouselItem>
