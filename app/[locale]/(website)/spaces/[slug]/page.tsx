@@ -224,7 +224,7 @@ const  styleRange = s.styles.items.map((sp)=>({
       )}
 
       {s?.brands?.isVisible && s.brands.brands.length > 0 && (
-        <FadeUp>
+        <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.brands.heading}
             logos={s.brands.brands.map((brand) => ({
