@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/blogs/${slug}` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -63,14 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogsDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const blog = await getBlogDetailCms(slug, locale);
+  const [blog, tBlog] = await Promise.all([
+    getBlogDetailCms(slug, locale),
+    getTranslations({ locale, namespace: "BlogDetail" }).catch(() => null),
+  ]);
 
   if (!blog) notFound();
-
-  const tBlog = await getTranslations({
-    locale,
-    namespace: "BlogDetail",
-  }).catch(() => null);
   const hero = blog.sections.hero;
   const articleContent = blog.sections.articleContent;
   const relatedArticles = blog.sections.relatedArticles;
