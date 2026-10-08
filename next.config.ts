@@ -84,6 +84,35 @@ const REDIRECTS: Array<{ source: string; destination: string }> = [
 ];
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [
+      {
+        // Public folder static assets — images, videos, fonts, icons
+        // No content hash in filename so skip immutable; 30-day cache with
+        // background revalidation keeps things fresh after deploys.
+        source: "/assets/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=86400",
+          },
+        ],
+      },
+      {
+        // Woff/woff2 fonts served from /public (if any)
+        source: "/:path*.woff2",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+      {
+        source: "/:path*.woff",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
+  },
   async redirects() {
     return REDIRECTS.map(({ source, destination }) => ({
       source,
@@ -92,6 +121,7 @@ const nextConfig: NextConfig = {
     }));
   },
   images: {
+    minimumCacheTTL: 2592000, // 30 days — CDN/browser caches optimised images aggressively
     remotePatterns: [
       {
         protocol: "https",
