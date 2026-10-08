@@ -147,7 +147,7 @@ export default async function AboutPage({
       )}
 
       {s?.brands?.isVisible && (
-        <FadeUp>
+        <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.brands.heading as string}
             logos={(s.brands.brands || []).map((award) => ({

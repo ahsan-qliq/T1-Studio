@@ -146,7 +146,7 @@ export default async function TradePage({
       )}
 
       {s?.logos?.isVisible && (
-        <FadeUp>
+        <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.logos.heading as string}
             logos={s.logos.logos.map((logo) => ({
