@@ -128,7 +128,6 @@ export default async function HomePage({
   ]);
 
   const p = (field: CmsBilingualText | string | undefined) => pick(field, locale);
-  console.log("CMS Sections 107:", cms?.seo);
   const s = cms?.sections;
   // ── Hero ──────────────────────────────────────────────────────────────────
   const heroProps = {
@@ -378,7 +377,6 @@ export default async function HomePage({
       }))
     : getLocationColumns(tLocationLinks);
 
-    console.log("CMS Sections 107:", cms?.seo);
   return (
     <main>
       {/* Hero — entrance animation handled internally */}

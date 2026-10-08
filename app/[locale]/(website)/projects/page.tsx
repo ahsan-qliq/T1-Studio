@@ -41,7 +41,6 @@ export default async function ProjectsPage({
   const locale: Locale = rawLocale === "ar" ? "ar" : "en";
 
   const cms = await getProjectsPageCms(locale);
-  console.log(cms, 77)
   const s = cms?.sections;
 
   const t = (value: unknown): string => {
