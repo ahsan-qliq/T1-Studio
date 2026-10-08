@@ -205,7 +205,7 @@ export default async function WhyT1Page({
       )}
 
       {s?.brands?.isVisible && (
-        <FadeUp>
+        <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.brands.heading as string}
             logos={s.brands.brands.map((award) => ({
