@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
     getDreamSpaceConfig,
   getServiceItems,
@@ -15,6 +16,28 @@ import { SignatureProjectsSection } from "@/components/sections/SignatureProject
 import { StatsBarServer } from "@/components/sections/StatsBarServer";
 import { FadeUp } from "@/components/ui/animate";
 import { getTranslations } from "next-intl/server";
+import { notFound } from "next/navigation";
+
+const VALID_LP_SLUGS = new Set(["kitchen", "wardrobe", "fit-out", "landing"]);
+
+const LP_META: Record<string, { title: string; description: string }> = {
+  kitchen: {
+    title: "Bespoke Kitchen Design in Dubai | T1 Studio",
+    description: "Transform your kitchen with T1 Studio's award-winning bespoke kitchen design and installation service in Dubai.",
+  },
+  wardrobe: {
+    title: "Custom Wardrobe Design in Dubai | T1 Studio",
+    description: "Discover made-to-measure wardrobe solutions crafted by T1 Studio's expert designers in Dubai.",
+  },
+  "fit-out": {
+    title: "Interior Fit-Out Services in Dubai | T1 Studio",
+    description: "Full-service interior fit-out for residential and commercial spaces across Dubai by T1 Studio.",
+  },
+  landing: {
+    title: "Luxury Interior Design in Dubai | T1 Studio",
+    description: "T1 Studio creates exceptional living spaces across Dubai. Book a free consultation today.",
+  },
+};
 
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
@@ -22,8 +45,21 @@ interface Props {
 
 export const revalidate = 3600;
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const meta = LP_META[slug];
+  if (!meta) return {};
+  return {
+    title: meta.title,
+    description: meta.description,
+    robots: { index: false, follow: false },
+  };
+}
+
 export default async function LandingPage({ params }: Props) {
-  const { locale } = await params;
+  const { slug, locale } = await params;
+
+  if (!VALID_LP_SLUGS.has(slug)) notFound();
   const [
     tHero,
     tStory,
