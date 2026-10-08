@@ -43,7 +43,7 @@ export default async function ContactPage({
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
-  console.log("Contact page CMS data:", s?.location);
+  console.log("Contact page CMS data:", s);
   return (
     <main>
       {s?.hero?.isVisible && (
