@@ -49,7 +49,9 @@ export function SearchHero({
         src={imageSrc}
         alt={imageAlt}
         fill
-        priority
+        preload
+        loading="eager"
+        fetchPriority="high"
         sizes="100vw"
         className="object-cover"
       />

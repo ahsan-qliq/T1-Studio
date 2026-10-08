@@ -68,7 +68,7 @@ function FeaturedCard({
             fill
             sizes="(max-width: 1024px) 100vw, 40vw"
             className="object-cover"
-            priority
+            fetchPriority="high"
           />
         ) : (
           <div className="absolute inset-0 bg-white/5" />
@@ -86,9 +86,9 @@ function FeaturedCard({
           </div>
         )}
 
-        <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+        <h3 className="text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {post.title}
-        </h2>
+        </h3>
 
         {post.excerpt && (
           <p className="max-w-lg text-sm leading-relaxed text-white/60 sm:text-[0.9375rem]">
@@ -270,12 +270,12 @@ export function BlogsListingSection({
 
         {/* ── Header: heading + category filter tabs ── */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
-          <h1
+          <h2
             id="blogs-listing-heading"
             className="text-3xl font-bold text-white sm:text-4xl"
           >
             {heading}
-          </h1>
+          </h2>
 
           {enableCategoryFilter && filterOptions.length > 0 && (
             <nav

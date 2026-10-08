@@ -5,6 +5,7 @@ import {
   PrivacyPolicySection,
   type PrivacySection,
 } from "@/components/sections/PrivacyPolicySection";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 
 export const revalidate = 3600;
 
@@ -15,9 +16,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "TermsConditions" });
+  const base = locale === "ar" ? "/ar" : "";
   return {
     title: t("metaTitle"),
     description: t("metaDescription"),
+    alternates: { canonical: `${base}/terms-and-conditions` },
   };
 }
 
@@ -28,6 +31,47 @@ export default async function TermsConditionsPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "TermsConditions" });
+
+  const pageSchema = {
+    structuredData: {
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://t1-studio.com/#organization",
+          name: "T1 Studio",
+          url: "https://t1-studio.com/",
+        },
+        {
+          "@type": "BreadcrumbList",
+          "@id": "https://t1-studio.com/terms-and-conditions/#breadcrumb",
+          itemListElement: [
+            {
+              "@type": "ListItem",
+              position: 1,
+              name: t("breadcrumbHome"),
+              item: "https://t1-studio.com/",
+            },
+            {
+              "@type": "ListItem",
+              position: 2,
+              name: t("breadcrumbCurrent"),
+              item: "https://t1-studio.com/terms-and-conditions/",
+            },
+          ],
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://t1-studio.com/terms-and-conditions/#webpage",
+          url: "https://t1-studio.com/terms-and-conditions/",
+          name: t("metaTitle"),
+          description: t("metaDescription"),
+          inLanguage: locale === "ar" ? "ar" : "en",
+          isPartOf: { "@id": "https://t1-studio.com/#website" },
+          breadcrumb: { "@id": "https://t1-studio.com/terms-and-conditions/#breadcrumb" },
+        },
+      ],
+    },
+  };
 
   const sections: PrivacySection[] = [
     {
@@ -99,6 +143,7 @@ export default async function TermsConditionsPage({
         lastUpdated={t("lastUpdated")}
         sections={sections}
       />
+      <JsonLdSchema pageSeo={pageSchema} />
     </main>
   );
 }

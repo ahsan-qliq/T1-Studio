@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getProjectsPageCms } from "@/lib/cms/projects";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
@@ -20,7 +21,7 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/projects` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -264,6 +265,7 @@ export default async function ProjectsPage({
             }))}
         />
       )}
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }

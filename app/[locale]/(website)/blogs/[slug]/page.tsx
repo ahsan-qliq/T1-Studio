@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import {
   BlogDetailContent,
@@ -24,11 +25,21 @@ function getText(
   return value.en || value.ar || "";
 }
 
+function toBlogHref(raw: string | undefined | null) {
+  if (!raw) return undefined;
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/blogs" || clean.startsWith("/blogs/")) return clean;
+  // /blog → /blogs, /blog/slug → /blogs/slug
+  if (clean === "/blog") return "/blogs";
+  if (clean.startsWith("/blog/")) return clean.replace(/^\/blog\//, "/blogs/");
+  return clean;
+}
+
 function mapBreadcrumbs(
   crumbs: CmsBlogDetail["sections"]["hero"]["breadcrumbs"],
   locale: string,
 ) {
-  return crumbs.map((c) => ({ label: getText(c.label, locale), href: c.href }));
+  return crumbs.map((c) => ({ label: getText(c.label, locale), href: toBlogHref(c.href) }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -38,7 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/blogs/${slug}` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -52,14 +63,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BlogsDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  const blog = await getBlogDetailCms(slug, locale);
+  const [blog, tBlog] = await Promise.all([
+    getBlogDetailCms(slug, locale),
+    getTranslations({ locale, namespace: "BlogDetail" }).catch(() => null),
+  ]);
 
   if (!blog) notFound();
-
-  const tBlog = await getTranslations({
-    locale,
-    namespace: "BlogDetail",
-  }).catch(() => null);
   const hero = blog.sections.hero;
   const articleContent = blog.sections.articleContent;
   const relatedArticles = blog.sections.relatedArticles;
@@ -146,6 +155,8 @@ export default async function BlogsDetailsPage({ params }: Props) {
       src: authorInfo.author.image?.url || "",
       alt: getText(authorInfo.author.image?.alt, locale),
     },
+    linkedinUrl: authorInfo.author.linkedinUrl || undefined,
+    websiteUrl: authorInfo.author.websiteUrl || undefined,
   };
 
   const relatedPosts: BlogPost[] = relatedArticles.articles.map((a) => ({
@@ -193,6 +204,7 @@ export default async function BlogsDetailsPage({ params }: Props) {
           learnMoreLabel="Read more"
         />
       )}
+      <JsonLdSchema globalSeo={blog?.globalSeo} pageSeo={blog?.seo} />
     </main>
   );
 }

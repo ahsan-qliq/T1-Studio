@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { createElement } from "react";
 import {
   Globe,
@@ -57,6 +58,13 @@ const PROJECT_SIZES = [
   { width: 560, height: 480 },
 ];
 
+function toSpaceHref(raw: string) {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/spaces" || clean.startsWith("/spaces/")) return clean;
+  const slug = clean.replace(/^\//, "");
+  return `/spaces/${slug}`;
+}
+
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
 }
@@ -74,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/spaces/${slug}` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -161,7 +169,7 @@ const  styleRange = s.styles.items.map((sp)=>({
           imageSrc={s.hero.backgroundImage.url || undefined}
           breadcrumbs={s.hero.breadcrumbs.map((b) => ({
             label: b.label as string,
-            href: b.href || undefined,
+            href: b.href ? toSpaceHref(b.href) : undefined,
           }))}
         />
       )}
@@ -274,6 +282,15 @@ const  styleRange = s.styles.items.map((sp)=>({
         emailLabel={tDreamSpace("emailLabel")}
         phoneLabel={tDreamSpace("phoneLabel")}
         submitLabel={tDreamSpace("submitLabel")}
+        developerDropdown1Label={tDreamSpace("developerProjectScaleLabel")}
+        developerDropdown2Label={tDreamSpace("developerProjectTypeLabel")}
+        developerDropdown3Label={tDreamSpace("developerServiceLabel")}
+        companyNameLabel={tDreamSpace("companyNameLabel")}
+        messageLabel={tDreamSpace("messageLabel")}
+        consentText={tDreamSpace("consentText")}
+        privacyPolicyLabel={tDreamSpace("privacyPolicyLabel")}
+        privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
+        consentRequired={tDreamSpace("consentRequired")}
       />
 
       {s?.faq?.isVisible && (
@@ -297,6 +314,7 @@ const  styleRange = s.styles.items.map((sp)=>({
           spaces={relatedSpaces}
         />
       )}
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }

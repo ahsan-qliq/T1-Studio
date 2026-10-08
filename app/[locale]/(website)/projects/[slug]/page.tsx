@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
@@ -18,6 +19,13 @@ import { notFound } from "next/navigation";
 
 import type { CmsBilingualText, CmsProjectDetail } from "@/lib/cms/types";
 
+function toProjectHref(raw: string) {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/projects" || clean.startsWith("/projects/")) return clean;
+  const slug = clean.replace(/^\//, "");
+  return `/projects/${slug}`;
+}
+
 interface Props {
   params: Promise<{
     slug: string;
@@ -34,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/projects/${slug}` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -93,50 +101,20 @@ function isVisible(
 export default async function ProjectDetailsPage({ params }: Props) {
   const { slug, locale } = await params;
 
-  /**
-   * Fetch project from CMS:
-   *
-   * /project-detail-page?slug=...&lang=...
-   */
-  const project: CmsProjectDetail | null = await getProjectDetailCms(
-    slug,
-    locale,
-  );
+  const [project, tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] =
+    await Promise.all([
+      getProjectDetailCms(slug, locale),
+      getTranslations({ locale, namespace: "BeforeAfter" }),
+      getTranslations({ locale, namespace: "SpacesCarousel" }),
+      getTranslations({ locale, namespace: "Testimonials" }),
+      getTranslations({ locale, namespace: "DreamSpace" }),
+    ]);
 
   if (!project) {
     notFound();
   }
 
   const sections = project.sections;
-
-  /*
-   * ---------------------------------------------------------
-   * TRANSLATIONS
-   * ---------------------------------------------------------
-   */
-
-  const [tBeforeAfter, tCarousel, tTestimonials, tDreamSpace] =
-    await Promise.all([
-      getTranslations({
-        locale,
-        namespace: "BeforeAfter",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "SpacesCarousel",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "Testimonials",
-      }),
-
-      getTranslations({
-        locale,
-        namespace: "DreamSpace",
-      }),
-    ]);
 
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
@@ -266,7 +244,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           breadcrumbs={
             hero.breadcrumbs?.map((b) => ({
               label: getText(b.label, locale),
-              href: b.href || undefined,
+              href: b.href ? toProjectHref(b.href) : undefined,
             })) || []
           }
           imageSrc={hero.backgroundImage?.url || ""}
@@ -528,7 +506,17 @@ export default async function ProjectDetailsPage({ params }: Props) {
         emailLabel={tDreamSpace("emailLabel")}
         phoneLabel={tDreamSpace("phoneLabel")}
         submitLabel={tDreamSpace("submitLabel")}
+        developerDropdown1Label={tDreamSpace("developerProjectScaleLabel")}
+        developerDropdown2Label={tDreamSpace("developerProjectTypeLabel")}
+        developerDropdown3Label={tDreamSpace("developerServiceLabel")}
+        companyNameLabel={tDreamSpace("companyNameLabel")}
+        messageLabel={tDreamSpace("messageLabel")}
+        consentText={tDreamSpace("consentText")}
+        privacyPolicyLabel={tDreamSpace("privacyPolicyLabel")}
+        privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
+        consentRequired={tDreamSpace("consentRequired")}
       />
+      <JsonLdSchema globalSeo={project?.globalSeo} pageSeo={project?.seo} />
     </main>
   );
 }

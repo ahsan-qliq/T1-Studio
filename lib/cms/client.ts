@@ -38,14 +38,11 @@ export async function cmsGet<T>(
   } = options;
 
   try {
-    // const res = await fetch(url.toString(), {
-    //   next: {
-    //     revalidate,
-    //     tags: ["cms", ...tags],
-    //   },
-    // });
     const res = await fetch(url.toString(), {
-      cache: "no-store",
+      next: {
+        revalidate,
+        tags: ["cms", ...tags],
+      },
     });
 
     if (!res.ok) {

@@ -133,7 +133,6 @@ export function BeforeAfterSection({
           sizes="(max-width: 1024px) 100vw, 1024px"
           className="pointer-events-none object-cover"
           draggable={false}
-          priority
         />
 
         {/* After image — clipped by slider position */}

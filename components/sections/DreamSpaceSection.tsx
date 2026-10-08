@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { ArrowRight, ChevronDown } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { cn } from '@/lib/utils';
@@ -35,6 +36,20 @@ export interface DreamSpaceSectionProps {
   submitLabel: string;
   imageSrc: string;
   imageAlt: string;
+  // Developer tab overrides
+  developerDropdown1Label?: string;
+  developerDropdown1Options?: SelectOption[];
+  developerDropdown2Label?: string;
+  developerDropdown2Options?: SelectOption[];
+  developerDropdown3Label?: string;
+  developerDropdown3Options?: SelectOption[];
+  // New fields
+  companyNameLabel?: string;
+  messageLabel?: string;
+  consentText?: string;
+  privacyPolicyLabel?: string;
+  privacyPolicyHref?: string;
+  consentRequired?: string;
 }
 
 // ─── Zod schema ───────────────────────────────────────────────────────────────
@@ -48,10 +63,12 @@ const dreamSpaceSchema = z.object({
   lastName:      z.string().min(1, 'Last name is required'),
   email:         z.string().min(1, 'Email is required').email('Enter a valid email address'),
   phone:         z.string().min(1, 'Phone number is required').regex(/^\+?[\d\s\-()]{7,}$/, 'Enter a valid phone number'),
+  companyName:   z.string().optional(),
+  message:       z.string().optional(),
 });
 
 type DreamSpaceFields = z.infer<typeof dreamSpaceSchema>;
-type FieldErrors = Partial<Record<keyof DreamSpaceFields, string>>;
+type FieldErrors = Partial<Record<keyof DreamSpaceFields | 'consent', string>>;
 
 // ─── Shared styles ────────────────────────────────────────────────────────────
 
@@ -98,6 +115,7 @@ function DarkSelect({
           aria-label={label}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}
+          required
         >
           <option value="" disabled>
             {label}
@@ -133,6 +151,7 @@ function TextInput({
   onChange,
   autoComplete,
   error,
+  required = false,
 }: {
   id: string;
   label: string;
@@ -142,6 +161,7 @@ function TextInput({
   onChange: (v: string) => void;
   autoComplete?: string;
   error?: string;
+  required?: boolean;
 }) {
   return (
     <div>
@@ -157,6 +177,49 @@ function TextInput({
         onChange={(e) => onChange(e.target.value)}
         className={fieldClass(error)}
         autoComplete={autoComplete}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${id}-error` : undefined}
+        required={required}
+      />
+      {error && (
+        <p id={`${id}-error`} className="mt-1 text-xs text-red-400" role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+// ─── TextArea ─────────────────────────────────────────────────────────────────
+
+function TextArea({
+  id,
+  label,
+  name,
+  value,
+  onChange,
+  error,
+}: {
+  id: string;
+  label: string;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
+  error?: string;
+}) {
+  return (
+    <div>
+      <label htmlFor={id} className="sr-only">
+        {label}
+      </label>
+      <textarea
+        id={id}
+        name={name}
+        placeholder={label}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        rows={3}
+        className={cn(fieldClass(error), 'resize-none')}
         aria-invalid={!!error}
         aria-describedby={error ? `${id}-error` : undefined}
       />
@@ -189,6 +252,18 @@ export function DreamSpaceSection({
   submitLabel,
   imageSrc,
   imageAlt,
+  developerDropdown1Label,
+  developerDropdown1Options,
+  developerDropdown2Label,
+  developerDropdown2Options,
+  developerDropdown3Label,
+  developerDropdown3Options,
+  companyNameLabel = 'Company Name',
+  messageLabel = 'Message (optional)',
+  consentText = 'By submitting this form, I agree to the ',
+  privacyPolicyLabel = 'Privacy Policy',
+  privacyPolicyHref = '/privacy-policy',
+  consentRequired = 'Please accept the privacy policy to continue',
 }: DreamSpaceSectionProps) {
   const [activeAudience, setActiveAudience] = useState(audienceTabs[0]?.id ?? '');
   const [fields, setFields] = useState<DreamSpaceFields>({
@@ -200,7 +275,11 @@ export function DreamSpaceSection({
     lastName:      '',
     email:         '',
     phone:         '',
+    companyName:   '',
+    message:       '',
   });
+  const [consent, setConsent] = useState(false);
+  const [honeypot, setHoneypot] = useState('');
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submitted, setSubmitted] = useState(false);
 
@@ -209,34 +288,74 @@ export function DreamSpaceSection({
 
   const EASE = [0.22, 1, 0.36, 1] as const;
 
+  const isDeveloper = activeAudience === 'propertyDevelopers';
+
+  const d1Label   = isDeveloper ? (developerDropdown1Label ?? propertyTypeLabel)    : propertyTypeLabel;
+  const d1Options = isDeveloper ? (developerDropdown1Options ?? propertyTypeOptions) : propertyTypeOptions;
+  const d2Label   = isDeveloper ? (developerDropdown2Label ?? spaceRequiredLabel)    : spaceRequiredLabel;
+  const d2Options = isDeveloper ? (developerDropdown2Options ?? spaceRequiredOptions) : spaceRequiredOptions;
+  const d3Label   = isDeveloper ? (developerDropdown3Label ?? typeOfServiceLabel)    : typeOfServiceLabel;
+  const d3Options = isDeveloper ? (developerDropdown3Options ?? typeOfServiceOptions) : typeOfServiceOptions;
+
   const set = (key: keyof DreamSpaceFields) => (value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }));
-    // Clear field error on change
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
+  };
+
+  // Reset audience-specific fields when tab changes
+  const switchAudience = (id: string) => {
+    setActiveAudience(id);
+    setFields((prev) => ({
+      ...prev,
+      propertyType:  '',
+      spaceRequired: '',
+      typeOfService: '',
+      companyName:   '',
+    }));
+    setErrors({});
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Honeypot — silently discard bot submissions
+    if (honeypot) {
+      setSubmitted(true);
+      return;
+    }
+
     const result = dreamSpaceSchema.safeParse(fields);
+    const newErrors: FieldErrors = {};
+
     if (!result.success) {
-      const fieldErrors: FieldErrors = {};
       for (const issue of result.error.issues) {
         const key = issue.path[0] as keyof DreamSpaceFields;
-        if (!fieldErrors[key]) fieldErrors[key] = issue.message;
+        if (!newErrors[key]) newErrors[key] = issue.message;
       }
-      setErrors(fieldErrors);
+    }
+
+    if (isDeveloper && !fields.companyName?.trim()) {
+      newErrors.companyName = `${companyNameLabel} is required`;
+    }
+
+    if (!consent) {
+      newErrors.consent = consentRequired;
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     setErrors({});
     setSubmitted(true);
-    // TODO: send result.data to your API
+    // TODO: send result.data + { audience: activeAudience } to your API
   };
 
   if (submitted) {
     return (
       <section
+        id="enquiry"
         ref={sectionRef}
         aria-labelledby="dream-space-heading"
         className="flex min-h-[600px] flex-col items-center justify-center bg-[#0C0C0C] px-4 py-16 text-center sm:px-8 sm:py-20"
@@ -251,6 +370,7 @@ export function DreamSpaceSection({
 
   return (
     <section
+      id="enquiry"
       ref={sectionRef}
       aria-labelledby="dream-space-heading"
       className="flex min-h-[600px] flex-col lg:flex-row overflow-hidden"
@@ -287,6 +407,20 @@ export function DreamSpaceSection({
         </h2>
 
         <form onSubmit={handleSubmit} aria-label={heading} noValidate>
+          {/* Honeypot — hidden from real users, catches bots */}
+          <div aria-hidden="true" className="absolute -left-[9999px] -top-[9999px] overflow-hidden">
+            <label htmlFor="website">Website</label>
+            <input
+              id="website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
           {/* Audience tabs */}
           <div role="group" aria-label="Select audience type" className="mb-8 flex">
             {audienceTabs.map((tab) => {
@@ -296,7 +430,7 @@ export function DreamSpaceSection({
                   key={tab.id}
                   type="button"
                   aria-pressed={isActive}
-                  onClick={() => setActiveAudience(tab.id)}
+                  onClick={() => switchAudience(tab.id)}
                   className={cn(
                     'flex-1 border border-white/20 px-4 py-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-inset',
                     isActive
@@ -311,28 +445,44 @@ export function DreamSpaceSection({
             })}
           </div>
 
+          {/* Developer: company name (full width) */}
+          {isDeveloper && (
+            <div className="mb-4">
+              <TextInput
+                id="company-name"
+                name="companyName"
+                label={companyNameLabel}
+                value={fields.companyName ?? ''}
+                onChange={set('companyName')}
+                autoComplete="organization"
+                error={errors.companyName}
+                required
+              />
+            </div>
+          )}
+
           {/* Dropdowns */}
           <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <DarkSelect
-              id="property-type"
-              label={propertyTypeLabel}
-              options={propertyTypeOptions}
+              id="dropdown-1"
+              label={d1Label}
+              options={d1Options}
               value={fields.propertyType}
               onChange={set('propertyType')}
               error={errors.propertyType}
             />
             <DarkSelect
-              id="space-required"
-              label={spaceRequiredLabel}
-              options={spaceRequiredOptions}
+              id="dropdown-2"
+              label={d2Label}
+              options={d2Options}
               value={fields.spaceRequired}
               onChange={set('spaceRequired')}
               error={errors.spaceRequired}
             />
             <DarkSelect
-              id="type-of-service"
-              label={typeOfServiceLabel}
-              options={typeOfServiceOptions}
+              id="dropdown-3"
+              label={d3Label}
+              options={d3Options}
               value={fields.typeOfService}
               onChange={set('typeOfService')}
               error={errors.typeOfService}
@@ -348,7 +498,7 @@ export function DreamSpaceSection({
           </div>
 
           {/* Text inputs */}
-          <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <TextInput
               id="first-name"
               name="firstName"
@@ -357,6 +507,7 @@ export function DreamSpaceSection({
               onChange={set('firstName')}
               autoComplete="given-name"
               error={errors.firstName}
+              required
             />
             <TextInput
               id="last-name"
@@ -366,6 +517,7 @@ export function DreamSpaceSection({
               onChange={set('lastName')}
               autoComplete="family-name"
               error={errors.lastName}
+              required
             />
             <TextInput
               id="email"
@@ -376,6 +528,7 @@ export function DreamSpaceSection({
               onChange={set('email')}
               autoComplete="email"
               error={errors.email}
+              required
             />
             <TextInput
               id="phone"
@@ -386,7 +539,52 @@ export function DreamSpaceSection({
               onChange={set('phone')}
               autoComplete="tel"
               error={errors.phone}
+              required
             />
+          </div>
+
+          {/* Message */}
+          <div className="mb-6">
+            <TextArea
+              id="message"
+              name="message"
+              label={messageLabel}
+              value={fields.message ?? ''}
+              onChange={set('message')}
+              error={errors.message}
+            />
+          </div>
+
+          {/* Consent */}
+          <div className="mb-6">
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={consent}
+                onChange={(e) => {
+                  setConsent(e.target.checked);
+                  if (errors.consent) setErrors((prev) => ({ ...prev, consent: undefined }));
+                }}
+                className="mt-0.5 size-4 shrink-0 accent-white"
+                required
+                aria-describedby={errors.consent ? 'consent-error' : undefined}
+              />
+              <span className="text-sm text-white/70">
+                {consentText}
+                <Link
+                  href={privacyPolicyHref}
+                  className="underline underline-offset-2 hover:text-white"
+                >
+                  {privacyPolicyLabel}
+                </Link>
+                .
+              </span>
+            </label>
+            {errors.consent && (
+              <p id="consent-error" className="mt-1 text-xs text-red-400" role="alert">
+                {errors.consent}
+              </p>
+            )}
           </div>
 
           {/* Submit */}

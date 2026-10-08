@@ -17,6 +17,7 @@ import { BlogSection } from "@/components/sections/BlogSection";
 // import { LocationLinksSection } from "@/components/sections/LocationLinksSection";
 import { ComparisonSection } from "@/components/sections/ComparisonSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
@@ -74,7 +75,7 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? (locale === "ar" ? "/ar" : "/") },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -153,13 +154,20 @@ export default async function HomePage({
   const servicesHeading = s?.services ? p(s.services.heading) : tServices("heading");
 
   // ── Featured Spaces ───────────────────────────────────────────────────────
+  const toSpaceHref = (raw: string) => {
+    const clean = raw.trim().replace(/\s+/g, "-");
+    if (clean.startsWith("/spaces/")) return clean;
+    const slug = clean.replace(/^\//, "");
+    return `/spaces/${slug}`;
+  };
+
   const accordionSpaces = s?.featuredSpaces
     ? s.featuredSpaces.spaces
         .filter((sp) => sp.isVisible)
         .map((sp) => ({
           id: sp._id,
           title: p(sp.title),
-          href: sp.href,
+          href: toSpaceHref(sp.href),
           image: { src: sp.image.url, alt: p(sp.image.alt) },
         }))
     : getAccordionSpaces(tSpaces);
@@ -287,6 +295,15 @@ export default async function HomePage({
     emailLabel: tDreamSpace("emailLabel"),
     phoneLabel: tDreamSpace("phoneLabel"),
     submitLabel: tDreamSpace("submitLabel"),
+    developerDropdown1Label: tDreamSpace("developerProjectScaleLabel"),
+    developerDropdown2Label: tDreamSpace("developerProjectTypeLabel"),
+    developerDropdown3Label: tDreamSpace("developerServiceLabel"),
+    companyNameLabel: tDreamSpace("companyNameLabel"),
+    messageLabel: tDreamSpace("messageLabel"),
+    consentText: tDreamSpace("consentText"),
+    privacyPolicyLabel: tDreamSpace("privacyPolicyLabel"),
+    privacyPolicyHref: tDreamSpace("privacyPolicyHref"),
+    consentRequired: tDreamSpace("consentRequired"),
   };
 
   // ── Referral Partner ──────────────────────────────────────────────────────
@@ -325,7 +342,7 @@ export default async function HomePage({
         label: p(s.designTips.eyebrow),
         heading: p(s.designTips.heading),
         viewAllLabel: p(s.designTips.button.label),
-        viewAllHref: s.designTips.button.href || "/blogs",
+        viewAllHref: "/blogs",
         learnMoreLabel: tBlog("learnMoreLabel"),
         posts: s.designTips.articles
           .filter((a) => a.isVisible)
@@ -347,18 +364,21 @@ export default async function HomePage({
         heading: p(s.faq.heading),
         items: s.faq.faqs
           .filter((f) => f.isVisible)
+         
+         
           .map((f) => ({ question: p(f.question), answer: p(f.answer) })),
       }
     : getFaqConfig(tFaq);
 
   // ── Location Links ────────────────────────────────────────────────────────
-  const locationColumns = s?.locationLinks
+  const _locationColumns = s?.locationLinks
     ? s.locationLinks.columns.map((col) => ({
         city: p(col.title),
         links: col.links.map((link) => ({ label: p(link.label), href: link.href })),
       }))
     : getLocationColumns(tLocationLinks);
-console.log("CMS Sections:", s); 
+
+    console.log("CMS Sections 107:", cms?.seo);
   return (
     <main>
       {/* Hero — entrance animation handled internally */}
@@ -431,7 +451,10 @@ console.log("CMS Sections:", s);
       <FaqSection {...faqConfig} />
 
       {/* Location links — SEO-focused service × city grid */}
-      {/* <LocationLinksSection columns={locationColumns} /> */}
+      {/* <LocationLinksSection columns={_locationColumns} /> */}
+
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
+

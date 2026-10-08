@@ -7,6 +7,7 @@ import { stagger } from '@/components/ui/animate';
 export interface ServiceItem {
   title: string;
   subtitle: string;
+  href?: string;
 }
 
 interface ServicesSectionProps {
@@ -81,9 +82,20 @@ export function ServicesSection({
             <h3 className="mb-3 text-lg font-bold text-white sm:text-xl">
               {service.title}
             </h3>
-            <p className="text-sm text-white/65 sm:text-base">
-              {service.subtitle}
-            </p>
+            {service.href ? (
+              <a
+                href={service.href}
+                target={service.href.startsWith("http") ? "_blank" : undefined}
+                rel={service.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="text-sm text-white/65 hover:text-white transition-colors sm:text-base"
+              >
+                {service.subtitle}
+              </a>
+            ) : (
+              <p className="text-sm text-white/65 sm:text-base">
+                {service.subtitle}
+              </p>
+            )}
           </motion.li>
         ))}
       </motion.ul>

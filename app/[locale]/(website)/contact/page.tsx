@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getContactPageCms } from "@/lib/cms/contact";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { DreamSpaceSection } from "@/components/sections/DreamSpaceSection";
@@ -21,7 +22,7 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/contact` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -41,6 +42,7 @@ export default async function ContactPage({
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
+  console.log("Contact page CMS data:", s?.location);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -65,6 +67,7 @@ export default async function ContactPage({
             .map((svc) => ({
               title: svc.title as string,
               subtitle: svc.value as string,
+              href: svc.href || undefined,
             }))}
         />
       )}
@@ -82,6 +85,15 @@ export default async function ContactPage({
         emailLabel={tDreamSpace("emailLabel")}
         phoneLabel={tDreamSpace("phoneLabel")}
         submitLabel={tDreamSpace("submitLabel")}
+        developerDropdown1Label={tDreamSpace("developerProjectScaleLabel")}
+        developerDropdown2Label={tDreamSpace("developerProjectTypeLabel")}
+        developerDropdown3Label={tDreamSpace("developerServiceLabel")}
+        companyNameLabel={tDreamSpace("companyNameLabel")}
+        messageLabel={tDreamSpace("messageLabel")}
+        consentText={tDreamSpace("consentText")}
+        privacyPolicyLabel={tDreamSpace("privacyPolicyLabel")}
+        privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
+        consentRequired={tDreamSpace("consentRequired")}
       />
 
       {s?.location?.isVisible && s.location.embedUrl && (
@@ -104,6 +116,7 @@ export default async function ContactPage({
             }))}
         />
       )}
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }
