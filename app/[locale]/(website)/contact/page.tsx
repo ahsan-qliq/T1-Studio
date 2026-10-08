@@ -22,7 +22,7 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    ...(seo?.canonicalUrl && { alternates: { canonical: seo.canonicalUrl } }),
+    alternates: { canonical: seo?.canonicalUrl ?? `${locale === "ar" ? "/ar" : ""}/contact` },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -42,6 +42,7 @@ export default async function ContactPage({
   ]);
   const s = cms?.sections;
   const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
+  console.log("Contact page CMS data:", s?.location);
   return (
     <main>
       {s?.hero?.isVisible && (
