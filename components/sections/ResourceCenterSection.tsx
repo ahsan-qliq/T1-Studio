@@ -136,14 +136,14 @@ function LeadModal({
 
       {/* Panel */}
       <motion.div
-        className="relative z-10 w-full max-w-lg bg-[#0a0a0a] border border-white/10"
+        className="relative z-10 w-full max-w-lg bg-[#0a0a0a] border border-white/10 overflow-y-auto max-h-[90dvh]"
         initial={{ opacity: 0, y: 32, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 16, scale: 0.98 }}
         transition={{ duration: 0.3, ease: EASE }}
       >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 px-6 py-5">
+        <div className="flex items-start justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6 sm:py-5">
           <div>
             <p className="text-xs uppercase tracking-widest text-white/40 mb-1">Download</p>
             <h2 id={titleId} className="text-lg font-semibold text-white leading-snug">
@@ -164,13 +164,13 @@ function LeadModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} noValidate className="px-6 py-6 space-y-4">
+        <form onSubmit={handleSubmit} noValidate className="px-4 py-4 sm:px-6 sm:py-6 space-y-4">
           <p className="text-sm text-white/50 -mt-1">
             Please fill in your details to download this resource.
           </p>
 
           {/* First / Last name */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 min-[400px]:grid-cols-2 gap-3">
             <div>
               <label htmlFor="rc-firstName" className="sr-only">First Name</label>
               <input
@@ -307,7 +307,7 @@ function ResourceCard({
         type="button"
         onClick={() => onRequestDownload(item)}
         aria-label={`${downloadLabel}: ${item.title} (${item.fileType}, ${item.fileSize})`}
-        className="group flex w-full items-center gap-4 border border-white/20 p-5 text-left transition-colors duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+        className="group flex w-full items-center gap-3 sm:gap-4 border border-white/20 p-4 sm:p-5 text-left transition-colors duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
       >
         <div
           aria-hidden="true"
