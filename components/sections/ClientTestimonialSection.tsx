@@ -122,7 +122,6 @@ function BannerLayout({
         fill
         sizes="100vw"
         className="object-cover object-center"
-        priority
       />
 
       <div
@@ -314,7 +313,7 @@ function TestimonialCard({
         fill
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         className="object-cover object-center"
-        priority={index === 0}
+        fetchPriority={index === 0 ? "high" : "auto"}
       />
 
       {/* Overlay */}
