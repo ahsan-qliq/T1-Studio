@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
 
     // all=true → bust the global "cms" tag which covers every CMS fetch
     if (all === true) {
-      revalidateTag("cms", { expire: 0 });
+      revalidateTag("cms");
       return NextResponse.json({ success: true, revalidated: ["cms"] });
     }
 
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     for (const tag of tags) {
-      revalidateTag(tag, { expire: 0 });
+      revalidateTag(tag);
     }
 
     return NextResponse.json({ success: true, revalidated: tags });
