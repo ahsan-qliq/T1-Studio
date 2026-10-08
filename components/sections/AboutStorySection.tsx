@@ -48,7 +48,6 @@ export function AboutStorySection({
           fill
           sizes="(max-width: 1024px) 100vw, 40vw"
           className="object-cover object-center"
-          priority
         />
       </motion.div>
 
