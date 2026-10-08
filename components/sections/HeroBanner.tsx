@@ -41,22 +41,38 @@ export async function HeroBanner({
     >
       {/* Background — video takes priority over image when provided */}
       {videoSrc ? (
-        <video
-          src={videoSrc}
-          poster="/assets/images/Home.webp"
-          autoPlay
-          loop
-          muted
-          playsInline
-          aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
+        <>
+          {/* Preload the poster so it shows instantly before the video decodes */}
+          <Image
+            src="/assets/images/Home.webp"
+            alt=""
+            fill
+            preload
+            loading="eager"
+            fetchPriority="high"
+            sizes="100vw"
+            className="object-cover"
+            aria-hidden="true"
+          />
+          <video
+            src={videoSrc}
+            poster="/assets/images/Home.webp"
+            autoPlay
+            loop
+            muted
+            playsInline
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </>
       ) : (
         <Image
           src={imageSrc ?? ''}
           alt={t("bgImageAlt")}
           fill
-          priority
+          preload
+          loading="eager"
+          fetchPriority="high"
           sizes="100vw"
           className="object-cover"
         />
