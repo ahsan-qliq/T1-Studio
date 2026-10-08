@@ -33,6 +33,18 @@ export default async function PrivacyPolicyPage({
   const t = await getTranslations({ locale, namespace: "PrivacyPolicy" });
 
   
+  const isAr = locale === "ar";
+  const pageUrl = isAr
+    ? "https://t1-studio.com/ar/privacy-policy/"
+    : "https://t1-studio.com/privacy-policy/";
+  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
+  const breadcrumbId = isAr
+    ? "https://t1-studio.com/ar/privacy-policy/#breadcrumb"
+    : "https://t1-studio.com/privacy-policy/#breadcrumb";
+  const webpageId = isAr
+    ? "https://t1-studio.com/ar/privacy-policy/#webpage"
+    : "https://t1-studio.com/privacy-policy/#webpage";
+
   const pageSchema = {
     structuredData: {
       "@graph": [
@@ -40,35 +52,42 @@ export default async function PrivacyPolicyPage({
           "@type": "Organization",
           "@id": "https://t1-studio.com/#organization",
           name: "T1 Studio",
+          ...(isAr && {
+            alternateName: "T.ONE Studio",
+            legalName: "T.One Universal Studio LLC",
+          }),
           url: "https://t1-studio.com/",
         },
         {
           "@type": "BreadcrumbList",
-          "@id": "https://t1-studio.com/privacy-policy/#breadcrumb",
+          "@id": breadcrumbId,
           itemListElement: [
             {
               "@type": "ListItem",
               position: 1,
               name: t("breadcrumbHome"),
-              item: "https://t1-studio.com/",
+              item: homeUrl,
             },
             {
               "@type": "ListItem",
               position: 2,
               name: t("breadcrumbCurrent"),
-              item: "https://t1-studio.com/privacy-policy/",
+              item: pageUrl,
             },
           ],
         },
         {
           "@type": "WebPage",
-          "@id": "https://t1-studio.com/privacy-policy/#webpage",
-          url: "https://t1-studio.com/privacy-policy/",
+          "@id": webpageId,
+          url: pageUrl,
           name: t("metaTitle"),
           description: t("metaDescription"),
-          inLanguage: locale === "ar" ? "ar" : "en",
+          inLanguage: isAr ? "ar" : "en",
           isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": "https://t1-studio.com/privacy-policy/#breadcrumb" },
+          breadcrumb: { "@id": breadcrumbId },
+          ...(isAr && {
+            about: { "@id": "https://t1-studio.com/#organization" },
+          }),
         },
       ],
     },
