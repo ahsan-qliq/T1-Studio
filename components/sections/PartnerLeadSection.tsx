@@ -217,13 +217,15 @@ function TradePartnerForm({
   };
   const [fields, setFields] = useState<TradeFields>(empty);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const set = (key: keyof TradeFields) => (value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }));
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = tradeSchema.safeParse(fields);
     if (!result.success) {
@@ -236,8 +238,28 @@ function TradePartnerForm({
       return;
     }
     setErrors({});
-    // TODO: send result.data to your API
-    onSuccess();
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/$/, '');
+      const res = await fetch(`${apiBase}/api/trade-submissions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category: 'trade', ...result.data }),
+      });
+
+      if (!res.ok && res.status !== 429) {
+        const body = await res.json().catch(() => ({})) as { message?: string };
+        throw new Error(body.message ?? 'Submission failed. Please try again.');
+      }
+
+      onSuccess();
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -321,7 +343,10 @@ function TradePartnerForm({
         />
       </div>
 
-      <SubmitButton />
+      {submitError && (
+        <p className="mb-4 text-sm text-red-400" role="alert">{submitError}</p>
+      )}
+      <SubmitButton disabled={submitting} label={submitting ? 'Sending…' : undefined} />
     </form>
   );
 }
@@ -341,13 +366,15 @@ function ReferralPartnerForm({
   };
   const [fields, setFields] = useState<ReferralFields>(empty);
   const [errors, setErrors] = useState<FieldErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const set = (key: keyof ReferralFields) => (value: string) => {
     setFields((prev) => ({ ...prev, [key]: value }));
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: undefined }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = referralSchema.safeParse(fields);
     if (!result.success) {
@@ -360,8 +387,28 @@ function ReferralPartnerForm({
       return;
     }
     setErrors({});
-    // TODO: send result.data to your API
-    onSuccess();
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/$/, '');
+      const res = await fetch(`${apiBase}/api/trade-submissions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category: 'referral', ...result.data }),
+      });
+
+      if (!res.ok && res.status !== 429) {
+        const body = await res.json().catch(() => ({})) as { message?: string };
+        throw new Error(body.message ?? 'Submission failed. Please try again.');
+      }
+
+      onSuccess();
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -436,24 +483,30 @@ function ReferralPartnerForm({
         />
       </div>
 
-      <SubmitButton />
+      {submitError && (
+        <p className="mb-4 text-sm text-red-400" role="alert">{submitError}</p>
+      )}
+      <SubmitButton disabled={submitting} label={submitting ? 'Sending…' : undefined} />
     </form>
   );
 }
 
 // ─── Submit button (shared) ───────────────────────────────────────────────────
 
-function SubmitButton() {
+function SubmitButton({ disabled, label }: { disabled?: boolean; label?: string }) {
   return (
     <button
       type="submit"
-      className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0C0C]"
+      disabled={disabled}
+      className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0C0C] disabled:opacity-60 disabled:cursor-not-allowed"
     >
-      Submit
-      <ArrowRight
-        className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
-        aria-hidden="true"
-      />
+      {label ?? 'Submit'}
+      {!disabled && (
+        <ArrowRight
+          className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+          aria-hidden="true"
+        />
+      )}
     </button>
   );
 }

@@ -315,7 +315,16 @@ export function DreamSpaceSection({
     setErrors({});
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const audienceToSubmissionType: Record<string, string> = {
+    homeOwners:         'homeOwner',
+    apartmentsOwners:   'apartmentOwner',
+    propertyDevelopers: 'propertyDeveloper',
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Honeypot — silently discard bot submissions
@@ -348,8 +357,40 @@ export function DreamSpaceSection({
     }
 
     setErrors({});
-    setSubmitted(true);
-    // TODO: send result.data + { audience: activeAudience } to your API
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/$/, '');
+      const res = await fetch(`${apiBase}/api/contact-submissions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          submissionType: audienceToSubmissionType[activeAudience] ?? activeAudience,
+          firstName:    fields.firstName,
+          lastName:     fields.lastName,
+          email:        fields.email,
+          phone:        fields.phone,
+          propertyType: fields.propertyType,
+          spaceRequired: fields.spaceRequired,
+          typeOfService: fields.typeOfService,
+          timeline:     fields.timeline,
+          companyName:  fields.companyName,
+          message:      fields.message,
+        }),
+      });
+
+      if (!res.ok && res.status !== 429) {
+        const body = await res.json().catch(() => ({})) as { message?: string };
+        throw new Error(body.message ?? 'Submission failed. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Submission failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -587,16 +628,24 @@ export function DreamSpaceSection({
             )}
           </div>
 
+          {/* Submit error */}
+          {submitError && (
+            <p className="mb-4 text-sm text-red-400" role="alert">{submitError}</p>
+          )}
+
           {/* Submit */}
           <button
             type="submit"
-            className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0C0C]"
+            disabled={submitting}
+            className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-medium text-black transition-colors hover:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0C0C] disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {submitLabel}
-            <ArrowRight
-              className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
+            {submitting ? 'Sending…' : submitLabel}
+            {!submitting && (
+              <ArrowRight
+                className="size-4 motion-safe:transition-transform motion-safe:duration-200 motion-safe:group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            )}
           </button>
         </form>
       </motion.div>
