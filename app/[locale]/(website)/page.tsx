@@ -53,14 +53,29 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { createElement } from "react";
 
-function pick(field: CmsBilingualText | string | undefined, locale: string): string {
+function pick(
+  field: CmsBilingualText | string | undefined,
+  locale: string,
+): string {
   if (!field) return "";
   if (typeof field === "string") return field;
   return field[locale as "en" | "ar"] ?? field.en ?? "";
 }
 
-const JOURNEY_ICONS: LucideIcon[] = [Globe, Lightbulb, Building2, Rocket, TrendingUp];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [User, Maximize2, Shield, CheckCircle2, RefreshCw];
+const JOURNEY_ICONS: LucideIcon[] = [
+  Globe,
+  Lightbulb,
+  Building2,
+  Rocket,
+  TrendingUp,
+];
+const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
+  User,
+  Maximize2,
+  Shield,
+  CheckCircle2,
+  RefreshCw,
+];
 
 export const revalidate = 3600;
 
@@ -75,7 +90,9 @@ export async function generateMetadata({
   return {
     ...(seo?.metaTitle && { title: seo.metaTitle }),
     ...(seo?.metaDescription && { description: seo.metaDescription }),
-    alternates: { canonical: seo?.canonicalUrl ?? (locale === "ar" ? "/ar" : "/") },
+    alternates: {
+      canonical: seo?.canonicalUrl ?? (locale === "ar" ? "/ar" : "/"),
+    },
     ...(seo?.ogImage?.url && {
       openGraph: { images: [{ url: seo.ogImage.url }] },
       twitter: { images: [seo.ogImage.url] },
@@ -127,7 +144,8 @@ export default async function HomePage({
     getTranslations({ locale, namespace: "Stats" }),
   ]);
 
-  const p = (field: CmsBilingualText | string | undefined) => pick(field, locale);
+  const p = (field: CmsBilingualText | string | undefined) =>
+    pick(field, locale);
   const s = cms?.sections;
   // ── Hero ──────────────────────────────────────────────────────────────────
   const heroProps = {
@@ -149,8 +167,12 @@ export default async function HomePage({
         .map((svc) => ({ title: p(svc.title), subtitle: p(svc.description) }))
     : getServiceItems(tServices);
 
-  const servicesLabel = s?.services ? p(s.services.eyebrow) : tServices("label");
-  const servicesHeading = s?.services ? p(s.services.heading) : tServices("heading");
+  const servicesLabel = s?.services
+    ? p(s.services.eyebrow)
+    : tServices("label");
+  const servicesHeading = s?.services
+    ? p(s.services.heading)
+    : tServices("heading");
 
   // ── Featured Spaces ───────────────────────────────────────────────────────
   const toSpaceHref = (raw: string) => {
@@ -241,7 +263,9 @@ export default async function HomePage({
     : getJourneySteps(tJourney);
 
   const journeyLabel = s?.journey ? p(s.journey.eyebrow) : tJourney("label");
-  const journeyHeading = s?.journey ? p(s.journey.heading) : tJourney("heading");
+  const journeyHeading = s?.journey
+    ? p(s.journey.heading)
+    : tJourney("heading");
 
   // ── Comparison ────────────────────────────────────────────────────────────
   const comparisonColumns = s?.whyChooseT1
@@ -363,8 +387,7 @@ export default async function HomePage({
         heading: p(s.faq.heading),
         items: s.faq.faqs
           .filter((f) => f.isVisible)
-         
-         
+
           .map((f) => ({ question: p(f.question), answer: p(f.answer) })),
       }
     : getFaqConfig(tFaq);
@@ -373,7 +396,10 @@ export default async function HomePage({
   const _locationColumns = s?.locationLinks
     ? s.locationLinks.columns.map((col) => ({
         city: p(col.title),
-        links: col.links.map((link) => ({ label: p(link.label), href: link.href })),
+        links: col.links.map((link) => ({
+          label: p(link.label),
+          href: link.href,
+        })),
       }))
     : getLocationColumns(tLocationLinks);
 
@@ -425,7 +451,10 @@ export default async function HomePage({
       </FadeUp>
 
       {/* Comparison — columns slide in from different directions */}
-      <ComparisonSection heading={comparisonHeading} columns={comparisonColumns} />
+      <ComparisonSection
+        heading={comparisonHeading}
+        columns={comparisonColumns}
+      />
 
       {/* Testimonials — scroll reveal handled internally */}
       <TestimonialsSection
@@ -441,7 +470,9 @@ export default async function HomePage({
       <ReferralPartnerSection {...referralPartnerConfig} />
 
       {/* Awards — staggered logos */}
-      <AwardsSection {...awardsConfig} />
+      <FadeUp className="bg-secondary">
+        <AwardsSection {...awardsConfig} />
+      </FadeUp>
 
       {/* Blog — stagger animation handled internally */}
       <BlogSection {...blogConfig} />
@@ -455,4 +486,3 @@ export default async function HomePage({
     </main>
   );
 }
-
