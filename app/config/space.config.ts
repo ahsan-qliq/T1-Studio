@@ -1,4 +1,98 @@
+import type {
+  CmsSpaceGallerySectionT,
+  CmsSpaceGallerySection,
+  CmsMaterialInspirationSection,
+  CmsSpaceBrandsSection,
+  CmsSignatureProjectsSectionT,
+  CmsFaqSection,
+  CmsSpaceRelatedSpacesSection,
+} from "@/lib/cms/types";
+
 type Translator = (key: string) => string;
+
+// ─── Space detail resolvers ───────────────────────────────────────────────────
+
+const PROJECT_SIZES = [
+  { width: 700, height: 500 },
+  { width: 280, height: 180 },
+  { width: 560, height: 480 },
+];
+
+export function toSpaceHref(raw: string): string {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean === "/" || clean === "/spaces" || clean.startsWith("/spaces/")) return clean;
+  return `/spaces/${clean.replace(/^\//, "")}`;
+}
+
+export const mapSpaceDetailGallery = (section: CmsSpaceGallerySectionT) => {
+  const images = section.images ?? [];
+  return {
+    slides: images.slice(0, 3).map((img) => ({
+      src: img.image.url,
+      alt: img.image.alt as string,
+    })),
+    gridItems: images.slice(3, 5).map((img) => ({
+      src: img.image.url,
+      alt: img.image.alt as string,
+    })),
+  };
+};
+
+export const mapSpaceDetailStyles = (section: CmsSpaceGallerySection) =>
+  section.items.map((sp) => ({
+    id: sp._id,
+    title: sp.title as string,
+    href: sp.href,
+    image: { src: sp.image.url, alt: sp.image.alt as string },
+  }));
+
+export const mapSpaceDetailMaterials = (section: CmsMaterialInspirationSection) =>
+  section.materials.map((item) => ({
+    src: item.image.url,
+    alt: item.image.alt as string,
+    label: item.title,
+  }));
+
+export const mapSpaceDetailBrands = (section: CmsSpaceBrandsSection) =>
+  section.brands.map((brand) => ({
+    src: brand.logo.url,
+    alt: brand.logo.alt as string,
+    width: 120,
+    height: 40,
+  }));
+
+export const mapSpaceDetailRelatedProjects = (section: CmsSignatureProjectsSectionT) =>
+  section.projects
+    .filter((pr) => pr.isVisible)
+    .map((pr, i) => ({
+      id: pr._id,
+      title: pr.title as string,
+      location: pr.location as string,
+      href: pr.href,
+      image: {
+        src: pr.image.url,
+        alt: pr.image.alt as string,
+        ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
+      },
+    }));
+
+export const mapSpaceDetailFaq = (section: CmsFaqSection) =>
+  section.faqs
+    .filter((faq) => faq.isVisible)
+    .map((faq) => ({
+      question: faq.question as string,
+      answer: faq.answer as string,
+    }));
+
+export const mapSpaceDetailRelatedSpaces = (section: CmsSpaceRelatedSpacesSection) =>
+  section.spaces
+    .filter((sp) => sp.isVisible)
+    .map((sp) => ({
+      id: sp._id,
+      title: sp.title as string,
+      href: sp.href,
+      image: { src: sp.image.url, alt: sp.image.alt as string },
+    }));
 
 // ─── Space detail ─────────────────────────────────────────────────────────────
 
