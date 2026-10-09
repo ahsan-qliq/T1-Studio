@@ -8,6 +8,7 @@ import { MapSection } from "@/components/sections/MapSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { getTranslations } from "next-intl/server";
 import { getDreamSpaceConfig } from "@/app/config/home.config";
+import { mapContactServices } from "@/app/config/contact.config";
 
 export const revalidate = 3600;
 
@@ -41,9 +42,7 @@ export default async function ContactPage({
     getTranslations({ locale, namespace: "DreamSpace" }),
   ]);
   const s = cms?.sections;
-  const dreamSpaceConfig = getDreamSpaceConfig(tDreamSpace);
 
-  console.log("Contact page CMS data:", s);
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -51,10 +50,12 @@ export default async function ContactPage({
           badge={s.hero.eyebrow as string}
           heading={s.hero.heading as string}
           description={s.hero.description as string}
-        breadcrumbs={s.hero.breadcrumbs?.map((b) => ({
-            label: b.label as string,
-            href: b.href || undefined,
-          })) || []}
+          breadcrumbs={
+            s.hero.breadcrumbs?.map((b) => ({
+              label: b.label as string,
+              href: b.href || undefined,
+            })) || []
+          }
           imageSrc={s.hero.backgroundImage.url || undefined}
         />
       )}
@@ -63,39 +64,11 @@ export default async function ContactPage({
         <ServicesSection
           label={s.contactInfo.eyebrow as string}
           heading={s.contactInfo.heading as string}
-          services={s.contactInfo.items
-            .filter((svc) => svc.isVisible)
-            .map((svc) => ({
-              title: svc.title as string,
-              subtitle: svc.value as string,
-              href: svc.href || undefined,
-            }))}
+          services={mapContactServices(s.contactInfo)}
         />
       )}
 
-      <DreamSpaceSection
-        {...dreamSpaceConfig}
-        heading={tDreamSpace("heading")}
-        imageAlt={tDreamSpace("imageAlt")}
-        propertyTypeLabel={tDreamSpace("propertyTypeLabel")}
-        spaceRequiredLabel={tDreamSpace("spaceRequiredLabel")}
-        typeOfServiceLabel={tDreamSpace("typeOfServiceLabel")}
-        timelineLabel={tDreamSpace("timelineLabel")}
-        firstNameLabel={tDreamSpace("firstNameLabel")}
-        lastNameLabel={tDreamSpace("lastNameLabel")}
-        emailLabel={tDreamSpace("emailLabel")}
-        phoneLabel={tDreamSpace("phoneLabel")}
-        submitLabel={tDreamSpace("submitLabel")}
-        developerDropdown1Label={tDreamSpace("developerProjectScaleLabel")}
-        developerDropdown2Label={tDreamSpace("developerProjectTypeLabel")}
-        developerDropdown3Label={tDreamSpace("developerServiceLabel")}
-        companyNameLabel={tDreamSpace("companyNameLabel")}
-        messageLabel={tDreamSpace("messageLabel")}
-        consentText={tDreamSpace("consentText")}
-        privacyPolicyLabel={tDreamSpace("privacyPolicyLabel")}
-        privacyPolicyHref={tDreamSpace("privacyPolicyHref")}
-        consentRequired={tDreamSpace("consentRequired")}
-      />
+      <DreamSpaceSection {...getDreamSpaceConfig(tDreamSpace)} />
 
       {s?.location?.isVisible && s.location.mapEmbedUrl && (
         <MapSection

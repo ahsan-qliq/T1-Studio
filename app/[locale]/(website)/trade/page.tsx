@@ -6,10 +6,6 @@ import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
-import {
-  SmartSpaceDiagram,
-  KellerBadge,
-} from "@/components/sections/ProjectJourneySection";
 import { StatsBar } from "@/components/sections/StatsBar";
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
@@ -17,46 +13,20 @@ import { PartnerLeadSection } from "@/components/sections/PartnerLeadSection";
 import { ResourceCenterSection } from "@/components/sections/ResourceCenterSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
+import { MilestoneTimelineSection } from "@/components/sections/MilestoneTimelineSection";
+import { resolveJourney, pick } from "@/app/config/home.config";
+import type { PickFn } from "@/app/config/home.config";
 import {
-  Globe,
-  Lightbulb,
-  Building2,
-  Rocket,
-  TrendingUp,
-  User,
-  Maximize2,
-  Shield,
-  CheckCircle2,
-  RefreshCw,
-  LayoutGrid,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { createElement } from "react";
-import {
-  MilestoneTimelineSection,
-  type MilestoneIconName,
-} from "@/components/sections/MilestoneTimelineSection";
-
-const JOURNEY_ICONS: LucideIcon[] = [
-  Globe,
-  Lightbulb,
-  Building2,
-  Rocket,
-  TrendingUp,
-];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
-  User,
-  Maximize2,
-  Shield,
-  CheckCircle2,
-  RefreshCw,
-];
-
-const PROJECT_SIZES = [
-  { width: 700, height: 500 },
-  { width: 280, height: 180 },
-  { width: 560, height: 480 },
-];
+  mapTradeLogos,
+  mapTradeWhoWeWorkWith,
+  mapTradeStats,
+  mapTradeProjects,
+  mapTradeBenefits,
+  mapTradeIndustryServices,
+  mapTradeFaq,
+  getResourceCenterConfig,
+  getPartnerLeadConfig,
+} from "@/app/config/trade.config";
 
 export const revalidate = 3600;
 
@@ -97,37 +67,9 @@ export default async function TradePage({
     getTranslations({ locale, namespace: "Stats" }),
   ]);
   const s = cms?.sections;
+  const p: PickFn = (field) => pick(field, locale);
+  const journey = resolveJourney(s?.journey, p, tJourney);
 
-  // ── Journey steps ─────────────────────────────────────────────────────────
-  const journeySteps =
-    s?.journey?.steps
-      .filter((step) => step.isVisible)
-      .map((step, i) => ({
-        number: String(i + 1).padStart(2, "0"),
-        icon: JOURNEY_ICONS[i] ?? Globe,
-        title: step.title as string,
-        subtitle: step.subtitle as string,
-        description: step.description as string,
-        advantageText: step.advantageTitle as string,
-        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
-        highlightText: step.highlight as string,
-        extraContent:
-          i === 1
-            ? createElement(SmartSpaceDiagram, {
-                badge: tJourney("smartSpaceBadge"),
-                items: [
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
-                ],
-              })
-            : i === 2
-              ? createElement(KellerBadge, {
-                  line1: tJourney("kellerLine1"),
-                  line2: tJourney("kellerLine2"),
-                })
-              : undefined,
-      })) ?? [];
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -149,12 +91,7 @@ export default async function TradePage({
         <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.logos.heading as string}
-            logos={s.logos.logos.map((logo) => ({
-              src: logo.logo.url,
-              alt: logo.logo.alt as string,
-              width: 120,
-              height: 40,
-            }))}
+            logos={mapTradeLogos(s.logos)}
           />
         </FadeUp>
       )}
@@ -162,23 +99,19 @@ export default async function TradePage({
       {s?.whoWeWorkWith?.isVisible && (
         <MaterialInspirationSection
           heading={s.whoWeWorkWith.heading}
-          items={s.whoWeWorkWith.items.map((item) => ({
-            src: item.image.url,
-            alt: item.image.alt as string,
-            label: item.label,
-          }))}
+          items={mapTradeWhoWeWorkWith(s.whoWeWorkWith)}
         />
       )}
 
-      {s?.journey?.isVisible && journeySteps.length > 0 && (
+      {s?.journey?.isVisible && journey.steps.length > 0 && (
         <FadeUp>
           <ProjectJourneySection
-            label={s.journey.eyebrow as string}
-            heading={s.journey.heading as string}
+            label={journey.label}
+            heading={journey.heading}
             advantageLabel={tJourney("advantageLabel")}
             prevLabel={tJourney("prevLabel")}
             nextLabel={tJourney("nextLabel")}
-            steps={journeySteps}
+            steps={journey.steps}
           />
         </FadeUp>
       )}
@@ -186,12 +119,7 @@ export default async function TradePage({
       {s?.stats?.isVisible && (
         <FadeUp>
           <StatsBar
-            items={s.stats.stats
-              .filter((stat) => stat.isVisible)
-              .map((stat) => ({
-                value: stat.value,
-                label: stat.label as string,
-              }))}
+            items={mapTradeStats(s.stats)}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
@@ -202,19 +130,7 @@ export default async function TradePage({
           heading={s.projects.heading as string}
           viewAllLabel={s.projects.button.label as string}
           viewAllHref="/projects"
-          projects={s.projects.projects
-            .filter((pr) => pr.isVisible)
-            .map((pr, i) => ({
-              id: pr._id,
-              title: pr.title as string,
-              location: pr.location as string,
-              href: pr.href,
-              image: {
-                src: pr.image.url,
-                alt: pr.image.alt as string,
-                ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
-              },
-            }))}
+          projects={mapTradeProjects(s.projects)}
         />
       )}
 
@@ -222,171 +138,26 @@ export default async function TradePage({
         <ServicesSection
           label={s.benefits.eyebrow as string}
           heading={s.benefits.heading as string}
-          services={s.benefits.items
-            .filter((svc) => svc.isVisible)
-            .map((svc) => ({
-              title: svc.title as string,
-              subtitle: svc.description as string,
-            }))}
+          services={mapTradeBenefits(s.benefits)}
         />
       )}
 
       {s?.industryServices?.isVisible && (
         <MilestoneTimelineSection
           heading={s.industryServices.heading as string}
-          milestones={s.industryServices.items
-            .filter((m) => m.isVisible)
-            .map((m, i) => {
-              const MILESTONE_ICONS: MilestoneIconName[] = [
-                "Globe",
-                "Lightbulb",
-                "BarChart2",
-                "BookMarked",
-              ];
-              const year = (m.title as string).split("—")[0].trim();
-              return {
-                iconName: MILESTONE_ICONS[i % MILESTONE_ICONS.length],
-                year,
-                description: m.description as string,
-              };
-            })}
+          milestones={mapTradeIndustryServices(s.industryServices)}
         />
       )}
 
-      <ResourceCenterSection
-        heading={locale === "ar" ? "مركز الموارد" : "Resource Center"}
-        prevLabel={locale === "ar" ? "السابق" : "Previous resources"}
-        nextLabel={locale === "ar" ? "التالي" : "Next resources"}
-        downloadLabel={locale === "ar" ? "تحميل" : "Download"}
-        items={[
-          {
-            id: "1",
-            title:
-              locale === "ar"
-                ? "الملف التعريفي للشركة"
-                : "T One Company Profile",
-            fileType: "PDF",
-            fileSize: "13MB",
-            downloadUrl: "/assets/downloads/T One - Company Profile.pdf",
-          },
-          {
-            id: "2",
-            title:
-              locale === "ar" ? "التأهيل المسبق 2026" : "Prequalification 2026",
-            fileType: "PDF",
-            fileSize: "19MB",
-            downloadUrl:
-              "/assets/downloads/Tone Universal Prequalification 2026 1.pdf",
-          },
-          {
-            id: "3",
-            title:
-              locale === "ar"
-                ? "كتالوج إلهام كيلر 2026"
-                : "Keller Inspiration Brochure 2026",
-            fileType: "PDF",
-            fileSize: "8.1MB",
-            downloadUrl:
-              "/assets/downloads/Keller inspiration brochure 2026-EN-SPREAD-LR.pdf",
-          },
-          {
-            id: "4",
-            title: locale === "ar" ? "شهادات الأيزو" : "ISO Certificates",
-            fileType: "PDF",
-            fileSize: "5.6MB",
-            downloadUrl: "/assets/downloads/ISO Certificates.pdf",
-          },
-        ]}
-      />
+      <ResourceCenterSection {...getResourceCenterConfig(locale)} />
 
-      {/* {s?.partnershipServices?.isVisible && (
-        <FadeUp>
-          <ReferralPartnerSection
-            heading={s.partnershipServices.heading as string}
-            description={s.partnershipServices.description as string}
-            imageSrc={s.partnershipServices.image.url}
-            imageAlt={s.partnershipServices.image.alt as string}
-            ctaLabel={s.partnershipServices.button.label as string}
-            ctaHref={s.partnershipServices.button.href || "/"}
-            steps={s.partnershipServices.services.map((step) => ({
-              label: step.title as string,
-              iconName: step.icon,
-            }))}
-            benefits={[]}
-          />
-        </FadeUp>
-      )} */}
-
-      <PartnerLeadSection
-        heading="Partner With Us"
-        imageSrc="/assets/images/contact.webp"
-        imageAlt="Partner with T1 Studio"
-        submitLabel="Submit"
-        tradePartnerLabel="Trade Partner"
-        referralPartnerLabel="Referral Partner"
-        trade={{
-          companyNameLabel: "Company Name",
-          companyTypeLabel: "Company Type",
-          companyTypeOptions: [
-            { value: "architecture", label: "Architecture Firm" },
-            { value: "interior-design", label: "Interior Design Studio" },
-            { value: "construction", label: "Construction Company" },
-            { value: "real-estate", label: "Real Estate Developer" },
-            { value: "contractor", label: "General Contractor" },
-          ],
-          projectScaleLabel: "Project Scale",
-          projectScaleOptions: [
-            { value: "residential", label: "Residential" },
-            { value: "commercial", label: "Commercial" },
-            { value: "mixed-use", label: "Mixed Use" },
-            { value: "hospitality", label: "Hospitality" },
-          ],
-          locationLabel: "Location",
-          locationOptions: [
-            { value: "dubai", label: "Dubai" },
-            { value: "abu-dhabi", label: "Abu Dhabi" },
-            { value: "sharjah", label: "Sharjah" },
-            { value: "other-uae", label: "Other UAE" },
-            { value: "international", label: "International" },
-          ],
-          firstNameLabel: "First Name",
-          lastNameLabel: "Last Name",
-          emailLabel: "Email Address",
-          phoneLabel: "Phone Number",
-        }}
-        referral={{
-          firstNameLabel: "First Name",
-          lastNameLabel: "Last Name",
-          emailLabel: "Email Address",
-          phoneLabel: "Phone Number",
-          clientNameLabel: "Client Name",
-          referralSourceLabel: "How did you hear about us?",
-          referralSourceOptions: [
-            { value: "existing-client", label: "Existing Client" },
-            { value: "social-media", label: "Social Media" },
-            { value: "word-of-mouth", label: "Word of Mouth" },
-            { value: "online-search", label: "Online Search" },
-            { value: "event", label: "Event or Exhibition" },
-          ],
-          clientTypeLabel: "Client Type",
-          clientTypeOptions: [
-            { value: "residential", label: "Residential" },
-            { value: "commercial", label: "Commercial" },
-            { value: "both", label: "Both" },
-          ],
-        }}
-      />
+      <PartnerLeadSection {...getPartnerLeadConfig()} />
 
       {s?.faq?.isVisible && (
         <FaqSection
           label={s.faq.eyebrow as string}
           heading={s.faq.heading as string}
-          items={s.faq.faqs
-            .filter((f) => f.isVisible)
-            .map((f) => ({
-              question: f.question as string,
-              answer: f.answer as string,
-            }))}
+          items={mapTradeFaq(s.faq)}
         />
       )}
       <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />

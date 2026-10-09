@@ -3,43 +3,19 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
-import {
-  BlogDetailContent,
-  type ArticleBlock,
-} from "@/components/sections/BlogDetailContent";
-import { BlogSection, type BlogPost } from "@/components/sections/BlogSection";
+import { BlogDetailContent } from "@/components/sections/BlogDetailContent";
+import { BlogSection } from "@/components/sections/BlogSection";
 import { getBlogDetailCms } from "@/lib/cms/blog-detail";
-import type { CmsBlogDetail } from "@/lib/cms/types";
+import {
+  getText,
+  toBlogHref,
+  mapArticleBlocks,
+  mapAuthorBio,
+  mapRelatedSection,
+} from "@/app/config/blogs.config";
 
 interface Props {
   params: Promise<{ slug: string; locale: string }>;
-}
-
-function getText(
-  value: { en?: string; ar?: string } | string | undefined | null,
-  locale: string,
-): string {
-  if (!value) return "";
-  if (typeof value === "string") return value;
-  if (locale === "ar") return value.ar || value.en || "";
-  return value.en || value.ar || "";
-}
-
-function toBlogHref(raw: string | undefined | null) {
-  if (!raw) return undefined;
-  const clean = raw.trim().replace(/\s+/g, "-");
-  if (clean === "/" || clean === "/blogs" || clean.startsWith("/blogs/")) return clean;
-  // /blog → /blogs, /blog/slug → /blogs/slug
-  if (clean === "/blog") return "/blogs";
-  if (clean.startsWith("/blog/")) return clean.replace(/^\/blog\//, "/blogs/");
-  return clean;
-}
-
-function mapBreadcrumbs(
-  crumbs: CmsBlogDetail["sections"]["hero"]["breadcrumbs"],
-  locale: string,
-) {
-  return crumbs.map((c) => ({ label: getText(c.label, locale), href: toBlogHref(c.href) }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -69,116 +45,30 @@ export default async function BlogsDetailsPage({ params }: Props) {
   ]);
 
   if (!blog) notFound();
+
   const hero = blog.sections.hero;
   const articleContent = blog.sections.articleContent;
   const relatedArticles = blog.sections.relatedArticles;
   const authorInfo = blog.sections.authorInfo;
 
   const heroBadge =
-    getText(hero.eyebrow, locale) ||
-    getText(blog.categoryLabel, locale) ||
-    blog.category;
-  const heroHeading =
-    getText(hero.title, locale) || getText(blog.title, locale);
-  const heroDescription =
-    getText(hero.excerpt, locale) || getText(blog.excerpt, locale);
+    getText(hero.eyebrow, locale) || getText(blog.categoryLabel, locale) || blog.category;
+  const heroHeading = getText(hero.title, locale) || getText(blog.title, locale);
+  const heroDescription = getText(hero.excerpt, locale) || getText(blog.excerpt, locale);
   const heroImage =
-    hero.backgroundImage?.url ||
-    blog.featuredImage?.url ||
-    "/assets/images/BlogBanner.jpg";
+    hero.backgroundImage?.url || blog.featuredImage?.url || "/assets/images/BlogBanner.jpg";
   const breadcrumbs =
     hero.breadcrumbs?.length > 0
-      ? mapBreadcrumbs(hero.breadcrumbs, locale)
+      ? hero.breadcrumbs.map((c) => ({ label: getText(c.label, locale), href: toBlogHref(c.href) }))
       : undefined;
-  const rawBlocks = articleContent.blocks.filter((b) => b.isVisible !== false);
-  const blocks: ArticleBlock[] = rawBlocks
-    .filter((b, i) => {
-      // The CMS emits a standalone `heading` block immediately before `table`
-      // and `faq` blocks. Those sections render their own headings, so skip
-      // the redundant preceding heading to avoid a double render.
-      const next = rawBlocks[i + 1]?.type;
-      if (b.type === "heading" && (next === "table" || next === "faq"))
-        return false;
-      return true;
-    })
-    .map((b) => {
-      if (b.type === "heading" || b.type === "paragraph") {
-        return {
-          type: "paragraph" as const,
-          id: b._id,
-          heading: getText(b.heading, locale),
-          body: getText(b.content, locale),
-        };
-      }
-      if (b.type === "list") {
-        return {
-          type: "list" as const,
-          id: b._id,
-          heading: getText(b.heading, locale),
-          items: (b.listItems ?? []).map((item) => getText(item, locale)),
-        };
-      }
-      if (b.type === "table") {
-        return {
-          type: "table" as const,
-          id: b._id,
-          heading: getText(b.heading, locale),
-          headers: b.headers ?? [],
-          rows: b.rows ?? [],
-        };
-      }
-      if (b.type === "faq") {
-        return {
-          type: "faq" as const,
-          id: b._id,
-          heading: getText(b.heading, locale),
-          faqs: (b.faqItems ?? []).map((item) => ({
-            question: getText(item.question, locale),
-            answer: getText(item.answer, locale),
-          })),
-        };
-      }
 
-      return {
-        type: "paragraph" as const,
-        id: b._id,
-        heading: getText(b.heading, locale),
-        body: getText(b.content, locale),
-      };
-    });
-
-  const authorBio = {
-    name: getText(authorInfo.author.name, locale),
-    role: getText(authorInfo.author.designation, locale),
-    experience: getText(authorInfo.author.bio, locale),
-    image: {
-      src: authorInfo.author.image?.url || "",
-      alt: getText(authorInfo.author.image?.alt, locale),
-    },
-    linkedinUrl: authorInfo.author.linkedinUrl || undefined,
-    websiteUrl: authorInfo.author.websiteUrl || undefined,
-  };
-
-  const relatedPosts: BlogPost[] = relatedArticles.articles.map((a) => ({
-    slug: a.slug,
-    tag: a.category,
-    readTime: getText(a.readTime, locale),
-    title: getText(a.title, locale),
-    href: `/blogs/${a.slug}`,
-    image: {
-      src: a.featuredImage?.url || "",
-      alt: getText(a.featuredImage?.alt, locale),
-    },
-  }));
-
-  const relatedHeading =
-    getText(relatedArticles.heading, locale) ||
-    tBlog?.("relatedHeading") ||
-    "Related Articles";
-
-  const viewAllLabel =
-    getText(relatedArticles.button?.label, locale) || "View all articles";
-  const viewAllHref = relatedArticles.button?.href || "/blogs";
+  const blocks = mapArticleBlocks(articleContent.blocks, locale);
+  const authorBio = mapAuthorBio(authorInfo.author, locale);
+  const related = mapRelatedSection(
+    relatedArticles,
+    locale,
+    tBlog?.("relatedHeading") || "Related Articles",
+  );
 
   return (
     <main>
@@ -194,13 +84,13 @@ export default async function BlogsDetailsPage({ params }: Props) {
         <BlogDetailContent blocks={blocks} authorBio={authorBio} title={heroHeading} />
       )}
 
-      {relatedArticles.isVisible && relatedPosts.length > 0 && (
+      {relatedArticles.isVisible && related.posts.length > 0 && (
         <BlogSection
-          label={getText(relatedArticles.eyebrow, locale) || "Blog"}
-          heading={relatedHeading}
-          posts={relatedPosts}
-          viewAllLabel={viewAllLabel}
-          viewAllHref={viewAllHref}
+          label={related.label}
+          heading={related.heading}
+          posts={related.posts}
+          viewAllLabel={related.viewAllLabel}
+          viewAllHref={related.viewAllHref}
           learnMoreLabel="Read more"
         />
       )}
