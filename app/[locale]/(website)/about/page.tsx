@@ -5,7 +5,6 @@ import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AboutStorySection } from "@/components/sections/AboutStorySection";
 import { MilestoneTimelineSection } from "@/components/sections/MilestoneTimelineSection";
-import type { MilestoneIconName } from "@/components/sections/MilestoneTimelineSection";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { MaterialInspirationSection } from "@/components/sections/MaterialInspirationSection";
 import { StatsBar } from "@/components/sections/StatsBar";
@@ -13,13 +12,7 @@ import { ImageCarouselSection } from "@/components/sections/ImageCarouselSection
 import { AwardsSection } from "@/components/sections/AwardsSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
-
-const VALID_MILESTONE_ICONS = new Set([
-  "Globe",
-  "Lightbulb",
-  "BarChart2",
-  "BookMarked",
-]);
+import { mapMilestones } from "@/app/config/about.config";
 
 export const revalidate = 3600;
 
@@ -63,10 +56,12 @@ export default async function AboutPage({
           badge={s.hero.eyebrow as string}
           heading={s.hero.heading as string}
           description={s.hero.description as string}
-          breadcrumbs={s.hero.breadcrumbs?.map((b) => ({
-            label: b.label as string,
-            href: b.href || undefined,
-          })) || []}
+          breadcrumbs={
+            s.hero.breadcrumbs?.map((b) => ({
+              label: b.label as string,
+              href: b.href || undefined,
+            })) || []
+          }
           imageSrc={s.hero.backgroundImage.url || undefined}
         />
       )}
@@ -76,23 +71,14 @@ export default async function AboutPage({
           label={s.story.eyebrow}
           heading={s.story.heading}
           description={s.story.description}
-          image={{
-            src: s.story.image.url,
-            alt: s.story.image.alt as string,
-          }}
+          image={{ src: s.story.image.url, alt: s.story.image.alt as string }}
         />
       )}
 
       {s?.journey?.isVisible && (
         <MilestoneTimelineSection
           heading={s.journey.heading}
-          milestones={s.journey.items.map((m) => ({
-            iconName: (VALID_MILESTONE_ICONS.has(m.iconName)
-              ? m.iconName
-              : "Globe") as MilestoneIconName,
-            year: m.year,
-            description: m.description,
-          }))}
+          milestones={mapMilestones(s.journey.items)}
         />
       )}
 
@@ -125,10 +111,7 @@ export default async function AboutPage({
           <StatsBar
             items={s.stats.stats
               .filter((stat) => stat.isVisible)
-              .map((stat) => ({
-                value: stat.value,
-                label: stat.label as string,
-              }))}
+              .map((stat) => ({ value: stat.value, label: stat.label as string }))}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
