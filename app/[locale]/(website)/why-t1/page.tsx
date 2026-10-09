@@ -5,10 +5,6 @@ import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { ComparisonSection } from "@/components/sections/ComparisonSection";
 import { ProjectJourneySection } from "@/components/sections/ProjectJourneySection";
-import {
-  SmartSpaceDiagram,
-  KellerBadge,
-} from "@/components/sections/ProjectJourneySection";
 import { StatsBar } from "@/components/sections/StatsBar";
 import { ServicesSection } from "@/components/sections/ServicesSection";
 import { ClientTestimonialSection } from "@/components/sections/ClientTestimonialSection";
@@ -17,42 +13,18 @@ import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSec
 import { SignatureProjectsSection } from "@/components/sections/SignatureProjectsSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { FadeUp } from "@/components/ui/animate";
+import { resolveJourney, pick } from "@/app/config/home.config";
+import type { PickFn } from "@/app/config/home.config";
 import {
-  Globe,
-  Lightbulb,
-  Building2,
-  Rocket,
-  TrendingUp,
-  User,
-  Maximize2,
-  Shield,
-  CheckCircle2,
-  RefreshCw,
-  LayoutGrid,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
-import { createElement } from "react";
-
-const JOURNEY_ICONS: LucideIcon[] = [
-  Globe,
-  Lightbulb,
-  Building2,
-  Rocket,
-  TrendingUp,
-];
-const JOURNEY_HIGHLIGHT_ICONS: LucideIcon[] = [
-  User,
-  Maximize2,
-  Shield,
-  CheckCircle2,
-  RefreshCw,
-];
-
-const PROJECT_SIZES = [
-  { width: 700, height: 500 },
-  { width: 280, height: 180 },
-  { width: 560, height: 480 },
-];
+  mapWhyT1ComparisonColumns,
+  mapWhyT1Stats,
+  mapWhyT1Benefits,
+  mapWhyT1ClientTestimonials,
+  mapWhyT1Brands,
+  mapWhyT1Partnership,
+  mapWhyT1DesignTips,
+  mapWhyT1Faq,
+} from "@/app/config/why-t1.config";
 
 export const revalidate = 3600;
 
@@ -89,35 +61,9 @@ export default async function WhyT1Page({
   ]);
 
   const s = cms?.sections;
-  const journeySteps =
-    s?.journey?.steps
-      .filter((step) => step.isVisible)
-      .map((step, i) => ({
-        number: String(i + 1).padStart(2, "0"),
-        icon: JOURNEY_ICONS[i] ?? Globe,
-        title: step.title as string,
-        subtitle: step.subtitle as string,
-        description: step.description as string,
-        advantageText: step.advantageTitle as string,
-        highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
-        highlightText: step.highlight as string,
-        extraContent:
-          i === 1
-            ? createElement(SmartSpaceDiagram, {
-                badge: tJourney("smartSpaceBadge"),
-                items: [
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem1") },
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem2") },
-                  { icon: LayoutGrid, label: tJourney("smartSpaceItem3") },
-                ],
-              })
-            : i === 2
-              ? createElement(KellerBadge, {
-                  line1: tJourney("kellerLine1"),
-                  line2: tJourney("kellerLine2"),
-                })
-              : undefined,
-      })) ?? [];
+  const p: PickFn = (field) => pick(field, locale);
+  const journey = resolveJourney(s?.journey, p, tJourney);
+
   return (
     <main>
       {s?.hero?.isVisible && (
@@ -137,24 +83,20 @@ export default async function WhyT1Page({
         <FadeUp>
           <ComparisonSection
             heading={s.comparison.heading as string}
-            columns={s.comparison.columns.map((col) => ({
-              title: col.title as string,
-              variant: (col.highlighted ? "dark" : "light") as "dark" | "light",
-              features: col.items.map((item) => item.label as string),
-            }))}
+            columns={mapWhyT1ComparisonColumns(s.comparison)}
           />
         </FadeUp>
       )}
 
-      {s?.journey?.isVisible && journeySteps.length > 0 && (
+      {s?.journey?.isVisible && journey.steps.length > 0 && (
         <FadeUp>
           <ProjectJourneySection
-            label={s.journey.eyebrow as string}
-            heading={s.journey.heading as string}
+            label={journey.label}
+            heading={journey.heading}
             advantageLabel={tJourney("advantageLabel")}
             prevLabel={tJourney("prevLabel")}
             nextLabel={tJourney("nextLabel")}
-            steps={journeySteps}
+            steps={journey.steps}
           />
         </FadeUp>
       )}
@@ -162,12 +104,7 @@ export default async function WhyT1Page({
       {s?.stats?.isVisible && (
         <FadeUp>
           <StatsBar
-            items={s.stats.stats
-              .filter((stat) => stat.isVisible)
-              .map((stat) => ({
-                value: stat.value,
-                label: stat.label as string,
-              }))}
+            items={mapWhyT1Stats(s.stats)}
             sectionLabel={tStats("sectionLabel")}
           />
         </FadeUp>
@@ -177,12 +114,7 @@ export default async function WhyT1Page({
         <ServicesSection
           label={s.benefits.eyebrow as string}
           heading={s.benefits.heading as string}
-          services={s.benefits.items
-            .filter((svc) => svc.isVisible)
-            .map((svc) => ({
-              title: svc.title as string,
-              subtitle: svc.description as string,
-            }))}
+          services={mapWhyT1Benefits(s.benefits)}
         />
       )}
 
@@ -191,16 +123,7 @@ export default async function WhyT1Page({
           label={s.clientTestimonials.eyebrow}
           heading={s.clientTestimonials.heading}
           variant="card"
-          testimonials={s.clientTestimonials.testimonials.map((t) => ({
-            quote: t.quote,
-            author: t.author,
-            authorRole: t.authorRole,
-            badge: t.badge,
-            readTime: t.readTime,
-            image: { src: t.image.url, alt: t.image.alt as string },
-            avatar: { src: t.avatar.url, alt: t.avatar.alt as string },
-            videoUrl: t.videoUrl,
-          }))}
+          testimonials={mapWhyT1ClientTestimonials(s.clientTestimonials)}
         />
       )}
 
@@ -208,30 +131,13 @@ export default async function WhyT1Page({
         <FadeUp className="bg-secondary">
           <AwardsSection
             label={s.brands.heading as string}
-            logos={s.brands.brands.map((award) => ({
-              src: award.logo.url,
-              alt: award.logo.alt as string,
-              width: 120,
-              height: 40,
-            }))}
+            logos={mapWhyT1Brands(s.brands)}
           />
         </FadeUp>
       )}
 
       {s?.partnership?.isVisible && (
-        <ReferralPartnerSection
-          heading={s.partnership.heading as string}
-          description={s.partnership.description as string}
-          imageSrc={s.partnership.image.url}
-          imageAlt={s.partnership.image.alt as string}
-          ctaLabel={s.partnership.button.label as string}
-          ctaHref={s.partnership.button.href || "/"}
-          steps={s.partnership.steps.map((step) => ({
-            label: step.title as string,
-            iconName: step.icon,
-          }))}
-          benefits={[]}
-        />
+        <ReferralPartnerSection {...mapWhyT1Partnership(s.partnership)} />
       )}
 
       {s?.designTips?.isVisible && (
@@ -239,19 +145,7 @@ export default async function WhyT1Page({
           heading={s.designTips.heading as string}
           viewAllLabel={s.designTips.button.label as string}
           viewAllHref="/projects"
-          projects={(s.designTips.articles || [])
-            .filter((pr) => pr.isVisible)
-            .map((pr, i) => ({
-              id: pr._id,
-              title: pr.title as string,
-              location: pr.location as string,
-              href: pr.href,
-              image: {
-                src: pr.image.url,
-                alt: pr.image.alt as string,
-                ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
-              },
-            }))}
+          projects={mapWhyT1DesignTips(s.designTips)}
         />
       )}
 
@@ -259,12 +153,7 @@ export default async function WhyT1Page({
         <FaqSection
           label={s.faq.eyebrow as string}
           heading={s.faq.heading as string}
-          items={s.faq.faqs
-            .filter((f) => f.isVisible)
-            .map((f) => ({
-              question: f.question as string,
-              answer: f.answer as string,
-            }))}
+          items={mapWhyT1Faq(s.faq)}
         />
       )}
       <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
