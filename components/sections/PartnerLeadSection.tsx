@@ -242,7 +242,7 @@ function TradePartnerForm({
     setSubmitError(null);
 
     try {
-      const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/$/, '');
+      const apiBase = (process.env.CMS_API_BASE_URL ?? '').replace(/\/$/, '');
       const res = await fetch(`${apiBase}/api/trade-submissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -391,7 +391,7 @@ function ReferralPartnerForm({
     setSubmitError(null);
 
     try {
-      const apiBase = (process.env.NEXT_PUBLIC_API_BASE_URL ?? '').replace(/\/$/, '');
+      const apiBase = (process.env.CMS_API_BASE_URL ?? '').replace(/\/$/, '');
       const res = await fetch(`${apiBase}/api/trade-submissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
