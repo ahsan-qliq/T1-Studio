@@ -810,10 +810,30 @@ export interface CmsBeforeAfterSection {
 }
 // ─── Full projects page ───────────────────────────────────────────────────────
 
+export interface CmsProjectStatSection {
+  _id: string;
+  category: string;
+  isVisible: boolean;
+  order: number;
+  heading: string;
+  stats: CmsStatItem[];
+}
+
+export interface CmsProjectLogoSection {
+  _id: string;
+  category: string;
+  isVisible: boolean;
+  order: number;
+  heading: string;
+  description: string;
+  logos: CmsAwardItem[];
+}
+
 export interface CmsProjectsPageSections {
   hero: CmsHeroSection;
   projects: CmsBlogListingSection;
-  stats: CmsStatsSection;
+  stats: CmsProjectStatSection[];
+  logos: CmsProjectLogoSection[];
   testimonials: CmsTestimonialsSection;
   beforeAfter: CmsBeforeAfterSection;
   partnership: CmsPartnershipSectionT;
