@@ -98,6 +98,7 @@ export default async function ProjectsPage({
           commercialStatsBarNode={
             commercialStatSection?.stats?.length ? (
               <StatsBar
+                key="commercial-stats"
                 sectionLabel={commercialStatSection.heading}
                 items={commercialStatSection.stats.map((st) => ({
                   value: st.value,
@@ -109,6 +110,7 @@ export default async function ProjectsPage({
           retailStatsBarNode={
             retailStatSection?.stats?.length ? (
               <StatsBar
+                key="retail-stats"
                 sectionLabel={retailStatSection.heading}
                 items={retailStatSection.stats.map((st) => ({
                   value: st.value,
@@ -119,7 +121,7 @@ export default async function ProjectsPage({
           }
           awardsNode={
             commercialLogosSection?.logos?.length ? (
-              <FadeUp className="bg-secondary">
+              <FadeUp key="awards" className="bg-secondary">
                 <AwardsSection
                   label={commercialLogosSection.heading}
                   logos={commercialLogosSection.logos.map((l) => ({
@@ -135,6 +137,7 @@ export default async function ProjectsPage({
             ba.item.beforeImage?.url &&
             ba.item.afterImage?.url ? (
               <BeforeAfterSection
+                key="retail-before-after"
                 heading={ba.heading}
                 beforeImage={{
                   src: ba.item.beforeImage.url,
