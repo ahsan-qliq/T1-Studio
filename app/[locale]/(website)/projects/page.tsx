@@ -3,6 +3,8 @@ import { getProjectsPageCms } from "@/lib/cms/projects";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
+import { StatsBar } from "@/components/sections/StatsBar";
+import { AwardsSection } from "@/components/sections/AwardsSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
@@ -179,6 +181,23 @@ export default async function ProjectsPage({
           }}
           filterOptions={filterOptions}
           projects={projectItems}
+          statsBarNode={
+            <StatsBar
+              sectionLabel="Project stats"
+              items={[
+                { value: "500+", label: locale === "ar" ? "مشروع منجز" : "Projects Completed" },
+                { value: "15+", label: locale === "ar" ? "سنوات خبرة" : "Years of Experience" },
+                { value: "98%", label: locale === "ar" ? "رضا العملاء" : "Client Satisfaction" },
+                { value: "50+", label: locale === "ar" ? "شريك موثوق" : "Trusted Partners" },
+              ]}
+            />
+          }
+          awardsNode={
+            <AwardsSection
+              label={locale === "ar" ? "شركاؤنا" : "Our Partners"}
+              logos={[]}
+            />
+          }
         />
       )}
 
