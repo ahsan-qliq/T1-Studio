@@ -38,12 +38,16 @@ const toOptions = (values: string[] = []) =>
 
 // ─── Projects list page ───────────────────────────────────────────────────────
 
-export const mapProjectsFilterOptions = (filters: CmsProjectsFilters | undefined) => ({
+export const mapProjectsFilterOptions = (filters: CmsProjectsFilters | undefined, locale: string) => ({
   locations: toOptions(filters?.locations),
   services: [] as { value: string; label: string }[],
   styles: [] as { value: string; label: string }[],
   propertyTypes: toOptions(filters?.categories),
   completionYears: toOptions(filters?.completionYears),
+  statuses: [
+    { value: "ongoing",   label: locale === "ar" ? "جارٍ" : "Ongoing" },
+    { value: "completed", label: locale === "ar" ? "منجز" : "Completed" },
+  ],
 });
 
 export const mapProjectItems = (
@@ -68,6 +72,7 @@ export const mapProjectItems = (
       serviceKeys: [] as string[],
       styleKey: "",
       propertyTypeKey: p.category || "",
+      status: p.status || "",
     }));
 
 export const mapProjectsAllProjectsLabels = (
@@ -90,6 +95,7 @@ export const mapProjectsAllProjectsLabels = (
     style: locale === "ar" ? "الأسلوب" : "Style",
     propertyType: locale === "ar" ? "الفئة" : "Category",
     completionYear: locale === "ar" ? "سنة الإنجاز" : "Year",
+    status: locale === "ar" ? "الحالة" : "Status",
   },
 });
 
