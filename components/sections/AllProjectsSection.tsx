@@ -110,7 +110,6 @@ function FeaturedCard({
       <div
         className="relative grid grid-cols-2 overflow-hidden border-b border-white/10 lg:border-r"
         style={{ aspectRatio: "4 / 5" }}
-        // className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch"
       >
         {project.image.src ? (
           <Image
@@ -139,9 +138,15 @@ function FeaturedCard({
         <h3 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {project.title}
         </h3>
-        <p className="text-base text-secondary font-medium">Property Type: {project.propertyType}</p>
-        <p className="text-base text-secondary font-medium">Completion Year: {project.completionYear}</p>
-        <p className="text-base text-secondary font-medium">Location: {project.location}</p>
+        <p className="text-base text-secondary font-medium">
+          Property Type: {project.propertyType}
+        </p>
+        <p className="text-base text-secondary font-medium">
+          Completion Year: {project.completionYear}
+        </p>
+        <p className="text-base text-secondary font-medium">
+          Location: {project.location}
+        </p>
 
         {project.description && (
           <p className="max-w-lg text-sm leading-relaxed text-secondary sm:text-[0.9375rem]">
@@ -263,7 +268,10 @@ export function AllProjectsSection({
   statsBarNode,
   awardsNode,
 }: AllProjectsSectionProps) {
-  const [activeTab, setActiveTab] = useState<"commercial" | "retail">("commercial");
+  console.log("statsBarNode", statsBarNode);
+  const [activeTab, setActiveTab] = useState<"commercial" | "retail">(
+    "commercial",
+  );
   const [filters, setFilters] = useState<{
     category: string | null;
     location: string | null;
@@ -294,7 +302,7 @@ export function AllProjectsSection({
   );
 
   const hasActiveFilter = Object.values(filters).some(Boolean);
-console.log("filtered", filtered);
+  console.log("filtered", filtered);
   const featured = filtered;
   const restAll = filtered.slice(1);
   const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
@@ -327,7 +335,10 @@ console.log("filtered", filtered);
           onValueChange={(v) => setActiveTab(v as "commercial" | "retail")}
         >
           <div className="border-b border-white/10">
-            <TabsList variant="line" className="w-auto h-auto rounded-none bg-transparent p-0 gap-0">
+            <TabsList
+              variant="line"
+              className="w-auto h-auto rounded-none bg-transparent p-0 gap-0"
+            >
               <TabsTrigger
                 value="commercial"
                 className="rounded-none px-12 py-5 text-base font-medium text-white/40 data-active:text-secondary data-active:bg-transparent after:bg-secondary after:h-1 after:bottom-0 hover:text-white/70 hover:bg-transparent transition-colors duration-200"
