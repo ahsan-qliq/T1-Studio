@@ -80,7 +80,8 @@ export interface AllProjectsSectionProps {
     completionYears: SelectOption[];
   };
   projects: ProjectItem[];
-  statsBarNode?: React.ReactNode;
+  commercialStatsBarNode?: React.ReactNode;
+  retailStatsBarNode?: React.ReactNode;
   awardsNode?: React.ReactNode;
 }
 
@@ -265,10 +266,12 @@ export function AllProjectsSection({
   filterLabels,
   filterOptions,
   projects,
-  statsBarNode,
+  commercialStatsBarNode,
+  retailStatsBarNode,
   awardsNode,
 }: AllProjectsSectionProps) {
-  console.log("statsBarNode", statsBarNode);
+
+  console.log(commercialStatsBarNode)
   const [activeTab, setActiveTab] = useState<"commercial" | "retail">(
     "commercial",
   );
@@ -356,7 +359,8 @@ export function AllProjectsSection({
 
           {(["commercial", "retail"] as const).map((tab) => (
             <TabsContent key={tab} value={tab} className="mt-0">
-              {statsBarNode}
+              <>
+              {tab === "commercial" ? commercialStatsBarNode : retailStatsBarNode}
               {tab === "commercial" && awardsNode}
               {/* ── Header: heading + filters ── */}
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
@@ -449,6 +453,7 @@ export function AllProjectsSection({
                   </button>
                 </div>
               )}
+              </>
             </TabsContent>
           ))}
         </Tabs>
