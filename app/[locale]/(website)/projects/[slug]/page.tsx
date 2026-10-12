@@ -86,7 +86,6 @@ export default async function ProjectDetailsPage({ params }: Props) {
   const beforeAfterItem =
     beforeAfter?.items?.find((item) => item?.isVisible !== false) ??
     beforeAfter?.items?.[0];
-console.log(project, 342)
   return (
     <main>
       {isVisible(hero) && (
