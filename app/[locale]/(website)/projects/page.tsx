@@ -83,7 +83,7 @@ export default async function ProjectsPage({
                 sectionLabel="Project stats"
                 items={s.stats.stats
                   .filter((st) => st.isVisible)
-                  .map((st) => ({ value: st.value, label: t(st.label) }))}
+                  .map((st) => ({ value: st.value, label: getText(st.label, locale) }))}
               />
             ) : null
           }
