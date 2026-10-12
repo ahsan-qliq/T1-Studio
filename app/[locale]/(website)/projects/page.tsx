@@ -128,6 +128,7 @@ export default async function ProjectsPage({
   ========================================================= */
 
   const faq = s?.faq;
+  console.log( s )
   return (
     <main>
       {/* =====================================================
@@ -182,15 +183,14 @@ export default async function ProjectsPage({
           filterOptions={filterOptions}
           projects={projectItems}
           statsBarNode={
-            <StatsBar
-              sectionLabel="Project stats"
-              items={[
-                { value: "500+", label: locale === "ar" ? "مشروع منجز" : "Projects Completed" },
-                { value: "15+", label: locale === "ar" ? "سنوات خبرة" : "Years of Experience" },
-                { value: "98%", label: locale === "ar" ? "رضا العملاء" : "Client Satisfaction" },
-                { value: "50+", label: locale === "ar" ? "شريك موثوق" : "Trusted Partners" },
-              ]}
-            />
+            s?.stats?.isVisible && s.stats.stats.some((st) => st.isVisible) ? (
+              <StatsBar
+                sectionLabel="Project stats"
+                items={s.stats.stats
+                  .filter((st) => st.isVisible)
+                  .map((st) => ({ value: st.value, label: t(st.label) }))}
+              />
+            ) : null
           }
           awardsNode={
             <AwardsSection
