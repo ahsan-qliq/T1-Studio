@@ -301,7 +301,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
           BEFORE / AFTER
       ===================================================== */}
 
-      {isVisible(beforeAfter) &&
+      {/* {isVisible(beforeAfter) &&
         beforeAfterItem &&
         beforeAfterItem.beforeImage?.url &&
         beforeAfterItem.afterImage?.url && (
@@ -327,7 +327,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                 tBeforeAfter("afterLabel"),
             }}
           />
-        )}
+        )} */}
 
       {/* =====================================================
           GALLERY
