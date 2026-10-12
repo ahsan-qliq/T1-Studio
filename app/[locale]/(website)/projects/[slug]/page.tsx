@@ -86,7 +86,6 @@ export default async function ProjectDetailsPage({ params }: Props) {
   const beforeAfterItem =
     beforeAfter?.items?.find((item) => item?.isVisible !== false) ??
     beforeAfter?.items?.[0];
-
   return (
     <main>
       {isVisible(hero) && (
@@ -138,7 +137,8 @@ export default async function ProjectDetailsPage({ params }: Props) {
           BEFORE / AFTER
       ===================================================== */}
 
-      {/* {isVisible(beforeAfter) &&
+      {project.slug === "nadia-saeed-bespoke-kitchen-renovation" &&
+        isVisible(beforeAfter) &&
         beforeAfterItem &&
         beforeAfterItem.beforeImage?.url &&
         beforeAfterItem.afterImage?.url && (
@@ -160,7 +160,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                 tBeforeAfter("afterLabel"),
             }}
           />
-        )} */}
+        )}
 
       {isVisible(gallery) && gallerySlides.length > 0 && (
         <ImageCarouselSection

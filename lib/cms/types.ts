@@ -687,6 +687,7 @@ export interface CmsBlogProjectItem {
   _id: string;
   category?: string;
   slug?: string;
+  status?: string;
 }
 
 export interface CmsBlogListingSection {

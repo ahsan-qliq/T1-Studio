@@ -53,6 +53,7 @@ export interface ProjectItem {
   serviceKeys: string[];
   styleKey: string;
   propertyTypeKey: string;
+  status?: string;
   readTime?: string;
 }
 
@@ -71,6 +72,7 @@ export interface AllProjectsSectionProps {
     style: string;
     propertyType: string;
     completionYear: string;
+    status: string;
   };
   filterOptions: {
     locations: SelectOption[];
@@ -78,11 +80,13 @@ export interface AllProjectsSectionProps {
     styles: SelectOption[];
     propertyTypes: SelectOption[];
     completionYears: SelectOption[];
+    statuses: SelectOption[];
   };
   projects: ProjectItem[];
   commercialStatsBarNode?: React.ReactNode;
   retailStatsBarNode?: React.ReactNode;
   awardsNode?: React.ReactNode;
+  retailBeforeAfterNode?: React.ReactNode;
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
@@ -269,6 +273,7 @@ export function AllProjectsSection({
   commercialStatsBarNode,
   retailStatsBarNode,
   awardsNode,
+  retailBeforeAfterNode,
 }: AllProjectsSectionProps) {
 
   console.log(commercialStatsBarNode)
@@ -279,17 +284,21 @@ export function AllProjectsSection({
     category: string | null;
     location: string | null;
     completionYear: string | null;
-  }>({ category: null, location: null, completionYear: null });
+    status: string | null;
+  }>({ category: null, location: null, completionYear: null, status: null });
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT);
 
   const hasDropdownFilters =
     filterOptions.propertyTypes.length > 0 ||
     filterOptions.locations.length > 0 ||
-    filterOptions.completionYears.length > 0;
+    filterOptions.completionYears.length > 0 ||
+    filterOptions.statuses.length > 0;
 
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
+        if (activeTab === "commercial" && p.propertyType === "Villa") return false;
+        if (activeTab === "retail" && p.propertyType !== "Villa") return false;
         if (filters.category && p.propertyTypeKey !== filters.category)
           return false;
         if (filters.location && p.locationKey !== filters.location)
@@ -299,9 +308,11 @@ export function AllProjectsSection({
           String(p.completionYear) !== filters.completionYear
         )
           return false;
+        if (filters.status && p.status !== filters.status)
+          return false;
         return true;
       }),
-    [projects, filters],
+    [projects, filters, activeTab],
   );
 
   const hasActiveFilter = Object.values(filters).some(Boolean);
@@ -312,7 +323,7 @@ export function AllProjectsSection({
   const hasMore = restAll.length > visibleRest.length;
 
   const handleFilter = (
-    key: "category" | "location" | "completionYear",
+    key: "category" | "location" | "completionYear" | "status",
     value: string | null,
   ) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -320,7 +331,7 @@ export function AllProjectsSection({
   };
 
   const handleClearFilters = () => {
-    setFilters({ category: null, location: null, completionYear: null });
+    setFilters({ category: null, location: null, completionYear: null, status: null });
     setVisibleCount(INITIAL_COUNT);
   };
   const PLACEMENTS = [
@@ -330,6 +341,7 @@ export function AllProjectsSection({
     "lg:col-start-2 lg:row-start-4",
     "lg:col-start-1 lg:row-start-5",
   ] as const;
+  console.log(filtered, 342)
   return (
     <section aria-labelledby="all-projects-heading">
       <div className="mx-auto">
@@ -337,29 +349,29 @@ export function AllProjectsSection({
           value={activeTab}
           onValueChange={(v) => setActiveTab(v as "commercial" | "retail")}
         >
-          <div className="border-b border-white/10">
+          <div className="border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
             <TabsList
               variant="line"
-              className="w-auto h-auto rounded-none bg-transparent p-0 gap-0"
+              className="w-auto h-auto rounded-none bg-transparent p-0 gap-6"
             >
               <TabsTrigger
                 value="commercial"
-                className="rounded-none px-12 py-5 text-base font-medium text-white/40 data-active:text-secondary data-active:bg-transparent after:bg-secondary after:h-1 after:bottom-0 hover:text-white/70 hover:bg-transparent transition-colors duration-200"
+                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white data-active:text-black hover:data-active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Commercial
               </TabsTrigger>
               <TabsTrigger
                 value="retail"
-                className="rounded-none px-12 py-5 text-base font-medium text-white/40 data-active:text-secondary data-active:bg-transparent after:bg-secondary after:h-1 after:bottom-0 hover:text-white/70 hover:bg-transparent transition-colors duration-200"
+                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white data-active:text-black hover:data-active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
-                Retail
+                Residential
               </TabsTrigger>
             </TabsList>
           </div>
 
           {(["commercial", "retail"] as const).map((tab) => (
             <TabsContent key={tab} value={tab} className="mt-0">
-              <>
+              <div>
               {tab === "commercial" ? commercialStatsBarNode : retailStatsBarNode}
               {tab === "commercial" && awardsNode}
               {/* ── Header: heading + filters ── */}
@@ -405,6 +417,16 @@ export function AllProjectsSection({
                         onValueChange={(v) => handleFilter("completionYear", v)}
                         aria-label={filterLabels.completionYear}
                         className="w-36"
+                      />
+                    )}
+                    {filterOptions.statuses.length > 0 && (
+                      <Select
+                        placeholder={filterLabels.status}
+                        options={filterOptions.statuses}
+                        value={filters.status ?? undefined}
+                        onValueChange={(v) => handleFilter("status", v)}
+                        aria-label={filterLabels.status}
+                        className="w-40"
                       />
                     )}
                     {hasActiveFilter && (
@@ -453,7 +475,8 @@ export function AllProjectsSection({
                   </button>
                 </div>
               )}
-              </>
+              {tab === "retail" && retailBeforeAfterNode}
+              </div>
             </TabsContent>
           ))}
         </Tabs>
