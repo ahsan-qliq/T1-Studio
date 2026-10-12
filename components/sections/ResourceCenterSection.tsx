@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useId } from "react";
 import { createPortal } from "react-dom";
 import { ArrowLeft, ArrowRight, FileText, Download, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { z } from "zod";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 const PER_PAGE = 3;
@@ -28,13 +29,16 @@ export interface ResourceCenterSectionProps {
 
 // ─── Lead modal ───────────────────────────────────────────────────────────────
 
-interface LeadForm {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  company: string;
-}
+const leadSchema = z.object({
+  firstName: z.string().min(1, "Required"),
+  lastName: z.string().min(1, "Required"),
+  email: z.string().min(1, "Required").email("Enter a valid email"),
+  phone: z.string().min(1, "Required"),
+  company: z.string().optional(),
+  projectName: z.string().optional(),
+});
+
+type LeadForm = z.infer<typeof leadSchema>;
 
 const EMPTY_FORM: LeadForm = {
   firstName: "",
@@ -42,6 +46,7 @@ const EMPTY_FORM: LeadForm = {
   email: "",
   phone: "",
   company: "",
+  projectName: "",
 };
 
 function LeadModal({
@@ -53,7 +58,7 @@ function LeadModal({
 }) {
   const titleId = useId();
   const [form, setForm] = useState<LeadForm>(EMPTY_FORM);
-  const [errors, setErrors] = useState<Partial<LeadForm>>({});
+  const [errors, setErrors] = useState<Partial<Record<keyof LeadForm, string>>>({});
   const [submitting, setSubmitting] = useState(false);
   const firstInputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -84,14 +89,18 @@ function LeadModal({
   };
 
   const validate = (): boolean => {
-    const e: Partial<LeadForm> = {};
-    if (!form.firstName.trim()) e.firstName = "Required";
-    if (!form.lastName.trim()) e.lastName = "Required";
-    if (!form.email.trim()) e.email = "Required";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = "Enter a valid email";
-    if (!form.phone.trim()) e.phone = "Required";
+    const result = leadSchema.safeParse(form);
+    if (result.success) {
+      setErrors({});
+      return true;
+    }
+    const e: Partial<Record<keyof LeadForm, string>> = {};
+    for (const issue of result.error.issues) {
+      const field = issue.path[0] as keyof LeadForm;
+      if (!e[field]) e[field] = issue.message;
+    }
     setErrors(e);
-    return Object.keys(e).length === 0;
+    return false;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -256,6 +265,19 @@ function LeadModal({
               autoComplete="organization"
               value={form.company}
               onChange={set("company")}
+              className={inputClass}
+            />
+          </div>
+
+          {/* Project Name (optional) */}
+          <div>
+            <label htmlFor="rc-projectName" className="sr-only">Project Name</label>
+            <input
+              id="rc-projectName"
+              type="text"
+              placeholder="Project Name (optional)"
+              value={form.projectName}
+              onChange={set("projectName")}
               className={inputClass}
             />
           </div>
