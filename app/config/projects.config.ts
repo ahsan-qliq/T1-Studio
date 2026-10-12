@@ -45,7 +45,6 @@ export const mapProjectsFilterOptions = (filters: CmsProjectsFilters | undefined
   propertyTypes: toOptions(filters?.categories),
   completionYears: toOptions(filters?.completionYears),
   statuses: [
-    { value: "ongoing",   label: locale === "ar" ? "جارٍ" : "Ongoing" },
     { value: "completed", label: locale === "ar" ? "منجز" : "Completed" },
   ],
 });
