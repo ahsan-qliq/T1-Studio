@@ -813,6 +813,7 @@ export interface CmsBeforeAfterSection {
 export interface CmsProjectsPageSections {
   hero: CmsHeroSection;
   projects: CmsBlogListingSection;
+  stats: CmsStatsSection;
   testimonials: CmsTestimonialsSection;
   beforeAfter: CmsBeforeAfterSection;
   partnership: CmsPartnershipSectionT;
