@@ -32,6 +32,18 @@ export default async function CookiePolicyPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "CookiePolicy" });
 
+  const isAr = locale === "ar";
+  const pageUrl = isAr
+    ? "https://t1-studio.com/ar/cookie-policy/"
+    : "https://t1-studio.com/cookie-policy/";
+  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
+  const breadcrumbId = isAr
+    ? "https://t1-studio.com/ar/cookie-policy/#breadcrumb"
+    : "https://t1-studio.com/cookie-policy/#breadcrumb";
+  const webpageId = isAr
+    ? "https://t1-studio.com/ar/cookie-policy/#webpage"
+    : "https://t1-studio.com/cookie-policy/#webpage";
+
   const pageSchema = {
     structuredData: {
       "@graph": [
@@ -43,31 +55,31 @@ export default async function CookiePolicyPage({
         },
         {
           "@type": "BreadcrumbList",
-          "@id": "https://t1-studio.com/cookie-policy/#breadcrumb",
+          "@id": breadcrumbId,
           itemListElement: [
             {
               "@type": "ListItem",
               position: 1,
               name: t("breadcrumbHome"),
-              item: "https://t1-studio.com/",
+              item: homeUrl,
             },
             {
               "@type": "ListItem",
               position: 2,
               name: t("breadcrumbCurrent"),
-              item: "https://t1-studio.com/cookie-policy/",
+              item: pageUrl,
             },
           ],
         },
         {
           "@type": "WebPage",
-          "@id": "https://t1-studio.com/cookie-policy/#webpage",
-          url: "https://t1-studio.com/cookie-policy/",
+          "@id": webpageId,
+          url: pageUrl,
           name: t("metaTitle"),
           description: t("metaDescription"),
-          inLanguage: locale === "ar" ? "ar" : "en",
+          inLanguage: isAr ? "ar" : "en",
           isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": "https://t1-studio.com/cookie-policy/#breadcrumb" },
+          breadcrumb: { "@id": breadcrumbId },
         },
       ],
     },

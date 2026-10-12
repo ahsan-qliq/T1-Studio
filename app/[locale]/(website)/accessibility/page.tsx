@@ -32,6 +32,18 @@ export default async function AccessibilityPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Accessibility" });
 
+  const isAr = locale === "ar";
+  const pageUrl = isAr
+    ? "https://t1-studio.com/ar/accessibility/"
+    : "https://t1-studio.com/accessibility/";
+  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
+  const breadcrumbId = isAr
+    ? "https://t1-studio.com/ar/accessibility/#breadcrumb"
+    : "https://t1-studio.com/accessibility/#breadcrumb";
+  const webpageId = isAr
+    ? "https://t1-studio.com/ar/accessibility/#webpage"
+    : "https://t1-studio.com/accessibility/#webpage";
+
   const pageSchema = {
     structuredData: {
       "@graph": [
@@ -43,31 +55,31 @@ export default async function AccessibilityPage({
         },
         {
           "@type": "BreadcrumbList",
-          "@id": "https://t1-studio.com/accessibility/#breadcrumb",
+          "@id": breadcrumbId,
           itemListElement: [
             {
               "@type": "ListItem",
               position: 1,
               name: t("breadcrumbHome"),
-              item: "https://t1-studio.com/",
+              item: homeUrl,
             },
             {
               "@type": "ListItem",
               position: 2,
               name: t("breadcrumbCurrent"),
-              item: "https://t1-studio.com/accessibility/",
+              item: pageUrl,
             },
           ],
         },
         {
           "@type": "WebPage",
-          "@id": "https://t1-studio.com/accessibility/#webpage",
-          url: "https://t1-studio.com/accessibility/",
+          "@id": webpageId,
+          url: pageUrl,
           name: t("metaTitle"),
           description: t("metaDescription"),
-          inLanguage: locale === "ar" ? "ar" : "en",
+          inLanguage: isAr ? "ar" : "en",
           isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": "https://t1-studio.com/accessibility/#breadcrumb" },
+          breadcrumb: { "@id": breadcrumbId },
         },
       ],
     },

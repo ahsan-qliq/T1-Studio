@@ -4,6 +4,7 @@ import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { BlogsListingSection } from "@/components/sections/BlogsListingSection";
 import { getTranslations } from "next-intl/server";
+import { mapBlogPosts, mapBlogFilterOptions } from "@/app/config/blogs.config";
 
 export const revalidate = 3600;
 
@@ -40,33 +41,8 @@ export default async function BlogsPage({
   const s = cms?.sections;
   const listing = s?.blogListing;
 
-  const allPosts = listing
-    ? [
-        ...(listing.featuredArticle?.isVisible !== false
-          ? [listing.featuredArticle]
-          : []),
-        ...listing.articles.filter((a) => a.isVisible),
-      ]
-    : [];
-
-  const posts = allPosts.map((a) => ({
-    id: a._id,
-    slug: a.blogSlug,
-    title: a.title,
-    excerpt: a.excerpt,
-    category: a.category,
-    categoryKey: a.categoryKey,
-    readTime: a.readTime || undefined,
-    image: {
-      src: a.image?.url || "",
-      alt: (a.image?.alt as string) || a.title,
-    },
-    href: a.href || `/blogs/${a.blogSlug}`,
-  }));
-
-  const filterOptions = (listing?.categories ?? [])
-    .filter((c) => c.isVisible)
-    .map((c) => ({ value: c.key, label: c.label }));
+  const posts = mapBlogPosts(listing);
+  const filterOptions = mapBlogFilterOptions(listing);
 
   return (
     <main>

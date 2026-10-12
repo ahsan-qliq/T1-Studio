@@ -1,3 +1,19 @@
+import type {
+  CmsBilingualText,
+  CmsHeroSection,
+  CmsStatsSectionT,
+  CmsServicesSectionT,
+  CmsFeaturedSpacesSectionT,
+  CmsSignatureProjectsSectionT,
+  CmsJourneySection,
+  CmsWhyChooseT1Section,
+  CmsTestimonialsSection,
+  CmsPartnershipSectionT,
+  CmsAwardsRecognitionSection,
+  CmsDesignTipsSection,
+  CmsFaqSection,
+} from "@/lib/cms/types";
+import { getFaqConfig } from "@/app/config/space.config";
 import {
   Sun,
   Shield,
@@ -397,6 +413,26 @@ export const getJourneySteps = (t: Translator): JourneyStep[] => [
 
 export const getDreamSpaceConfig = (t: Translator) => ({
   imageSrc: "/assets/images/contact.webp",
+  heading: t("heading"),
+  imageAlt: t("imageAlt"),
+  propertyTypeLabel: t("propertyTypeLabel"),
+  spaceRequiredLabel: t("spaceRequiredLabel"),
+  typeOfServiceLabel: t("typeOfServiceLabel"),
+  timelineLabel: t("timelineLabel"),
+  firstNameLabel: t("firstNameLabel"),
+  lastNameLabel: t("lastNameLabel"),
+  emailLabel: t("emailLabel"),
+  phoneLabel: t("phoneLabel"),
+  submitLabel: t("submitLabel"),
+  developerDropdown1Label: t("developerProjectScaleLabel"),
+  developerDropdown2Label: t("developerProjectTypeLabel"),
+  developerDropdown3Label: t("developerServiceLabel"),
+  companyNameLabel: t("companyNameLabel"),
+  messageLabel: t("messageLabel"),
+  consentText: t("consentText"),
+  privacyPolicyLabel: t("privacyPolicyLabel"),
+  privacyPolicyHref: t("privacyPolicyHref"),
+  consentRequired: t("consentRequired"),
 
   audienceTabs: [
     { id: "homeOwners", label: t("homeOwnersTab") },
@@ -679,3 +715,267 @@ export const getLocationColumns = (t: Translator) => {
     { city: t("abuDhabi"), links: abuDhabiLinks },
   ];
 };
+
+// ─── CMS pick helper ──────────────────────────────────────────────────────────
+
+export type PickFn = (field: CmsBilingualText | string | undefined) => string;
+
+export function pick(
+  field: CmsBilingualText | string | undefined,
+  locale: string,
+): string {
+  if (!field) return "";
+  if (typeof field === "string") return field;
+  return field[locale as "en" | "ar"] ?? field.en ?? "";
+}
+
+// ─── Section resolvers (CMS → component props, with translation fallback) ────
+
+const PROJECT_SIZES = [
+  { width: 700, height: 500 },
+  { width: 280, height: 180 },
+  { width: 560, height: 480 },
+];
+
+const JOURNEY_ICONS = [Globe, Lightbulb, Building2, Rocket, TrendingUp];
+const JOURNEY_HIGHLIGHT_ICONS = [User, Maximize2, Shield, CheckCircle2, RefreshCw];
+
+function toSpaceHref(raw: string): string {
+  const clean = raw.trim().replace(/\s+/g, "-");
+  if (clean.startsWith("/spaces/")) return clean;
+  return `/spaces/${clean.replace(/^\//, "")}`;
+}
+
+export const resolveHero = (
+  cms: CmsHeroSection | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  badge: cms ? p(cms.eyebrow) : t("badge"),
+  heading: cms ? p(cms.heading) : t("heading"),
+  description: cms ? p(cms.description) : t("description"),
+  cta: cms ? p(cms.primaryButton.label) : t("cta"),
+  imageSrc: cms?.backgroundImage.url,
+});
+
+export const resolveStats = (cms: CmsStatsSectionT | undefined, p: PickFn) =>
+  cms?.statistics
+    .filter((s) => s.isVisible)
+    .map((s) => ({ value: s.value, label: p(s.label) }));
+
+export const resolveServices = (
+  cms: CmsServicesSectionT | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  label: cms ? p(cms.eyebrow) : t("label"),
+  heading: cms ? p(cms.heading) : t("heading"),
+  services: cms
+    ? cms.services
+        .filter((s) => s.isVisible)
+        .map((s) => ({ title: p(s.title), subtitle: p(s.description ?? "") }))
+    : getServiceItems(t),
+});
+
+export const resolveAccordionSpaces = (
+  cms: CmsFeaturedSpacesSectionT | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  heading: cms ? p(cms.heading) : t("heading"),
+  viewAllLabel: cms ? p(cms.button.label) : t("viewAllLabel"),
+  spaces: cms
+    ? cms.spaces
+        .filter((sp) => sp.isVisible)
+        .map((sp) => ({
+          id: sp._id,
+          title: p(sp.title),
+          href: toSpaceHref(sp.href),
+          image: { src: sp.image.url, alt: p(sp.image.alt) },
+        }))
+    : getAccordionSpaces(t),
+});
+
+export const resolveSignatureProjects = (
+  cms: CmsSignatureProjectsSectionT | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  heading: cms ? p(cms.heading) : t("heading"),
+  viewAllLabel: cms ? p(cms.button.label) : t("viewAllLabel"),
+  projects: cms
+    ? cms.projects
+        .filter((pr) => pr.isVisible)
+        .map((pr, i) => ({
+          id: pr._id,
+          title: p(pr.title),
+          location: p(pr.location),
+          href: pr.href,
+          image: {
+            src: pr.image.url,
+            alt: p(pr.image.alt),
+            ...(PROJECT_SIZES[i] ?? { width: 700, height: 500 }),
+          },
+        }))
+    : getSignatureProjects(t),
+});
+
+export const resolveJourney = (
+  cms: CmsJourneySection | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  label: cms ? p(cms.eyebrow) : t("label"),
+  heading: cms ? p(cms.heading) : t("heading"),
+  steps: cms
+    ? cms.steps
+        .filter((s) => s.isVisible)
+        .map((step, i) => ({
+          number: String(i + 1).padStart(2, "0"),
+          icon: JOURNEY_ICONS[i] ?? Globe,
+          title: p(step.title),
+          subtitle: p(step.subtitle),
+          description: p(step.description),
+          advantageText: p(step.advantageTitle),
+          highlightIcon: JOURNEY_HIGHLIGHT_ICONS[i] ?? User,
+          highlightText: p(step.highlight),
+          extraContent:
+            i === 1
+              ? createElement(SmartSpaceDiagram, {
+                  badge: t("smartSpaceBadge"),
+                  items: [
+                    { icon: LayoutGrid, label: t("smartSpaceItem1") },
+                    { icon: LayoutGrid, label: t("smartSpaceItem2") },
+                    { icon: LayoutGrid, label: t("smartSpaceItem3") },
+                  ],
+                })
+              : i === 2
+                ? createElement(KellerBadge, {
+                    line1: t("kellerLine1"),
+                    line2: t("kellerLine2"),
+                  })
+                : undefined,
+        }))
+    : getJourneySteps(t),
+});
+
+export const resolveComparison = (
+  cms: CmsWhyChooseT1Section | undefined,
+  p: PickFn,
+  t: Translator,
+) => ({
+  heading: cms ? p(cms.heading) : t("heading"),
+  columns: cms
+    ? cms.columns.map((col) => ({
+        title: p(col.title),
+        variant: (col.highlighted ? "dark" : "light") as "dark" | "light",
+        features: col.items.map((item) => p(item.label)),
+      }))
+    : getComparisonColumns(t),
+});
+
+export const resolveTestimonials = (
+  cms: CmsTestimonialsSection | undefined,
+  p: PickFn,
+  t: Translator,
+) => {
+  const fallback = getTestimonialsConfig(t);
+  return {
+    label: cms ? p(cms.eyebrow) : fallback.label,
+    heading: cms ? p(cms.heading) : fallback.heading,
+    testimonials: cms
+      ? cms.testimonials
+          .filter((item) => item.isVisible)
+          .map((item, i) => ({
+            id: i,
+            name: item.clientName,
+            quote: item.testimonial,
+            image: item.image.url,
+            videoUrl: item.videoUrl,
+          }))
+      : fallback.testimonials.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quote: item.quote,
+          image: item.image,
+        })),
+  };
+};
+
+export const resolveReferral = (
+  cms: CmsPartnershipSectionT | undefined,
+  p: PickFn,
+  t: Translator,
+) =>
+  cms
+    ? {
+        heading: p(cms.heading),
+        description: p(cms.description),
+        imageSrc: cms.image.url,
+        imageAlt: p(cms.image.alt),
+        ctaLabel: p(cms.button.label),
+        ctaHref: cms.button.href,
+        steps: cms.steps.map((step) => ({
+          label: p(step.title),
+          iconName: step.icon,
+        })),
+        benefits: [] as { label: string; iconName: string }[],
+      }
+    : getReferralPartnerConfig(t);
+
+export const resolveAwards = (
+  cms: CmsAwardsRecognitionSection | undefined,
+  p: PickFn,
+  t: Translator,
+) =>
+  cms
+    ? {
+        label: p(cms.heading),
+        logos: cms.awards.map((award) => ({
+          src: award.logo.url,
+          alt: p(award.logo.alt),
+          width: 120,
+          height: 40,
+        })),
+      }
+    : getAwardsConfig(t);
+
+export const resolveBlog = (
+  cms: CmsDesignTipsSection | undefined,
+  p: PickFn,
+  t: Translator,
+) =>
+  cms
+    ? {
+        label: p(cms.eyebrow),
+        heading: p(cms.heading),
+        viewAllLabel: p(cms.button.label),
+        viewAllHref: "/blogs",
+        learnMoreLabel: t("learnMoreLabel"),
+        posts: cms.articles
+          .filter((a) => a.isVisible)
+          .map((a) => ({
+            slug: a._id,
+            tag: a.category,
+            readTime: a.readTime,
+            title: a.title,
+            href: a.href,
+            image: { src: a.image.url, alt: p(a.image.alt) },
+          })),
+      }
+    : getBlogConfig(t);
+
+export const resolveFaq = (
+  cms: CmsFaqSection | undefined,
+  p: PickFn,
+  t: Translator,
+) =>
+  cms
+    ? {
+        label: p(cms.eyebrow),
+        heading: p(cms.heading),
+        items: cms.faqs
+          .filter((f) => f.isVisible)
+          .map((f) => ({ question: p(f.question), answer: p(f.answer) })),
+      }
+    : getFaqConfig(t);

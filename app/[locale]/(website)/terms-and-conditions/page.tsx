@@ -32,6 +32,18 @@ export default async function TermsConditionsPage({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "TermsConditions" });
 
+  const isAr = locale === "ar";
+  const pageUrl = isAr
+    ? "https://t1-studio.com/ar/terms-and-conditions/"
+    : "https://t1-studio.com/terms-and-conditions/";
+  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
+  const breadcrumbId = isAr
+    ? "https://t1-studio.com/ar/terms-and-conditions/#breadcrumb"
+    : "https://t1-studio.com/terms-and-conditions/#breadcrumb";
+  const webpageId = isAr
+    ? "https://t1-studio.com/ar/terms-and-conditions/#webpage"
+    : "https://t1-studio.com/terms-and-conditions/#webpage";
+
   const pageSchema = {
     structuredData: {
       "@graph": [
@@ -39,35 +51,42 @@ export default async function TermsConditionsPage({
           "@type": "Organization",
           "@id": "https://t1-studio.com/#organization",
           name: "T1 Studio",
+          ...(isAr && {
+            alternateName: "T.ONE Studio",
+            legalName: "T.One Universal Trading LLC",
+          }),
           url: "https://t1-studio.com/",
         },
         {
           "@type": "BreadcrumbList",
-          "@id": "https://t1-studio.com/terms-and-conditions/#breadcrumb",
+          "@id": breadcrumbId,
           itemListElement: [
             {
               "@type": "ListItem",
               position: 1,
               name: t("breadcrumbHome"),
-              item: "https://t1-studio.com/",
+              item: homeUrl,
             },
             {
               "@type": "ListItem",
               position: 2,
               name: t("breadcrumbCurrent"),
-              item: "https://t1-studio.com/terms-and-conditions/",
+              item: pageUrl,
             },
           ],
         },
         {
           "@type": "WebPage",
-          "@id": "https://t1-studio.com/terms-and-conditions/#webpage",
-          url: "https://t1-studio.com/terms-and-conditions/",
+          "@id": webpageId,
+          url: pageUrl,
           name: t("metaTitle"),
           description: t("metaDescription"),
-          inLanguage: locale === "ar" ? "ar" : "en",
+          inLanguage: isAr ? "ar" : "en",
           isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": "https://t1-studio.com/terms-and-conditions/#breadcrumb" },
+          breadcrumb: { "@id": breadcrumbId },
+          ...(isAr && {
+            about: { "@id": "https://t1-studio.com/#organization" },
+          }),
         },
       ],
     },
