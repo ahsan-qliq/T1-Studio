@@ -17,7 +17,7 @@ export default function WebsiteLayout({
           alt=""
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover scale-125"
           priority
         />
       </div>

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Link } from "@/app/i18n/navigation";
 import { Select, type SelectOption } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { motion, useInView } from "framer-motion";
 
 import { cn } from "@/lib/utils";
@@ -79,6 +80,8 @@ export interface AllProjectsSectionProps {
     completionYears: SelectOption[];
   };
   projects: ProjectItem[];
+  statsBarNode?: React.ReactNode;
+  awardsNode?: React.ReactNode;
 }
 
 // ─── Badge ────────────────────────────────────────────────────────────────────
@@ -107,7 +110,6 @@ function FeaturedCard({
       <div
         className="relative grid grid-cols-2 overflow-hidden border-b border-white/10 lg:border-r"
         style={{ aspectRatio: "4 / 5" }}
-        // className="relative min-h-80 border-b border-white/10 lg:border-r lg:min-h-0 lg:self-stretch"
       >
         {project.image.src ? (
           <Image
@@ -136,9 +138,15 @@ function FeaturedCard({
         <h3 className="max-w-2xl text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
           {project.title}
         </h3>
-        <p className="text-base text-secondary font-medium">Property Type: {project.propertyType}</p>
-        <p className="text-base text-secondary font-medium">Completion Year: {project.completionYear}</p>
-        <p className="text-base text-secondary font-medium">Location: {project.location}</p>
+        <p className="text-base text-secondary font-medium">
+          Property Type: {project.propertyType}
+        </p>
+        <p className="text-base text-secondary font-medium">
+          Completion Year: {project.completionYear}
+        </p>
+        <p className="text-base text-secondary font-medium">
+          Location: {project.location}
+        </p>
 
         {project.description && (
           <p className="max-w-lg text-sm leading-relaxed text-secondary sm:text-[0.9375rem]">
@@ -149,7 +157,7 @@ function FeaturedCard({
         <div>
           <Link
             href={project.href}
-            className="group inline-flex items-center gap-2 rounded-full bg-secondary border border-white/30 px-6 py-2.5 text-sm font-medium text-black transition-colors duration-200 hover:border-black/60 hover:bg-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            className="group inline-flex items-center gap-2 rounded-full bg-secondary border border-white/30 px-6 py-2.5 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white hover:border-black hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
           >
             {viewCaseStudyLabel}
             <ArrowRight
@@ -257,7 +265,13 @@ export function AllProjectsSection({
   filterLabels,
   filterOptions,
   projects,
+  statsBarNode,
+  awardsNode,
 }: AllProjectsSectionProps) {
+  console.log("statsBarNode", statsBarNode);
+  const [activeTab, setActiveTab] = useState<"commercial" | "retail">(
+    "commercial",
+  );
   const [filters, setFilters] = useState<{
     category: string | null;
     location: string | null;
@@ -288,8 +302,8 @@ export function AllProjectsSection({
   );
 
   const hasActiveFilter = Object.values(filters).some(Boolean);
-
-  const featured = filtered[0];
+  console.log("filtered", filtered);
+  const featured = filtered;
   const restAll = filtered.slice(1);
   const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
   const hasMore = restAll.length > visibleRest.length;
@@ -316,126 +330,128 @@ export function AllProjectsSection({
   return (
     <section aria-labelledby="all-projects-heading">
       <div className="mx-auto">
-        {/* ── Header: heading + filters ── */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
-          <h2
-            id="all-projects-heading"
-            className="text-3xl font-bold text-white sm:text-4xl"
-          >
-            {heading}
-          </h2>
-
-          {hasDropdownFilters && (
-            <div
-              role="search"
-              aria-label="Project filters"
-              className="flex flex-wrap items-center gap-3"
+        <Tabs
+          value={activeTab}
+          onValueChange={(v) => setActiveTab(v as "commercial" | "retail")}
+        >
+          <div className="border-b border-white/10">
+            <TabsList
+              variant="line"
+              className="w-auto h-auto rounded-none bg-transparent p-0 gap-0"
             >
-              {filterOptions.propertyTypes.length > 0 && (
-                <Select
-                  placeholder={filterLabels.propertyType}
-                  options={filterOptions.propertyTypes}
-                  value={filters.category ?? undefined}
-                  onValueChange={(v) => handleFilter("category", v)}
-                  aria-label={filterLabels.propertyType}
-                  className="w-44"
-                />
-              )}
-              {filterOptions.locations.length > 0 && (
-                <Select
-                  placeholder={filterLabels.locations}
-                  options={filterOptions.locations}
-                  value={filters.location ?? undefined}
-                  onValueChange={(v) => handleFilter("location", v)}
-                  aria-label={filterLabels.locations}
-                  className="w-52"
-                />
-              )}
-              {filterOptions.completionYears.length > 0 && (
-                <Select
-                  placeholder={filterLabels.completionYear}
-                  options={filterOptions.completionYears}
-                  value={filters.completionYear ?? undefined}
-                  onValueChange={(v) => handleFilter("completionYear", v)}
-                  aria-label={filterLabels.completionYear}
-                  className="w-36"
-                />
-              )}
-              {hasActiveFilter && (
-                <button
-                  type="button"
-                  onClick={handleClearFilters}
-                  className="text-sm font-medium text-white/50 underline underline-offset-4 hover:text-white/80"
-                >
-                  {clearFiltersLabel}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* ── Results ── */}
-        {filtered.length === 0 ? (
-          <div className="flex flex-col items-center gap-4 py-20 text-center">
-            <p className="text-white/50">{noResultsLabel}</p>
+              <TabsTrigger
+                value="commercial"
+                className="rounded-none px-12 py-5 text-base font-medium text-white/40 data-active:text-secondary data-active:bg-transparent after:bg-secondary after:h-1 after:bottom-0 hover:text-white/70 hover:bg-transparent transition-colors duration-200"
+              >
+                Commercial
+              </TabsTrigger>
+              <TabsTrigger
+                value="retail"
+                className="rounded-none px-12 py-5 text-base font-medium text-white/40 data-active:text-secondary data-active:bg-transparent after:bg-secondary after:h-1 after:bottom-0 hover:text-white/70 hover:bg-transparent transition-colors duration-200"
+              >
+                Retail
+              </TabsTrigger>
+            </TabsList>
           </div>
-        ) : (
-          <>
-            {/* Featured: image (col 1) | content (col 2-3) */}
-            {featured && (
-              <div className="lg:grid lg:grid-cols-3">
-                <FeaturedCard
-                  project={featured}
-                  viewCaseStudyLabel={viewCaseStudyLabel}
-                />
-              </div>
-            )}
 
-            {/* Compact cards — spine layout */}
-            {visibleRest.length > 0 && (
-              <div className="relative overflow-hidden mt-16">
-                {/* Vertical spine line */}
-                <div
-                  className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-px bg-white/20 lg:block"
-                  aria-hidden="true"
-                />
-                <ul
-                  role="list"
-                  className="grid grid-cols-1 gap-y-6 lg:grid-cols-2 lg:gap-x-0 lg:gap-y-0"
+          {(["commercial", "retail"] as const).map((tab) => (
+            <TabsContent key={tab} value={tab} className="mt-0">
+              {statsBarNode}
+              {tab === "commercial" && awardsNode}
+              {/* ── Header: heading + filters ── */}
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
+                <h2
+                  id="all-projects-heading"
+                  className="text-3xl font-bold text-white sm:text-4xl"
                 >
-                  {visibleRest.map((project, i) => {
-                    const isLeft = i % 2 === 0;
-                    return (
-                      <li
-                        key={project.id}
-                        className={`${PLACEMENTS[i] ?? ""} ${CARD_WIDTHS[i] ?? ""}`}
+                  {heading}
+                </h2>
+
+                {hasDropdownFilters && (
+                  <div
+                    role="search"
+                    aria-label="Project filters"
+                    className="flex flex-wrap items-center gap-3"
+                  >
+                    {filterOptions.propertyTypes.length > 0 && (
+                      <Select
+                        placeholder={filterLabels.propertyType}
+                        options={filterOptions.propertyTypes}
+                        value={filters.category ?? undefined}
+                        onValueChange={(v) => handleFilter("category", v)}
+                        aria-label={filterLabels.propertyType}
+                        className="w-44"
+                      />
+                    )}
+                    {filterOptions.locations.length > 0 && (
+                      <Select
+                        placeholder={filterLabels.locations}
+                        options={filterOptions.locations}
+                        value={filters.location ?? undefined}
+                        onValueChange={(v) => handleFilter("location", v)}
+                        aria-label={filterLabels.locations}
+                        className="w-52"
+                      />
+                    )}
+                    {filterOptions.completionYears.length > 0 && (
+                      <Select
+                        placeholder={filterLabels.completionYear}
+                        options={filterOptions.completionYears}
+                        value={filters.completionYear ?? undefined}
+                        onValueChange={(v) => handleFilter("completionYear", v)}
+                        aria-label={filterLabels.completionYear}
+                        className="w-36"
+                      />
+                    )}
+                    {hasActiveFilter && (
+                      <button
+                        type="button"
+                        onClick={handleClearFilters}
+                        className="text-sm font-medium text-white/50 underline underline-offset-4 hover:text-white/80"
                       >
-                        <CompactCard
-                          project={project}
-                          isRight={!isLeft}
-                          index={i}
-                        />
-                      </li>
-                    );
-                  })}
-                </ul>
+                        {clearFiltersLabel}
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
-            )}
-          </>
-        )}
 
-        {/* ── Load more ── */}
-        {hasMore && (
-          <div className="flex justify-center border-t border-white/10 py-16">
-            <button
-              type="button"
-              onClick={() => setVisibleCount((c) => c + INITIAL_COUNT)}
-              className="rounded-full border border-white/25 px-8 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-            >
-              {loadMoreLabel}
-            </button>
-          </div>
-        )}
+              {/* ── Results ── */}
+              {filtered.length === 0 ? (
+                <div className="flex flex-col items-center gap-4 py-20 text-center">
+                  <p className="text-white/50">{noResultsLabel}</p>
+                </div>
+              ) : (
+                <>
+                  {featured && (
+                    <div className="lg:grid lg:grid-cols-3">
+                      {filtered.map((item) => (
+                        <FeaturedCard
+                          key={item.id}
+                          project={item}
+                          viewCaseStudyLabel={viewCaseStudyLabel}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* ── Load more ── */}
+              {hasMore && (
+                <div className="flex justify-center border-t border-white/10 py-16">
+                  <button
+                    type="button"
+                    onClick={() => setVisibleCount((c) => c + INITIAL_COUNT)}
+                    className="rounded-full border border-white/25 px-8 py-3 text-sm font-medium text-white transition-colors duration-200 hover:border-white/50 hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                  >
+                    {loadMoreLabel}
+                  </button>
+                </div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
       </div>
     </section>
   );

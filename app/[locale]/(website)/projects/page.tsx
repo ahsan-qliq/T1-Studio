@@ -3,6 +3,8 @@ import { getProjectsPageCms } from "@/lib/cms/projects";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { HeroBanner } from "@/components/sections/HeroBanner";
 import { AllProjectsSection } from "@/components/sections/AllProjectsSection";
+import { StatsBar } from "@/components/sections/StatsBar";
+import { AwardsSection } from "@/components/sections/AwardsSection";
 import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
 import { BeforeAfterSection } from "@/components/sections/BeforeAfterSection";
 import { ReferralPartnerSection } from "@/components/sections/ReferralPartnerSection";
@@ -75,6 +77,22 @@ export default async function ProjectsPage({
           {...mapProjectsAllProjectsLabels(projectsSection, locale)}
           filterOptions={filterOptions}
           projects={projectItems}
+          statsBarNode={
+            s?.stats?.isVisible && s.stats.stats.some((st) => st.isVisible) ? (
+              <StatsBar
+                sectionLabel="Project stats"
+                items={s.stats.stats
+                  .filter((st) => st.isVisible)
+                  .map((st) => ({ value: st.value, label: getText(st.label, locale) }))}
+              />
+            ) : null
+          }
+          awardsNode={
+            <AwardsSection
+              label={locale === "ar" ? "شركاؤنا" : "Our Partners"}
+              logos={[]}
+            />
+          }
         />
       )}
 

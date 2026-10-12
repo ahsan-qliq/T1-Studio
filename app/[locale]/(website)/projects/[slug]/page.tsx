@@ -134,7 +134,11 @@ export default async function ProjectDetailsPage({ params }: Props) {
         />
       )}
 
-      {isVisible(beforeAfter) &&
+      {/* =====================================================
+          BEFORE / AFTER
+      ===================================================== */}
+
+      {/* {isVisible(beforeAfter) &&
         beforeAfterItem &&
         beforeAfterItem.beforeImage?.url &&
         beforeAfterItem.afterImage?.url && (
@@ -156,7 +160,7 @@ export default async function ProjectDetailsPage({ params }: Props) {
                 tBeforeAfter("afterLabel"),
             }}
           />
-        )}
+        )} */}
 
       {isVisible(gallery) && gallerySlides.length > 0 && (
         <ImageCarouselSection
