@@ -308,7 +308,7 @@ export function AllProjectsSection({
           String(p.completionYear) !== filters.completionYear
         )
           return false;
-        if (filters.status && p.status !== filters.status)
+        if (filters.status === "ongoing" && p.status !== "ongoing")
           return false;
         return true;
       }),
@@ -356,13 +356,13 @@ export function AllProjectsSection({
             >
               <TabsTrigger
                 value="commercial"
-                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white data-active:text-black hover:data-active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white/10 data-active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Commercial
               </TabsTrigger>
               <TabsTrigger
                 value="retail"
-                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white data-active:text-black hover:data-active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white/10 data-active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 Residential
               </TabsTrigger>
