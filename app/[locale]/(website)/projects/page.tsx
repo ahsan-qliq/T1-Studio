@@ -57,6 +57,10 @@ export default async function ProjectsPage({
 
   const ba = s?.beforeAfter ? mapProjectsBeforeAfter(s.beforeAfter, locale) : null;
 
+  const commercialStatSection = s?.stats?.find((st) => st.category === "commercial");
+  const retailStatSection = s?.stats?.find((st) => st.category === "retail");
+  const commercialLogosSection = s?.logos?.find((l) => l.category === "commercial");
+
   return (
     <main>
       {hero?.isVisible && (
@@ -77,21 +81,32 @@ export default async function ProjectsPage({
           {...mapProjectsAllProjectsLabels(projectsSection, locale)}
           filterOptions={filterOptions}
           projects={projectItems}
-          statsBarNode={
-            s?.stats?.isVisible && s.stats.stats.some((st) => st.isVisible) ? (
+          commercialStatsBarNode={
+            commercialStatSection?.stats?.length ? (
               <StatsBar
-                sectionLabel="Project stats"
-                items={s.stats.stats
-                  .filter((st) => st.isVisible)
-                  .map((st) => ({ value: st.value, label: getText(st.label, locale) }))}
+                sectionLabel={commercialStatSection.heading}
+                items={commercialStatSection.stats.map((st) => ({ value: st.value, label: getText(st.label, locale) }))}
               />
-            ) : null
+            ) : undefined
+          }
+          retailStatsBarNode={
+            retailStatSection?.stats?.length ? (
+              <StatsBar
+                sectionLabel={retailStatSection.heading}
+                items={retailStatSection.stats.map((st) => ({ value: st.value, label: getText(st.label, locale) }))}
+              />
+            ) : undefined
           }
           awardsNode={
-            <AwardsSection
-              label={locale === "ar" ? "شركاؤنا" : "Our Partners"}
-              logos={[]}
-            />
+            commercialLogosSection?.logos?.length ? (
+              <AwardsSection
+                label={commercialLogosSection.heading}
+                logos={commercialLogosSection.logos.map((l) => ({
+                  src: l.logo?.url ?? "",
+                  alt: getText(l.logo?.alt, locale),
+                }))}
+              />
+            ) : undefined
           }
         />
       )}
