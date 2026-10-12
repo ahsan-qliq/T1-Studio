@@ -67,7 +67,7 @@ export function AwardsSection({ label, logos, className }: AwardsSectionProps) {
                   alt={logo.alt}
                   fill
                   sizes="80px"
-                  className="object-contain grayscale transition-all duration-300 "
+                  className="object-contain transition-all duration-300 "
                 />
               </div>
             ))}
