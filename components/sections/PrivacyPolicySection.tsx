@@ -29,10 +29,12 @@ export interface PrivacyPolicySectionProps {
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-function useActiveSection(ids: string[]): string {
+function useActiveSection(ids: string[], root: React.RefObject<HTMLDivElement | null>): string {
   const [activeId, setActiveId] = useState(ids[0] ?? '');
 
   useEffect(() => {
+    if (!root.current) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -42,7 +44,7 @@ function useActiveSection(ids: string[]): string {
           }
         }
       },
-      { rootMargin: '-15% 0px -70% 0px', threshold: 0 },
+      { root: root.current, rootMargin: '-10% 0px -70% 0px', threshold: 0 },
     );
 
     ids.forEach((id) => {
@@ -51,7 +53,7 @@ function useActiveSection(ids: string[]): string {
     });
 
     return () => observer.disconnect();
-  }, [ids]);
+  }, [ids, root]);
 
   return activeId;
 }
@@ -68,7 +70,7 @@ function SectionBlock({ section, index }: { section: PrivacySection; index: numb
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, ease: EASE, delay: 0.04 * index }}
-      className="scroll-mt-28 border-b border-secondary/10 pb-10 last:border-0"
+      className="border-b border-secondary/10 pb-10 last:border-0"
     >
       <h2
         id={`${section.id}-heading`}
@@ -147,16 +149,28 @@ export function PrivacyPolicySection({
 }: PrivacyPolicySectionProps) {
   const headerRef = useRef<HTMLDivElement>(null);
   const headerInView = useInView(headerRef as React.RefObject<Element>, { once: true, margin: '-60px' });
+  const contentRef = useRef<HTMLDivElement>(null);
   const ids = sections.map((s) => s.id);
-  const activeId = useActiveSection(ids);
+  const activeId = useActiveSection(ids, contentRef);
+
+  function scrollToSection(id: string) {
+    const el = document.getElementById(id);
+    const container = contentRef.current;
+    if (!el || !container) return;
+    const offset = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 16;
+    container.scrollTo({ top: offset, behavior: 'smooth' });
+  }
 
   return (
     <section aria-label="Privacy policy content" className="page-wrap py-16 lg:py-24">
-      <div className="flex flex-col gap-12 lg:flex-row lg:gap-16 xl:gap-20">
+      <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:gap-16 xl:gap-20">
 
         {/* Sticky sidebar — table of contents */}
-        <aside aria-label={tocLabel} className="shrink-0 lg:w-56 xl:w-64">
-          <div ref={headerRef} className="lg:sticky lg:top-28">
+        <aside
+          aria-label={tocLabel}
+          className="shrink-0 lg:w-56 xl:w-64 lg:sticky lg:top-28 lg:self-start"
+        >
+          <div ref={headerRef}>
             <motion.p
               className="mb-5 text-xs font-semibold uppercase tracking-widest text-secondary/40"
               initial={{ opacity: 0, x: -16 }}
@@ -179,6 +193,10 @@ export function PrivacyPolicySection({
                     >
                       <a
                         href={`#${s.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToSection(s.id);
+                        }}
                         aria-current={isActive ? 'true' : undefined}
                         className={cn(
                           'group flex items-start gap-3 border-l-2 py-1.5 pl-3 text-sm transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
@@ -215,8 +233,11 @@ export function PrivacyPolicySection({
           </div>
         </aside>
 
-        {/* Main content */}
-        <div className="min-w-0 flex-1 space-y-10">
+        {/* Scrollable content — only this column scrolls */}
+        <div
+          ref={contentRef}
+          className="min-w-0 flex-1 space-y-10 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto lg:pr-3"
+        >
           {sections.map((section, i) => (
             <SectionBlock key={section.id} section={section} index={i} />
           ))}
