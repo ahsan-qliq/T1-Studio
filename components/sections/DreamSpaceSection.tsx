@@ -361,9 +361,7 @@ export function DreamSpaceSection({
     setSubmitError(null);
 
     try {
-      console.log(process.env.NEXT_PUBLIC_CMS_API_BASE_URL, 364)
       const apiBase = (process.env.NEXT_PUBLIC_CMS_API_BASE_URL ?? '').replace(/\/$/, '');
-      console.log(apiBase, 365)
       const res = await fetch(`${apiBase}/api/contact-submissions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

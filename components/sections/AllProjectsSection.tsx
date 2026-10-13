@@ -276,7 +276,6 @@ export function AllProjectsSection({
   retailBeforeAfterNode,
 }: AllProjectsSectionProps) {
 
-  console.log(commercialStatsBarNode)
   const [activeTab, setActiveTab] = useState<"commercial" | "retail">(
     "commercial",
   );
@@ -316,7 +315,6 @@ export function AllProjectsSection({
   );
 
   const hasActiveFilter = Object.values(filters).some(Boolean);
-  console.log("filtered", filtered);
   const featured = filtered;
   const restAll = filtered.slice(1);
   const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
@@ -334,14 +332,7 @@ export function AllProjectsSection({
     setFilters({ category: null, location: null, completionYear: null, status: null });
     setVisibleCount(INITIAL_COUNT);
   };
-  const PLACEMENTS = [
-    "lg:col-start-1 lg:row-start-1",
-    "lg:col-start-2 lg:row-start-2",
-    "lg:col-start-1 lg:row-start-3",
-    "lg:col-start-2 lg:row-start-4",
-    "lg:col-start-1 lg:row-start-5",
-  ] as const;
-  console.log(filtered, 342)
+  
   return (
     <section aria-labelledby="all-projects-heading">
       <div className="mx-auto">
