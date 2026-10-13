@@ -1489,6 +1489,215 @@ export interface CmsProjectDetailSeo {
   structuredData?: Record<string, unknown>;
 }
 
+// ─── Cookie Policy page (named sections, not items array) ────────────────────
+
+export interface CmsCookiePolicySimpleSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+}
+
+export interface CmsCookiePolicyCategoryItem {
+  _id?: string;
+  title: string;
+  body: string;
+}
+
+export interface CmsCookiePolicyTypesSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  categories: CmsCookiePolicyCategoryItem[];
+  note: string;
+}
+
+export interface CmsCookiePolicyChoicesSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  choices: string[];
+  note: string;
+}
+
+export interface CmsCookiePolicyContactSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  contactSubTitle: string;
+  contactItems: string[];
+}
+
+export interface CmsCookiePolicyFaqItem {
+  _id?: string;
+  question: string;
+  answer: string;
+}
+
+export interface CmsCookiePolicyFaqSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  faqs: CmsCookiePolicyFaqItem[];
+}
+
+export interface CmsCookiePolicyPageSections {
+  hero: CmsPolicyHeroSection;
+  aboutPolicy: CmsCookiePolicySimpleSection;
+  whatAreCookies: CmsCookiePolicySimpleSection;
+  cookieTypes: CmsCookiePolicyTypesSection;
+  yourChoices: CmsCookiePolicyChoicesSection;
+  yourRights: CmsCookiePolicySimpleSection;
+  changes: CmsCookiePolicySimpleSection;
+  contact: CmsCookiePolicyContactSection;
+  faq: CmsCookiePolicyFaqSection;
+}
+
+export interface CmsCookiePolicyPage {
+  _id: string;
+  slug: string;
+  pageName: string;
+  status: string;
+  sections: CmsCookiePolicyPageSections;
+  seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
+  publishedAt: string | null;
+}
+
+// ─── Accessibility page (named sections) ─────────────────────────────────────
+
+export interface CmsAccessibilitySimpleSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+}
+
+export interface CmsAccessibilityStandardsSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  standards: string[];
+  note: string;
+}
+
+export interface CmsAccessibilityShortfallItem {
+  _id?: string;
+  title: string;
+  body: string;
+}
+
+export interface CmsAccessibilityShortfallsSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  items: CmsAccessibilityShortfallItem[];
+  note: string;
+}
+
+export interface CmsAccessibilityContactSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  body: string;
+  contactSubTitle: string;
+  contactItems: string[];
+  note: string;
+}
+
+export interface CmsAccessibilityFaqItem {
+  _id?: string;
+  question: string;
+  answer: string;
+}
+
+export interface CmsAccessibilityFaqSection {
+  isVisible: boolean;
+  order: number;
+  title: string;
+  faqs: CmsAccessibilityFaqItem[];
+}
+
+export interface CmsAccessibilityPageSections {
+  hero: CmsPolicyHeroSection;
+  commitment: CmsAccessibilitySimpleSection;
+  standards: CmsAccessibilityStandardsSection;
+  shortfalls: CmsAccessibilityShortfallsSection;
+  beyondWebsite: CmsAccessibilitySimpleSection;
+  contact: CmsAccessibilityContactSection;
+  faq: CmsAccessibilityFaqSection;
+}
+
+export interface CmsAccessibilityPage {
+  _id: string;
+  slug: string;
+  pageName: string;
+  status: string;
+  sections: CmsAccessibilityPageSections;
+  seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
+  publishedAt: string | null;
+}
+
+// ─── Policy pages (privacy, terms, cookie, accessibility) ────────────────────
+
+export interface CmsPolicyHeroSection {
+  isVisible: boolean;
+  order: number;
+  heading: string;
+  description: string;
+  bgImage: CmsImage;
+  breadcrumbs: Array<{ label: string; href: string }>;
+}
+
+export interface CmsPolicyContentSubsection {
+  _id?: string;
+  title: string;
+  body?: string;
+  items?: string[];
+}
+
+export interface CmsPolicyContentItem {
+  _id: string;
+  title: string;
+  body?: string;
+  intro?: string;
+  subsections?: CmsPolicyContentSubsection[];
+  isVisible?: boolean;
+  linkText?: string;
+  linkHref?: string;
+}
+
+export interface CmsPolicyContentSection {
+  isVisible: boolean;
+  order: number;
+  tocLabel: string;
+  lastUpdated: string;
+  contactEmail: string;
+  items: CmsPolicyContentItem[];
+}
+
+export interface CmsPolicyPageSections {
+  hero: CmsPolicyHeroSection;
+  content: CmsPolicyContentSection;
+}
+
+export interface CmsPolicyPage {
+  _id: string;
+  slug: string;
+  pageName: string;
+  status: string;
+  sections: CmsPolicyPageSections;
+  seo?: CmsHomePageSeo;
+  globalSeo?: CmsGlobalSeo;
+  publishedAt: string | null;
+}
+
 // ─── Full Project Detail Page ────────────────────────────────────────────────
 
 export interface CmsProjectDetail {
