@@ -47,7 +47,6 @@ export default async function PrivacyPolicyPage({
   const hero = cms?.sections?.hero;
   const content = cms?.sections?.content;
 
-
   const sections: PrivacySection[] = content?.items?.length
     ? content.items
         .filter((item) => item.isVisible !== false)
