@@ -47,49 +47,6 @@ export default async function CookiePolicyPage({
   const s = cms?.sections;
   const hero = s?.hero;
 
-  const isAr = locale === "ar";
-  const pageUrl = isAr
-    ? "https://t1-studio.com/ar/cookie-policy/"
-    : "https://t1-studio.com/cookie-policy/";
-  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
-  const breadcrumbId = isAr
-    ? "https://t1-studio.com/ar/cookie-policy/#breadcrumb"
-    : "https://t1-studio.com/cookie-policy/#breadcrumb";
-  const webpageId = isAr
-    ? "https://t1-studio.com/ar/cookie-policy/#webpage"
-    : "https://t1-studio.com/cookie-policy/#webpage";
-
-  const pageSchema = {
-    structuredData: {
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://t1-studio.com/#organization",
-          name: "T1 Studio",
-          url: "https://t1-studio.com/",
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": breadcrumbId,
-          itemListElement: [
-            { "@type": "ListItem", position: 1, name: t("breadcrumbHome"), item: homeUrl },
-            { "@type": "ListItem", position: 2, name: t("breadcrumbCurrent"), item: pageUrl },
-          ],
-        },
-        {
-          "@type": "WebPage",
-          "@id": webpageId,
-          url: pageUrl,
-          name: t("metaTitle"),
-          description: t("metaDescription"),
-          inLanguage: isAr ? "ar" : "en",
-          isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": breadcrumbId },
-        },
-      ],
-    },
-  };
-
   const sections: PrivacySection[] = s
     ? ([
         s.aboutPolicy?.isVisible && {
@@ -215,7 +172,7 @@ export default async function CookiePolicyPage({
         lastUpdated={t("lastUpdated")}
         sections={sections}
       />
-      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo ?? pageSchema} />
+      <JsonLdSchema globalSeo={cms?.globalSeo} pageSeo={cms?.seo} />
     </main>
   );
 }

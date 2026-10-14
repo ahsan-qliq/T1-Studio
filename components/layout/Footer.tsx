@@ -197,6 +197,7 @@ export async function Footer() {
     { label: t("privacyPolicy"), href: "/privacy-policy" },
     { label: t("termsOfService"), href: "/terms-and-conditions" },
     { label: t("cookies"), href: "/cookie-policy" },
+    {label: t("accessibility"), href: "/accessibility" },
     { label: t("sitemap"), href: "/sitemap" },
   ];
 
