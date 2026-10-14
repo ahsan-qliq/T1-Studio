@@ -47,65 +47,7 @@ export default async function PrivacyPolicyPage({
   const hero = cms?.sections?.hero;
   const content = cms?.sections?.content;
 
-  const isAr = locale === "ar";
-  const pageUrl = isAr
-    ? "https://t1-studio.com/ar/privacy-policy/"
-    : "https://t1-studio.com/privacy-policy/";
-  const homeUrl = isAr ? "https://t1-studio.com/ar/" : "https://t1-studio.com/";
-  const breadcrumbId = isAr
-    ? "https://t1-studio.com/ar/privacy-policy/#breadcrumb"
-    : "https://t1-studio.com/privacy-policy/#breadcrumb";
-  const webpageId = isAr
-    ? "https://t1-studio.com/ar/privacy-policy/#webpage"
-    : "https://t1-studio.com/privacy-policy/#webpage";
 
-  const pageSchema = {
-    structuredData: {
-      "@graph": [
-        {
-          "@type": "Organization",
-          "@id": "https://t1-studio.com/#organization",
-          name: "T1 Studio",
-          ...(isAr && {
-            alternateName: "T.ONE Studio",
-            legalName: "T.One Universal Studio LLC",
-          }),
-          url: "https://t1-studio.com/",
-        },
-        {
-          "@type": "BreadcrumbList",
-          "@id": breadcrumbId,
-          itemListElement: [
-            {
-              "@type": "ListItem",
-              position: 1,
-              name: t("breadcrumbHome"),
-              item: homeUrl,
-            },
-            {
-              "@type": "ListItem",
-              position: 2,
-              name: t("breadcrumbCurrent"),
-              item: pageUrl,
-            },
-          ],
-        },
-        {
-          "@type": "WebPage",
-          "@id": webpageId,
-          url: pageUrl,
-          name: t("metaTitle"),
-          description: t("metaDescription"),
-          inLanguage: isAr ? "ar" : "en",
-          isPartOf: { "@id": "https://t1-studio.com/#website" },
-          breadcrumb: { "@id": breadcrumbId },
-          ...(isAr && {
-            about: { "@id": "https://t1-studio.com/#organization" },
-          }),
-        },
-      ],
-    },
-  };
   const sections: PrivacySection[] = content?.items?.length
     ? content.items
         .filter((item) => item.isVisible !== false)
