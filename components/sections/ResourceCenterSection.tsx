@@ -108,6 +108,24 @@ function LeadModal({
     if (!validate()) return;
     setSubmitting(true);
     try {
+      const apiBase = (process.env.NEXT_PUBLIC_CMS_API_BASE_URL ?? "").replace(/\/$/, "");
+      const res = await fetch(`${apiBase}/api/contact-submissions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submissionType: "resourceDownload",
+          firstName: form.firstName,
+          lastName: form.lastName,
+          email: form.email,
+          phone: form.phone,
+          companyName: form.company,
+          projectName: form.projectName,
+          resourceTitle: item.title,
+        }),
+      });
+      if (!res.ok && res.status !== 429) {
+        throw new Error("Submission failed");
+      }
       // Trigger download
       const a = document.createElement("a");
       a.href = item.downloadUrl;
@@ -116,6 +134,8 @@ function LeadModal({
       a.click();
       document.body.removeChild(a);
       onClose();
+    } catch {
+      setErrors((er) => ({ ...er, email: "Something went wrong. Please try again." }));
     } finally {
       setSubmitting(false);
     }
