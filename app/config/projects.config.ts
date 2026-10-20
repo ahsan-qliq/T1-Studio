@@ -73,6 +73,7 @@ export const mapProjectItems = (
       styleKey: "",
       propertyTypeKey: p.category || "",
       status: p.status || "",
+      hasInnerPage:p.hasInnerPage,
     }));
 
 export const mapProjectsAllProjectsLabels = (

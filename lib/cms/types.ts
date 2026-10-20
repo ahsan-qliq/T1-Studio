@@ -688,6 +688,7 @@ export interface CmsBlogProjectItem {
   category?: string;
   slug?: string;
   status?: string;
+  hasInnerPage?: boolean;
 }
 
 export interface CmsBlogListingSection {

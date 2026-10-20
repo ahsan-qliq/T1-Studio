@@ -28,7 +28,7 @@ const cardVariants = {
   }),
 };
 
-const INITIAL_COUNT = 4; // 1 featured + 3 compact
+const INITIAL_COUNT = 3;
 
 const CARD_WIDTHS = [
   "lg:w-[58%] lg:justify-self-end",
@@ -55,6 +55,7 @@ export interface ProjectItem {
   propertyTypeKey: string;
   status?: string;
   readTime?: string;
+  hasInnerPage?: boolean;
 }
 
 export interface AllProjectsSectionProps {
@@ -109,6 +110,7 @@ function FeaturedCard({
   project: ProjectItem;
   viewCaseStudyLabel: string;
 }) {
+  console.log("project", project);
   return (
     <>
       {/* Image — col 1, stretches to row height via CSS Grid */}
@@ -159,18 +161,20 @@ function FeaturedCard({
           </p>
         )}
 
-        <div>
-          <Link
-            href={project.href}
-            className="group inline-flex items-center gap-2 rounded-full bg-secondary border border-white/30 px-6 py-2.5 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white hover:border-black hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-          >
-            {viewCaseStudyLabel}
-            <ArrowRight
-              className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-          </Link>
-        </div>
+        {project.hasInnerPage !== false && (
+          <div>
+            <Link
+              href={project.href}
+              className="group inline-flex items-center gap-2 rounded-full bg-secondary border border-white/30 px-6 py-2.5 text-sm font-medium text-black transition-all duration-200 hover:bg-black hover:text-white hover:border-black hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white"
+            >
+              {viewCaseStudyLabel}
+              <ArrowRight
+                className="size-4 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </Link>
+          </div>
+        )}
       </div>
     </>
   );
@@ -292,7 +296,7 @@ export function AllProjectsSection({
     filterOptions.locations.length > 0 ||
     filterOptions.completionYears.length > 0 ||
     filterOptions.statuses.length > 0;
-
+console.log("projects 299", projects);
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
@@ -315,10 +319,8 @@ export function AllProjectsSection({
   );
 
   const hasActiveFilter = Object.values(filters).some(Boolean);
-  const featured = filtered;
-  const restAll = filtered.slice(1);
-  const visibleRest = restAll.slice(0, Math.max(0, visibleCount - 1));
-  const hasMore = restAll.length > visibleRest.length;
+  const visibleProjects = filtered.slice(0, visibleCount);
+  const hasMore = filtered.length > visibleCount;
 
   const handleFilter = (
     key: "category" | "location" | "completionYear" | "status",
@@ -338,7 +340,10 @@ export function AllProjectsSection({
       <div className="mx-auto">
         <Tabs
           value={activeTab}
-          onValueChange={(v) => setActiveTab(v as "commercial" | "retail")}
+          onValueChange={(v) => {
+            setActiveTab(v as "commercial" | "retail");
+            setVisibleCount(INITIAL_COUNT);
+          }}
         >
           <div className="border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
             <TabsList
@@ -440,9 +445,9 @@ export function AllProjectsSection({
                 </div>
               ) : (
                 <>
-                  {featured && (
+                  {visibleProjects.length > 0 && (
                     <div className="lg:grid lg:grid-cols-3">
-                      {filtered.map((item) => (
+                      {visibleProjects.map((item) => (
                         <FeaturedCard
                           key={item.id}
                           project={item}
