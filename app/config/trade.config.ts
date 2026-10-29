@@ -100,7 +100,7 @@ export const getResourceCenterConfig = (locale: string) => ({
       title: locale === "ar" ? "التأهيل المسبق 2026" : "Prequalification 2026",
       fileType: "PDF",
       fileSize: "19MB",
-      downloadUrl: "/assets/downloads/Tone Universal Prequalification 2026 1.pdf",
+      downloadUrl: "/assets/downloads/Tone Universal Prequalification 2026.pdf",
     },
     {
       id: "3",
