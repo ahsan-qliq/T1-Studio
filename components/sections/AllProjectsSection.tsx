@@ -280,8 +280,8 @@ export function AllProjectsSection({
   retailBeforeAfterNode,
 }: AllProjectsSectionProps) {
 
-  const [activeTab, setActiveTab] = useState<"commercial" | "retail">(
-    "commercial",
+  const [activeTab, setActiveTab] = useState<"private" | "retail">(
+    "private",
   );
   const [filters, setFilters] = useState<{
     category: string | null;
@@ -300,7 +300,7 @@ console.log("projects 299", projects);
   const filtered = useMemo(
     () =>
       projects.filter((p) => {
-        if (activeTab === "commercial" && p.propertyType === "Villa") return false;
+        if (activeTab === "private" && p.propertyType === "Villa") return false;
         if (activeTab === "retail" && p.propertyType !== "Villa") return false;
         if (filters.category && p.propertyTypeKey !== filters.category)
           return false;
@@ -341,7 +341,7 @@ console.log("projects 299", projects);
         <Tabs
           value={activeTab}
           onValueChange={(v) => {
-            setActiveTab(v as "commercial" | "retail");
+            setActiveTab(v as "private" | "retail");
             setVisibleCount(INITIAL_COUNT);
           }}
         >
@@ -351,10 +351,10 @@ console.log("projects 299", projects);
               className="w-auto h-auto rounded-none bg-transparent p-0 gap-6"
             >
               <TabsTrigger
-                value="commercial"
+                value="private"
                 className="rounded-full border border-white/25 px-8 py-3.5 text-sm font-semibold text-white/50 transition-colors duration-200 after:hidden hover:bg-white/10 hover:text-white data-active:border-white data-active:bg-white/10 data-active:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
-                Commercial
+                Private
               </TabsTrigger>
               <TabsTrigger
                 value="retail"
@@ -365,11 +365,11 @@ console.log("projects 299", projects);
             </TabsList>
           </div>
 
-          {(["commercial", "retail"] as const).map((tab) => (
+          {(["private", "retail"] as const).map((tab) => (
             <TabsContent key={tab} value={tab} className="mt-0">
               <div>
-              {tab === "commercial" ? commercialStatsBarNode : retailStatsBarNode}
-              {tab === "commercial" && awardsNode}
+              {tab === "private" ? commercialStatsBarNode : retailStatsBarNode}
+              {tab === "private" && awardsNode}
               {/* ── Header: heading + filters ── */}
               <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/10 px-4 py-6 sm:px-8 lg:px-12">
                 <h2
